@@ -1,5 +1,4 @@
 import 'package:evently/core/constants/images/images_name.dart';
-import 'package:evently/modules/onboarding/on_boarding_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../../core/constants/services/local_storage_keys.dart';
