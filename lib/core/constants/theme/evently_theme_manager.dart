@@ -39,20 +39,20 @@ abstract class EventlyThemeManager {
       ),
       titleMedium: TextStyle(
         fontSize: 20,
-        color: EventlyColors.white,
+        color: EventlyColors.blue,
         fontWeight: FontWeight.w700,
         fontFamily: "Inter",
       ),
       titleSmall: TextStyle(
-        fontSize: 18,
-        color: EventlyColors.white,
-        fontWeight: FontWeight.w700,
+        fontSize: 20,
+        color: EventlyColors.blue,
+        fontWeight: FontWeight.w500,
         fontFamily: "Inter",
       ),
       bodyLarge: TextStyle(
         fontSize: 16,
-        color: EventlyColors.white,
-        fontWeight: FontWeight.w700,
+        color: EventlyColors.black,
+        fontWeight: FontWeight.w500,
         fontFamily: "Inter",
       ),
       bodyMedium: TextStyle(
