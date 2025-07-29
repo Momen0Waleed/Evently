@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import '../../core/constants/services/local_storage_keys.dart';
 import '../../core/constants/services/local_storage_services.dart';
 import '../home/home_screen.dart';
+import '../onboarding/first_settings_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -33,8 +34,8 @@ class _SplashScreenState extends State<SplashScreen> {
 
     Navigator.pushReplacementNamed(
       context,
-      // hasSeenOnboarding ? HomeScreen.routeName :
-      OnBoardingScreen.routeName,
+      hasSeenOnboarding ? HomeScreen.routeName :
+      FirstSettingsScreen.routeName,
     );
   }
   @override

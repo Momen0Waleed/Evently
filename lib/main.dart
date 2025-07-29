@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'core/constants/services/local_storage_services.dart';
 import 'modules/home/home_screen.dart';
+import 'modules/onboarding/first_settings_screen.dart';
 import 'modules/onboarding/on_boarding_screen.dart';
 
 Future<void> main() async {
@@ -26,6 +27,7 @@ class MyApp extends StatelessWidget {
         SplashScreen.routeName : (context) =>const SplashScreen(),
         HomeScreen.routeName : (context) =>const HomeScreen(),
         OnBoardingScreen.routeName : (context) =>const OnBoardingScreen(),
+        FirstSettingsScreen.routeName : (context) =>const FirstSettingsScreen(),
       },
     );
   }
