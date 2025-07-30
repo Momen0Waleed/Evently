@@ -1,4 +1,5 @@
 import 'package:evently/core/constants/images/images_name.dart';
+import 'package:evently/modules/authentication/login_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../../core/constants/services/local_storage_keys.dart';
@@ -33,7 +34,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
     Navigator.pushReplacementNamed(
       context,
-      hasSeenOnboarding ? HomeScreen.routeName :
+      hasSeenOnboarding ? LoginScreen.routeName :
       FirstSettingsScreen.routeName,
     );
   }

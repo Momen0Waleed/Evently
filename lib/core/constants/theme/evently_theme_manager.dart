@@ -56,9 +56,9 @@ abstract class EventlyThemeManager {
         fontFamily: "Inter",
       ),
       bodyMedium: TextStyle(
-        fontSize: 14,
-        color: EventlyColors.white,
-        fontWeight: FontWeight.w700,
+        fontSize: 16,
+        color: EventlyColors.gray,
+        fontWeight: FontWeight.w500,
         fontFamily: "Inter",
       ),
       bodySmall: TextStyle(

@@ -2,6 +2,7 @@ import 'package:evently/core/constants/colors/evently_colors.dart';
 import 'package:evently/core/constants/images/images_name.dart';
 import 'package:evently/core/constants/strings/main_strings.dart';
 import 'package:evently/modules/onboarding/on_boarding_screen.dart';
+import 'package:evently/modules/onboarding/widgets/language_switch.dart';
 import 'package:flutter/material.dart';
 
 class FirstSettingsScreen extends StatefulWidget {
@@ -61,68 +62,73 @@ class _FirstSettingsScreenState extends State<FirstSettingsScreen> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text("Language", style: theme.titleSmall),
-                    GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          isLanguageEN = !isLanguageEN;
-                        });
-                      },
-                      child: AnimatedContainer(
-                        duration: Duration(milliseconds: 800),
-                        curve: Curves.easeInOut,
-                        width: 100,
-                        height: 40,
-                        decoration: BoxDecoration(
-                          color: EventlyColors.white,
-                          borderRadius: BorderRadius.circular(30),
-                          border: Border.all(
-                            width: 3,
-                            color: EventlyColors.blue,
-                          ),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            AnimatedContainer(
-                              duration: Duration(milliseconds: 500),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(18),
-                                color: isLanguageEN
-                                    ? EventlyColors.blue
-                                    : EventlyColors.white,
-                              ),
-                              padding: EdgeInsets.only(
-                                top: 3,
-                                bottom: 3,
-                                right: 3,
-                              ),
-                              child: CircleAvatar(
-                                radius: 18,
-                                backgroundImage: AssetImage(ImagesName.flagUS),
-                              ),
-                            ),
-                            AnimatedContainer(
-                              duration: Duration(milliseconds: 500),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(18),
-                                color: isLanguageEN
-                                    ? EventlyColors.white
-                                    : EventlyColors.blue,
-                              ),
-                              padding: EdgeInsets.only(
-                                top: 3,
-                                bottom: 3,
-                                left: 3,
-                              ),
-                              child: CircleAvatar(
-                                radius: 18,
-                                backgroundImage: AssetImage(ImagesName.flagEG),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+                    LanguageSwitch(onLanguageChanged: (bool value) {
+                      setState(() {
+                        isLanguageEN = value;
+                      });
+                    },),
+                    // GestureDetector(
+                    //   onTap: () {
+                    //     setState(() {
+                    //       isLanguageEN = !isLanguageEN;
+                    //     });
+                    //   },
+                    //   child: AnimatedContainer(
+                    //     duration: Duration(milliseconds: 800),
+                    //     curve: Curves.easeInOut,
+                    //     width: 100,
+                    //     height: 40,
+                    //     decoration: BoxDecoration(
+                    //       color: EventlyColors.white,
+                    //       borderRadius: BorderRadius.circular(30),
+                    //       border: Border.all(
+                    //         width: 3,
+                    //         color: EventlyColors.blue,
+                    //       ),
+                    //     ),
+                    //     child: Row(
+                    //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //       children: [
+                    //         AnimatedContainer(
+                    //           duration: Duration(milliseconds: 500),
+                    //           decoration: BoxDecoration(
+                    //             borderRadius: BorderRadius.circular(18),
+                    //             color: isLanguageEN
+                    //                 ? EventlyColors.blue
+                    //                 : EventlyColors.white,
+                    //           ),
+                    //           padding: EdgeInsets.only(
+                    //             top: 3,
+                    //             bottom: 3,
+                    //             right: 3,
+                    //           ),
+                    //           child: CircleAvatar(
+                    //             radius: 18,
+                    //             backgroundImage: AssetImage(ImagesName.flagUS),
+                    //           ),
+                    //         ),
+                    //         AnimatedContainer(
+                    //           duration: Duration(milliseconds: 500),
+                    //           decoration: BoxDecoration(
+                    //             borderRadius: BorderRadius.circular(18),
+                    //             color: isLanguageEN
+                    //                 ? EventlyColors.white
+                    //                 : EventlyColors.blue,
+                    //           ),
+                    //           padding: EdgeInsets.only(
+                    //             top: 3,
+                    //             bottom: 3,
+                    //             left: 3,
+                    //           ),
+                    //           child: CircleAvatar(
+                    //             radius: 18,
+                    //             backgroundImage: AssetImage(ImagesName.flagEG),
+                    //           ),
+                    //         ),
+                    //       ],
+                    //     ),
+                    //   ),
+                    // ),
                   ],
                 ),
                 SizedBox(height: 16),

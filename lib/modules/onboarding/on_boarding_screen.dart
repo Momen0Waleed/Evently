@@ -5,7 +5,7 @@ import '../../core/constants/images/images_name.dart';
 import '../../core/constants/services/local_storage_keys.dart';
 import '../../core/constants/services/local_storage_services.dart';
 import '../../core/constants/strings/main_strings.dart';
-import '../home/home_screen.dart';
+import '../authentication/login_screen.dart';
 
 class OnBoardingScreen extends StatefulWidget {
   const OnBoardingScreen({super.key});
@@ -241,6 +241,6 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
 
     if (!mounted) return;
 
-    Navigator.pushNamedAndRemoveUntil(context, HomeScreen.routeName,(route) => false);
+    Navigator.pushNamedAndRemoveUntil(context, LoginScreen.routeName,(route) => false);
   }
 }
