@@ -53,8 +53,9 @@ class _CreateAccountState extends State<CreateAccount> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Image.asset(ImagesName.splashLogo, width: dynamicSize.width * 0.4),
-            SizedBox(
+            Container(
               height: dynamicSize.height * 0.5,
+              margin: EdgeInsets.only(top: 30),
               child: Form(
                 key: _formKey,
                 child: Column(
