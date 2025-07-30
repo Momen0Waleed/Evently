@@ -8,13 +8,13 @@ abstract class EventlyThemeManager {
     appBarTheme: AppBarTheme(
       elevation: 0,
       backgroundColor: EventlyColors.white,
-      iconTheme: IconThemeData(color: EventlyColors.blue),
+      iconTheme: IconThemeData(color: EventlyColors.black),
       centerTitle: true,
       titleTextStyle: TextStyle(
         fontSize: 24,
         fontFamily: "Inter",
         fontWeight: FontWeight.w700,
-        color: EventlyColors.blue,
+        color: EventlyColors.black,
       ),
     ),
     bottomNavigationBarTheme: BottomNavigationBarThemeData(

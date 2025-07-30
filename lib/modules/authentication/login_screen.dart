@@ -1,11 +1,13 @@
 import 'package:evently/core/constants/colors/evently_colors.dart';
 import 'package:evently/core/constants/images/images_name.dart';
+import 'package:evently/modules/authentication/create_account.dart';
 import 'package:evently/modules/authentication/widgets/register_button_widget.dart';
 import 'package:evently/modules/authentication/widgets/text_field_widget.dart';
 import 'package:evently/modules/home/home_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../onboarding/widgets/language_switch.dart';
+import 'forget_password_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -18,6 +20,9 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   bool isLanguageEN = true;
   final _formKey = GlobalKey<FormState>();
+  final mailController = TextEditingController();
+  final passwordController = TextEditingController();
+
 
   @override
   Widget build(BuildContext context) {
@@ -53,16 +58,25 @@ class _LoginScreenState extends State<LoginScreen> {
                           title: 'Email',
                           prefixIcon: Icon(Icons.mail_rounded),
                           isPassword: false,
+                          isName: false,
+                          isLogin: true,
+                          controller: mailController,
                         ),
                         TextFieldWidget(
                           title: 'Password',
                           prefixIcon: Icon(Icons.lock_rounded),
                           isPassword: true,
+                          isName: false,
+                          isLogin: true,
+                          controller: passwordController,
                         ),
                         Align(
                           alignment: Alignment.centerRight,
                           child: TextButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.of(context).pushNamed(ForgetPasswordScreen.routeName);
+
+                            },
                             child: Text(
                               "Forget Password?",
                               style: theme.bodyLarge!.copyWith(
@@ -111,7 +125,9 @@ class _LoginScreenState extends State<LoginScreen> {
                               style: theme.bodyLarge,
                             ),
                             TextButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.of(context).pushNamed(CreateAccount.routeName);
+                              },
                               style: TextButton.styleFrom(
                                 padding: EdgeInsets.symmetric(horizontal: 2),
                               ),

@@ -11,4 +11,8 @@ abstract class ImagesName{
   static const String onboarding3 = "assets/images/onboarding3.png";
 
   static const String googleIcon = "assets/icons/Google Icon.png";
+
+  static const String forgetPassImage = "assets/images/Forget Password.png";
+
+
 }

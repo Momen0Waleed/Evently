@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 
 import '../../core/constants/services/local_storage_keys.dart';
 import '../../core/constants/services/local_storage_services.dart';
-import '../home/home_screen.dart';
 import '../onboarding/first_settings_screen.dart';
 
 class SplashScreen extends StatefulWidget {

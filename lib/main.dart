@@ -3,6 +3,8 @@ import 'package:evently/modules/splash/splash_screen.dart';
 import 'package:flutter/material.dart';
 
 import 'core/constants/services/local_storage_services.dart';
+import 'modules/authentication/create_account.dart';
+import 'modules/authentication/forget_password_screen.dart';
 import 'modules/authentication/login_screen.dart';
 import 'modules/home/home_screen.dart';
 import 'modules/onboarding/first_settings_screen.dart';
@@ -30,6 +32,8 @@ class MyApp extends StatelessWidget {
         OnBoardingScreen.routeName : (context) =>const OnBoardingScreen(),
         FirstSettingsScreen.routeName : (context) =>const FirstSettingsScreen(),
         LoginScreen.routeName : (context) =>const LoginScreen(),
+        ForgetPasswordScreen.routeName : (context) =>const ForgetPasswordScreen(),
+        CreateAccount.routeName : (context) =>const CreateAccount(),
       },
     );
   }

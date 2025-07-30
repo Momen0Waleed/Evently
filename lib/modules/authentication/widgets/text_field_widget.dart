@@ -7,10 +7,24 @@ class TextFieldWidget extends StatefulWidget {
     required this.title,
     required this.prefixIcon,
     required this.isPassword,
+    required this.isName,
+    required this.isLogin,
+    this.isConfirmPassword = false,
+    this.originalPasswordController,
+
+    required this.controller,
+
   });
   final String title;
   final Icon prefixIcon;
   final bool isPassword;
+  final bool isName;
+  final bool isLogin;
+  final bool isConfirmPassword;
+  final TextEditingController? originalPasswordController;
+
+  final TextEditingController controller;
+
 
   @override
   State<TextFieldWidget> createState() => _TextFieldWidgetState();
@@ -18,21 +32,38 @@ class TextFieldWidget extends StatefulWidget {
 
 class _TextFieldWidgetState extends State<TextFieldWidget> {
   bool obscurePassword = true;
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-
+  // final TextEditingController _emailController = TextEditingController();
+  // final TextEditingController _passwordController = TextEditingController();
+  // final _confirmPasswordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context).textTheme;
-    // var dynamic = MediaQuery.of(context).size;
 
     return Container(
       width: double.infinity,
       padding: EdgeInsets.symmetric(horizontal: 10),
       child: TextFormField(
-        controller: !widget.isPassword ? _emailController : _passwordController,
-        validator: !widget.isPassword ? validateEmail : null,
-        obscureText: widget.isPassword ? obscurePassword : false,
+        // controller: !widget.isPassword ? _emailController : _passwordController,
+        controller: widget.controller,
+
+        validator: (value) {
+          if (widget.isConfirmPassword) {
+            return validateConfirmPassword(value);
+          } else if (!widget.isName) {
+            if (!widget.isPassword) {
+              return validateEmail(value);
+            } else if (widget.isLogin) {
+              return null;
+            } else {
+              return validatePassword(value);
+            }
+          } else {
+            return null;
+          }
+        },
+        obscureText: !widget.isName
+            ? (widget.isPassword ? obscurePassword : false)
+            : false,
         decoration: InputDecoration(
           filled: true,
           fillColor: EventlyColors.white,
@@ -57,24 +88,21 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
           prefixIcon: widget.prefixIcon,
           suffixIcon: widget.isPassword
               ? IconButton(
-            icon: Icon(
-              obscurePassword
-                  ? Icons.visibility_off
-                  : Icons.visibility,
-            ),
-            onPressed: () {
-              setState(() {
-                obscurePassword = !obscurePassword;
-              });
-            },
-          )
+                  icon: Icon(
+                    obscurePassword ? Icons.visibility_off : Icons.visibility,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      obscurePassword = !obscurePassword;
+                    });
+                  },
+                )
               : null,
-        )
-
         ),
-      );
-
+      ),
+    );
   }
+
   String? validateEmail(String? value) {
     if (value == null || value.isEmpty) {
       return 'Email is required';
@@ -82,6 +110,29 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
     final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
     if (!emailRegex.hasMatch(value)) {
       return 'Enter a valid email (ex: example@mail.com)';
+    }
+    return null;
+  }
+
+  String? validatePassword(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Password is required';
+    }
+    final passwordRegex = RegExp(
+      r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#\$&*~]).{8,}$',
+    );
+    if (!passwordRegex.hasMatch(value)) {
+      return 'Password must contain uppercase, lowercase,\nnumber, and special character.';
+    }
+    return null;
+  }
+
+  String? validateConfirmPassword(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Please confirm your password';
+    }
+    if (value != widget.originalPasswordController?.text) {
+      return 'Passwords do not match';
     }
     return null;
   }
