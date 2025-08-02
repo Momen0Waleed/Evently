@@ -50,11 +50,16 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
           if (widget.isConfirmPassword) {
             return validateConfirmPassword(value);
           } else if (!widget.isName) {
-            if (!widget.isPassword) {
-              return validateEmail(value);
-            } else if (widget.isLogin) {
+            // if (!widget.isPassword) {
+            //   return validateEmail(value);
+            // } else
+            if (widget.isLogin) {
               return null;
-            } else {
+            }
+            else if (!widget.isPassword) {
+              return validateEmail(value);
+            }
+            else {
               return validatePassword(value);
             }
           } else {
