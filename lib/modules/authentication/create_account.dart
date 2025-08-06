@@ -1,10 +1,10 @@
 import 'package:evently/modules/authentication/widgets/register_button_widget.dart';
 import 'package:evently/modules/authentication/widgets/text_field_widget.dart';
+import 'package:evently/modules/layout/layout_view.dart';
 import 'package:flutter/material.dart';
 
 import '../../core/constants/colors/evently_colors.dart';
 import '../../core/constants/images/images_name.dart';
-import '../home/home_screen.dart';
 import '../onboarding/widgets/language_switch.dart';
 import 'login_screen.dart';
 
@@ -123,7 +123,7 @@ class _CreateAccountState extends State<CreateAccount> {
                           if (_formKey.currentState!.validate()) {
                             Navigator.of(
                               context,
-                            ).pushReplacementNamed(HomeScreen.routeName);
+                            ).pushReplacementNamed(LayoutView.routeName);
                           }
                         });
                       },

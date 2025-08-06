@@ -3,7 +3,7 @@ import 'package:evently/core/constants/images/images_name.dart';
 import 'package:evently/modules/authentication/create_account.dart';
 import 'package:evently/modules/authentication/widgets/register_button_widget.dart';
 import 'package:evently/modules/authentication/widgets/text_field_widget.dart';
-import 'package:evently/modules/home/home_screen.dart';
+import 'package:evently/modules/layout/layout_view.dart';
 import 'package:flutter/material.dart';
 
 import '../onboarding/widgets/language_switch.dart';
@@ -111,7 +111,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           buttonAction: () {
                             setState(() {
                               if (_formKey.currentState!.validate()) {
-                                Navigator.of(context).pushReplacementNamed(HomeScreen.routeName);
+                                Navigator.of(context).pushReplacementNamed(LayoutView.routeName);
                               }
                             });
                           },
