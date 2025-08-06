@@ -67,6 +67,12 @@ abstract class EventlyThemeManager {
         fontWeight: FontWeight.w700,
         fontFamily: "Inter",
       ),
+      labelSmall: TextStyle(
+        fontSize: 14,
+        color: EventlyColors.white,
+        fontWeight: FontWeight.w400,
+        fontFamily: "Inter",
+      ),
     ),
   );
 }
