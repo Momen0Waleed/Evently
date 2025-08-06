@@ -1,10 +1,10 @@
 import 'package:evently/core/constants/images/images_name.dart';
-import 'package:evently/modules/onboarding/on_boarding_screen.dart';
+import 'package:evently/modules/authentication/login_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../../core/constants/services/local_storage_keys.dart';
 import '../../core/constants/services/local_storage_services.dart';
-import '../home/home_screen.dart';
+import '../onboarding/first_settings_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -33,8 +33,8 @@ class _SplashScreenState extends State<SplashScreen> {
 
     Navigator.pushReplacementNamed(
       context,
-      // hasSeenOnboarding ? HomeScreen.routeName :
-      OnBoardingScreen.routeName,
+      hasSeenOnboarding ? LoginScreen.routeName :
+      FirstSettingsScreen.routeName,
     );
   }
   @override
