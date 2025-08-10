@@ -1,17 +1,21 @@
 class EventsData {
   static const String collectionName = "event_task";
-  final String eventID;
+  String? eventID;
   final String eventTitle;
   final String eventDescription;
-  final String eventCategory;
-  final bool isFavourite;
+  final String eventCategoryImg;
+  final String? eventCategoryId;
+  bool isFavourite;
+  final String selectedDate;
 
   EventsData({
-    required this.eventID,
+    this.eventID,
     required this.eventTitle,
-    required this.eventCategory,
     required this.eventDescription,
-    required this.isFavourite,
+    required this.eventCategoryImg,
+    required this.eventCategoryId,
+    this.isFavourite = false,
+    required this.selectedDate,
   });
 
   Map<String, dynamic> toJson(){
@@ -19,8 +23,10 @@ class EventsData {
       "eventID": eventID,
       "eventTitle": eventTitle,
       "eventDescription": eventDescription,
-      "eventCategory": eventCategory,
+      "eventCategoryImg": eventCategoryImg,
+      "eventCategoryId": eventCategoryId,
       "isFavourite": isFavourite,
+      "selectedDate": selectedDate,
     };
   }
 
@@ -28,9 +34,11 @@ class EventsData {
     return EventsData(
       eventID: json["eventID"],
       eventTitle: json["eventTitle"],
-      eventCategory: json["eventCategory"],
       eventDescription: json["eventDescription"],
-      isFavourite: json["isFavourite"].toLowerCase == 'true',
+      eventCategoryImg: json["eventCategoryImg"],
+      eventCategoryId: json["eventCategoryId"],
+      isFavourite: json["isFavourite'"].toLowerCase == 'true',
+      selectedDate: json["selectedDate"],
     );
   }
 

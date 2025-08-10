@@ -2,33 +2,26 @@ import 'package:evently/core/constants/colors/evently_colors.dart';
 import 'package:flutter/material.dart';
 
 class TextFieldWidget extends StatefulWidget {
-  const TextFieldWidget({
+  TextFieldWidget({
     super.key,
     required this.title,
     this.prefixIcon,
     this.isPassword = false,
-    this.isName = false,
-    this.isLogin = false,
     this.maxlines = 1,
     this.minlines,
-    this.isConfirmPassword = false,
-    this.originalPasswordController,
 
     this.controller,
+    this.validator,
 
   });
   final String title;
   final Widget? prefixIcon;
   final bool isPassword;
-  final bool isName;
-  final bool isLogin;
-  final bool isConfirmPassword;
-  final TextEditingController? originalPasswordController;
   final int? maxlines;
   final int? minlines;
 
   final TextEditingController? controller;
-
+  String? Function(String?)? validator;
 
   @override
   State<TextFieldWidget> createState() => _TextFieldWidgetState();
@@ -51,25 +44,8 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
         controller: widget.controller,
         maxLines: widget.maxlines,
         minLines: widget.minlines,
-        validator: (value) {
-          if (widget.isConfirmPassword) {
-            return validateConfirmPassword(value);
-          } else if (!widget.isName) {
-
-            if (widget.isLogin) {
-              return null;
-            }
-            else if (!widget.isPassword) {
-              return validateEmail(value);
-            }
-            else {
-              return validatePassword(value);
-            }
-          } else {
-            return null;
-          }
-        },
-        obscureText: !widget.isName
+        validator: widget.validator,
+        obscureText: widget.isPassword
             ? (widget.isPassword ? obscurePassword : false)
             : false,
         decoration: InputDecoration(
@@ -110,38 +86,38 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
       ),
     );
   }
-
-  String? validateEmail(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Email is required';
-    }
-    final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-    if (!emailRegex.hasMatch(value)) {
-      return 'Enter a valid email (ex: example@mail.com)';
-    }
-    return null;
-  }
-
-  String? validatePassword(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Password is required';
-    }
-    final passwordRegex = RegExp(
-      r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#\$&*~]).{8,}$',
-    );
-    if (!passwordRegex.hasMatch(value)) {
-      return 'Password must contain uppercase, lowercase,\nnumber, and special character.';
-    }
-    return null;
-  }
-
-  String? validateConfirmPassword(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Please confirm your password';
-    }
-    if (value != widget.originalPasswordController?.text) {
-      return 'Passwords do not match';
-    }
-    return null;
-  }
+  //
+  // String? validateEmail(String? value) {
+  //   if (value == null || value.isEmpty) {
+  //     return 'Email is required';
+  //   }
+  //   final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+  //   if (!emailRegex.hasMatch(value)) {
+  //     return 'Enter a valid email (ex: example@mail.com)';
+  //   }
+  //   return null;
+  // }
+  //
+  // String? validatePassword(String? value) {
+  //   if (value == null || value.isEmpty) {
+  //     return 'Password is required';
+  //   }
+  //   final passwordRegex = RegExp(
+  //     r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#\$&*~]).{8,}$',
+  //   );
+  //   if (!passwordRegex.hasMatch(value)) {
+  //     return 'Password must contain uppercase, lowercase,\nnumber, and special character.';
+  //   }
+  //   return null;
+  // }
+  //
+  // String? validateConfirmPassword(String? value) {
+  //   if (value == null || value.isEmpty) {
+  //     return 'Please confirm your password';
+  //   }
+  //   if (value != widget.originalPasswordController?.text) {
+  //     return 'Passwords do not match';
+  //   }
+  //   return null;
+  // }
 }

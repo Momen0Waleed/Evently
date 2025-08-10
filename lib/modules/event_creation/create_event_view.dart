@@ -1,8 +1,10 @@
 import 'package:evently/core/constants/images/images_name.dart';
+import 'package:evently/models/database/events_data.dart';
 import 'package:evently/modules/authentication/widgets/register_button_widget.dart';
 import 'package:evently/modules/event_creation/widgets/tap_item_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
+import 'package:intl/intl.dart';
 
 import '../../core/constants/colors/evently_colors.dart';
 import '../authentication/widgets/text_field_widget.dart';
@@ -16,7 +18,10 @@ class CreateEventView extends StatefulWidget {
 }
 
 class _CreateEventViewState extends State<CreateEventView> {
-  final nameController = TextEditingController();
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController descriptionController = TextEditingController();
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  DateTime? selectedDate;
 
   int currentTabIndex = 0;
   List<CategoryData> categories = [
@@ -82,8 +87,18 @@ class _CreateEventViewState extends State<CreateEventView> {
               color: EventlyColors.white,
             ),
           ),
-          buttonAction: (){
-
+          buttonAction: () {
+            if (formKey.currentState!.validate()) {
+              if (selectedDate != null) {
+                var eventData = EventsData(
+                  eventTitle: nameController.text,
+                  eventDescription: descriptionController.text,
+                  eventCategoryImg: categories[currentTabIndex].categoryImg,
+                  eventCategoryId: categories[currentTabIndex].id,
+                  selectedDate: selectedDate.toString(),
+                );
+              }
+            }
           },
         ),
       ),
@@ -93,137 +108,172 @@ class _CreateEventViewState extends State<CreateEventView> {
         padding: EdgeInsets.symmetric(horizontal: 16),
         child: SingleChildScrollView(
           physics: BouncingScrollPhysics(),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child: Image.asset(categories[currentTabIndex].categoryImg),
-              ),
-              SizedBox(height: 10),
-              DefaultTabController(
-                length: categories.length,
-                child: TabBar(
-                  onTap: (index) {
-                    setState(() {
-                      currentTabIndex = index;
-                    });
+          child: Form(
+            key: formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: Image.asset(categories[currentTabIndex].categoryImg),
+                ),
+                SizedBox(height: 10),
+                DefaultTabController(
+                  length: categories.length,
+                  child: TabBar(
+                    onTap: (index) {
+                      setState(() {
+                        currentTabIndex = index;
+                      });
+                    },
+                    isScrollable: true,
+                    dividerColor: Colors.transparent,
+                    indicator: BoxDecoration(),
+                    tabAlignment: TabAlignment.start,
+                    labelPadding: EdgeInsets.symmetric(horizontal: 4),
+                    tabs: categories.map((category) {
+                      return TapItemWidget(
+                        categoryData: category,
+                        isSelected:
+                            currentTabIndex == categories.indexOf(category),
+                      );
+                    }).toList(),
+                  ),
+                ),
+                SizedBox(height: 20),
+                Text("Title", style: theme.textTheme.bodyLarge),
+                SizedBox(height: 10),
+                TextFieldWidget(
+                  title: 'Event Item',
+                  prefixIcon: ImageIcon(
+                    AssetImage(ImagesName.editTextIcon),
+                    color: EventlyColors.gray,
+                  ),
+                  controller: nameController,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Title is Required";
+                    }
+                    return null;
                   },
-                  isScrollable: true,
-                  dividerColor: Colors.transparent,
-                  indicator: BoxDecoration(),
-                  tabAlignment: TabAlignment.start,
-                  labelPadding: EdgeInsets.symmetric(horizontal: 4),
-                  tabs: categories.map((category) {
-                    return TapItemWidget(
-                      categoryData: category,
-                      isSelected:
-                          currentTabIndex == categories.indexOf(category),
-                    );
-                  }).toList(),
                 ),
-              ),
-              SizedBox(height: 20),
-              Text("Title", style: theme.textTheme.bodyLarge),
-              SizedBox(height: 10),
-              TextFieldWidget(
-                title: 'Event Item',
-                prefixIcon: ImageIcon(
-                  AssetImage(ImagesName.editTextIcon),
-                  color: EventlyColors.gray,
+                SizedBox(height: 15),
+                Text("Description", style: theme.textTheme.bodyLarge),
+                SizedBox(height: 10),
+                TextFieldWidget(
+                  controller: descriptionController,
+                  title: 'Event Description',
+                  maxlines: 5,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Description is Required";
+                    }
+                    return null;
+                  },
                 ),
-                isPassword: false,
-                isName: true,
-                isLogin: false,
-                controller: nameController,
-              ),
-              SizedBox(height: 15),
-              Text("Description", style: theme.textTheme.bodyLarge),
-              SizedBox(height: 10),
-              TextFieldWidget(title: 'Event Description', maxlines: 5),
-              SizedBox(height: 20),
-              Row(
-                children: [
-                  Icon(Icons.calendar_month),
-                  SizedBox(width: 5),
-                  Text("Event Date", style: theme.textTheme.bodyLarge),
-                  Spacer(),
-                  Bounceable(
-                    onTap: () {},
-                    child: Text(
-                      "Choose Date",
-                      style: theme.textTheme.bodyLarge!.copyWith(
-                        color: EventlyColors.blue,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 20),
-              Row(
-                children: [
-                  Icon(Icons.calendar_month),
-                  SizedBox(width: 5),
-                  Text("Event Time", style: theme.textTheme.bodyLarge),
-                  Spacer(),
-                  Bounceable(
-                    onTap: () {},
-                    child: Text(
-                      "Choose Time",
-                      style: theme.textTheme.bodyLarge!.copyWith(
-                        color: EventlyColors.blue,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 20),
-              RegisterButtonWidget(
-                bgColor: EventlyColors.white,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 8,
-                    vertical: 5.0,
-                  ),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 45,
-                        height: double.infinity,
-                        padding: const EdgeInsets.all(5.0),
-                        decoration: BoxDecoration(
-                          color: EventlyColors.blue,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Icon(
-                          Icons.my_location_rounded,
-                          size: 26,
-                          color: EventlyColors.white,
-                        ),
-                      ),
-                      SizedBox(width: 10),
-                      Text(
-                        "Choose Event Location",
+                SizedBox(height: 20),
+                Row(
+                  children: [
+                    Icon(Icons.calendar_month),
+                    SizedBox(width: 5),
+                    Text("Event Date", style: theme.textTheme.bodyLarge),
+                    Spacer(),
+                    Bounceable(
+                      onTap: () {
+                        getCurrentDate();
+                      },
+                      child: Text(
+                        selectedDate == null
+                            ? "Choose Date"
+                            : DateFormat(
+                                "yyyy MMM dd",
+                              ).format(selectedDate!).toString(),
                         style: theme.textTheme.bodyLarge!.copyWith(
                           color: EventlyColors.blue,
                         ),
                       ),
-                      Spacer(),
-                      Icon(
-                        Icons.arrow_forward_ios_rounded,
-                        color: EventlyColors.blue,
-                        size: 20,
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-                buttonAction: () {},
-              ),
-              SizedBox(height: 200,)
-            ],
+                SizedBox(height: 20),
+                Row(
+                  children: [
+                    Icon(Icons.calendar_month),
+                    SizedBox(width: 5),
+                    Text("Event Time", style: theme.textTheme.bodyLarge),
+                    Spacer(),
+                    Bounceable(
+                      onTap: () {},
+                      child: Text(
+                        "Choose Time",
+                        style: theme.textTheme.bodyLarge!.copyWith(
+                          color: EventlyColors.blue,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 20),
+                RegisterButtonWidget(
+                  bgColor: EventlyColors.white,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 5.0,
+                    ),
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 45,
+                          height: double.infinity,
+                          padding: const EdgeInsets.all(5.0),
+                          decoration: BoxDecoration(
+                            color: EventlyColors.blue,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Icon(
+                            Icons.my_location_rounded,
+                            size: 26,
+                            color: EventlyColors.white,
+                          ),
+                        ),
+                        SizedBox(width: 10),
+                        Text(
+                          "Choose Event Location",
+                          style: theme.textTheme.bodyLarge!.copyWith(
+                            color: EventlyColors.blue,
+                          ),
+                        ),
+                        Spacer(),
+                        Icon(
+                          Icons.arrow_forward_ios_rounded,
+                          color: EventlyColors.blue,
+                          size: 20,
+                        ),
+                      ],
+                    ),
+                  ),
+                  buttonAction: () {},
+                ),
+                SizedBox(height: 200),
+              ],
+            ),
           ),
         ),
       ),
     );
+  }
+
+  void getCurrentDate() {
+    showDatePicker(
+      initialDate: DateTime.now(),
+      context: context,
+      firstDate: DateTime.now(),
+      lastDate: DateTime.now().add(Duration(days: 365)),
+    ).then((value) {
+      setState(() {
+        selectedDate = value;
+      });
+    });
   }
 }

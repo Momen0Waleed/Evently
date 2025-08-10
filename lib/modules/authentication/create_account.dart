@@ -1,13 +1,11 @@
 import 'package:evently/core/routes/page_routes_name.dart';
 import 'package:evently/modules/authentication/widgets/register_button_widget.dart';
 import 'package:evently/modules/authentication/widgets/text_field_widget.dart';
-import 'package:evently/modules/layout/layout_view.dart';
 import 'package:flutter/material.dart';
 
 import '../../core/constants/colors/evently_colors.dart';
 import '../../core/constants/images/images_name.dart';
 import '../onboarding/widgets/language_switch.dart';
-import 'login_screen.dart';
 
 class CreateAccount extends StatefulWidget {
   const CreateAccount({super.key});
@@ -66,9 +64,6 @@ class _CreateAccountState extends State<CreateAccount> {
                         color: EventlyColors.gray,
 
                       ),
-                      isPassword: false,
-                      isName: true,
-                      isLogin: false,
                       controller:nameController,
                     ),
                     TextFieldWidget(
@@ -77,9 +72,7 @@ class _CreateAccountState extends State<CreateAccount> {
                         Icons.mail_rounded,
                         color: EventlyColors.gray,
                       ),
-                      isPassword: false,
-                      isName: false,
-                      isLogin: false,
+                      validator: validateEmail,
                       controller:mailController,
                     ),
                     TextFieldWidget(
@@ -89,8 +82,7 @@ class _CreateAccountState extends State<CreateAccount> {
                         color: EventlyColors.gray,
                       ),
                       isPassword: true,
-                      isName: false,
-                      isLogin: false,
+                      validator: validatePassword,
                       controller: passwordController,
                     ),
                     TextFieldWidget(
@@ -100,11 +92,8 @@ class _CreateAccountState extends State<CreateAccount> {
                         color: EventlyColors.gray,
                       ),
                       isPassword: true,
-                      isName: false,
-                      isLogin: false,
-                      isConfirmPassword: true,
+                      validator: validateConfirmPassword,
                       controller: confirmPasswordController,
-                      originalPasswordController: passwordController,
                     ),
                     RegisterButtonWidget(
                       bgColor: EventlyColors.blue,
@@ -170,5 +159,38 @@ class _CreateAccountState extends State<CreateAccount> {
         ),
       ),
     );
+  }
+  String? validateEmail(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Email is required';
+    }
+    final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+    if (!emailRegex.hasMatch(value)) {
+      return 'Enter a valid email (ex: example@mail.com)';
+    }
+    return null;
+  }
+
+  String? validatePassword(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Password is required';
+    }
+    final passwordRegex = RegExp(
+      r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#\$&*~]).{8,}$',
+    );
+    if (!passwordRegex.hasMatch(value)) {
+      return 'Password must contain uppercase, lowercase,\nnumber, and special character.';
+    }
+    return null;
+  }
+
+  String? validateConfirmPassword(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Please confirm your password';
+    }
+    if (value != passwordController.text) {
+      return 'Passwords do not match';
+    }
+    return null;
   }
 }
