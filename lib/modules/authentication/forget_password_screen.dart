@@ -8,7 +8,6 @@ class ForgetPasswordScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var textTheme = Theme.of(context).textTheme;
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(

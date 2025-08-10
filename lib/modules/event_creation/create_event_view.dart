@@ -1,4 +1,5 @@
 import 'package:evently/core/constants/images/images_name.dart';
+import 'package:evently/core/utils/firebase_firestore.dart';
 import 'package:evently/models/database/events_data.dart';
 import 'package:evently/modules/authentication/widgets/register_button_widget.dart';
 import 'package:evently/modules/event_creation/widgets/tap_item_widget.dart';
@@ -22,6 +23,9 @@ class _CreateEventViewState extends State<CreateEventView> {
   final TextEditingController descriptionController = TextEditingController();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   DateTime? selectedDate;
+  DateTime? selectedTime;
+  bool isDateValid = true;
+  bool isTimeValid = true;
 
   int currentTabIndex = 0;
   List<CategoryData> categories = [
@@ -88,16 +92,35 @@ class _CreateEventViewState extends State<CreateEventView> {
             ),
           ),
           buttonAction: () {
+            setState(() {
+              // Validate fields
+              isDateValid = selectedDate != null;
+              isTimeValid = selectedTime != null;
+            });
+
             if (formKey.currentState!.validate()) {
-              if (selectedDate != null) {
-                var eventData = EventsData(
-                  eventTitle: nameController.text,
-                  eventDescription: descriptionController.text,
-                  eventCategoryImg: categories[currentTabIndex].categoryImg,
-                  eventCategoryId: categories[currentTabIndex].id,
-                  selectedDate: selectedDate.toString(),
-                );
+              if (!isDateValid || !isTimeValid) {
+                // ScaffoldMessenger.of(context).showSnackBar(
+                //   SnackBar(content: Text('Please select both date and time')),
+                // );
+                return;
               }
+              final DateTime combinedDateTime = DateTime(
+                selectedDate!.year,
+                selectedDate!.month,
+                selectedDate!.day,
+                selectedTime!.hour,
+                selectedTime!.minute,
+              );
+
+              var eventData = EventsData(
+                eventTitle: nameController.text,
+                eventDescription: descriptionController.text,
+                eventCategoryImg: categories[currentTabIndex].categoryImg,
+                eventCategoryId: categories[currentTabIndex].categoryTitle,
+                selectedDate: combinedDateTime.toString(),
+              );
+              FirebaseFirestoreUtils.createNewEvent(eventData);
             }
           },
         ),
@@ -189,25 +212,52 @@ class _CreateEventViewState extends State<CreateEventView> {
                                 "yyyy MMM dd",
                               ).format(selectedDate!).toString(),
                         style: theme.textTheme.bodyLarge!.copyWith(
-                          color: EventlyColors.blue,
+                          color: selectedDate == null
+                              ? (isDateValid ? EventlyColors.blue : Colors.red)
+                              : EventlyColors.blue,
                         ),
                       ),
                     ),
                   ],
                 ),
                 SizedBox(height: 20),
+                // Row(
+                //   children: [
+                //     Icon(Icons.calendar_month),
+                //     SizedBox(width: 5),
+                //     Text("Event Time", style: theme.textTheme.bodyLarge),
+                //     Spacer(),
+                //     Bounceable(
+                //       onTap: () {},
+                //       child: Text(
+                //         "Choose Time",
+                //         style: theme.textTheme.bodyLarge!.copyWith(
+                //           color: EventlyColors.blue,
+                //         ),
+                //       ),
+                //     ),
+                //   ],
+                // ),
                 Row(
                   children: [
-                    Icon(Icons.calendar_month),
+                    Icon(Icons.access_time),
                     SizedBox(width: 5),
                     Text("Event Time", style: theme.textTheme.bodyLarge),
                     Spacer(),
                     Bounceable(
-                      onTap: () {},
+                      onTap: () {
+                        getCurrentTime();
+                      },
                       child: Text(
-                        "Choose Time",
+                        selectedTime == null
+                            ? "Choose Time"
+                            : DateFormat(
+                                "h:mm a",
+                              ).format(selectedTime!).toString(),
                         style: theme.textTheme.bodyLarge!.copyWith(
-                          color: EventlyColors.blue,
+                          color: selectedTime == null
+                              ? (isTimeValid ? EventlyColors.blue : Colors.red)
+                              : EventlyColors.blue,
                         ),
                       ),
                     ),
@@ -273,7 +323,32 @@ class _CreateEventViewState extends State<CreateEventView> {
     ).then((value) {
       setState(() {
         selectedDate = value;
+        isDateValid = true;
       });
     });
+  }
+
+  void getCurrentTime() async {
+    final TimeOfDay? pickedTime = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+    );
+
+    if (pickedTime != null) {
+      setState(() {
+        // Combine with selectedDate if it exists, or use today
+        final DateTime now = DateTime.now();
+        final DateTime baseDate =
+            selectedDate ?? DateTime(now.year, now.month, now.day);
+        selectedTime = DateTime(
+          baseDate.year,
+          baseDate.month,
+          baseDate.day,
+          pickedTime.hour,
+          pickedTime.minute,
+        );
+        isTimeValid = true;
+      });
+    }
   }
 }

@@ -1,7 +1,6 @@
 import 'package:evently/core/constants/colors/evently_colors.dart';
 import 'package:evently/core/constants/images/images_name.dart';
 import 'package:evently/core/constants/strings/main_strings.dart';
-import 'package:evently/modules/onboarding/on_boarding_screen.dart';
 import 'package:evently/modules/onboarding/widgets/language_switch.dart';
 import 'package:flutter/material.dart';
 

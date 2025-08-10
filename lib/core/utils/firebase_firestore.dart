@@ -12,11 +12,18 @@ abstract class FirebaseFirestoreUtils {
         );
   }
 
-  static createNewEvent(EventsData eventData) {
+  static Future<bool> createNewEvent(EventsData eventData) {
+    try{
     var collectionReference = _getCollectionReference();
     var documentReference = collectionReference.doc();
-
+    /// this is to make auto generated Id for the document
+    eventData.eventID = documentReference.id;
     documentReference.set(eventData);
+    return Future.value(true);
+    }catch(e){
+      return Future.value(false);
+
+    }
   }
 
   static Future<List<EventsData>> readEventData() async {

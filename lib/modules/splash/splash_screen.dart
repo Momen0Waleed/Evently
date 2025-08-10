@@ -1,11 +1,9 @@
 import 'package:evently/core/constants/images/images_name.dart';
 import 'package:evently/core/routes/page_routes_name.dart';
-import 'package:evently/modules/authentication/login_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../../core/constants/services/local_storage_keys.dart';
 import '../../core/constants/services/local_storage_services.dart';
-import '../onboarding/first_settings_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});

@@ -6,7 +6,6 @@ import '../../core/constants/images/images_name.dart';
 import '../../core/constants/services/local_storage_keys.dart';
 import '../../core/constants/services/local_storage_services.dart';
 import '../../core/constants/strings/main_strings.dart';
-import '../authentication/login_screen.dart';
 
 class OnBoardingScreen extends StatefulWidget {
   const OnBoardingScreen({super.key});

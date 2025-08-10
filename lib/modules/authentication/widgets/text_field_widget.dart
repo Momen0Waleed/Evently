@@ -1,6 +1,7 @@
 import 'package:evently/core/constants/colors/evently_colors.dart';
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class TextFieldWidget extends StatefulWidget {
   TextFieldWidget({
     super.key,
@@ -69,7 +70,7 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
             borderRadius: BorderRadius.circular(16),
             borderSide: BorderSide(color: EventlyColors.redError, width: 1),
           ),
-          prefixIcon: widget.prefixIcon ?? null,
+          prefixIcon: widget.prefixIcon,
           suffixIcon: widget.isPassword
               ? IconButton(
                   icon: Icon(
