@@ -10,10 +10,17 @@ import 'modules/authentication/login_screen.dart';
 import 'modules/onboarding/first_settings_screen.dart';
 import 'modules/onboarding/on_boarding_screen.dart';
 
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await LocalStorageServices.init();
 
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 
