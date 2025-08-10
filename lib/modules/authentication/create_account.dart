@@ -1,3 +1,4 @@
+import 'package:evently/core/routes/page_routes_name.dart';
 import 'package:evently/modules/authentication/widgets/register_button_widget.dart';
 import 'package:evently/modules/authentication/widgets/text_field_widget.dart';
 import 'package:evently/modules/layout/layout_view.dart';
@@ -10,7 +11,6 @@ import 'login_screen.dart';
 
 class CreateAccount extends StatefulWidget {
   const CreateAccount({super.key});
-  static const String routeName = "/Create-Account";
 
   @override
   State<CreateAccount> createState() => _CreateAccountState();
@@ -36,14 +36,11 @@ class _CreateAccountState extends State<CreateAccount> {
           onPressed: () {
             Navigator.of(context).pop();
           },
-          icon: Icon(Icons.arrow_back, color: EventlyColors.black, size: 30),
+          icon: Icon(Icons.arrow_back, color: EventlyColors.blue, size: 30),
         ),
         title: Text(
           "Register",
-          style: textTheme.bodyLarge!.copyWith(
-            fontSize: 20,
-            fontWeight: FontWeight.w600,
-          ),
+
         ),
       ),
       body: Padding(
@@ -123,7 +120,7 @@ class _CreateAccountState extends State<CreateAccount> {
                           if (_formKey.currentState!.validate()) {
                             Navigator.of(
                               context,
-                            ).pushReplacementNamed(LayoutView.routeName);
+                            ).pushReplacementNamed(PageRoutesName.layout);
                           }
                         });
                       },
@@ -140,7 +137,7 @@ class _CreateAccountState extends State<CreateAccount> {
                           onPressed: () {
                             Navigator.of(
                               context,
-                            ).pushNamed(LoginScreen.routeName);
+                            ).pushNamed(PageRoutesName.login);
                           },
                           child: Text(
                             "Login",

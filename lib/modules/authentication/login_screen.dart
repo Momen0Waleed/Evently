@@ -1,17 +1,14 @@
 import 'package:evently/core/constants/colors/evently_colors.dart';
 import 'package:evently/core/constants/images/images_name.dart';
-import 'package:evently/modules/authentication/create_account.dart';
+import 'package:evently/core/routes/page_routes_name.dart';
 import 'package:evently/modules/authentication/widgets/register_button_widget.dart';
 import 'package:evently/modules/authentication/widgets/text_field_widget.dart';
-import 'package:evently/modules/layout/layout_view.dart';
 import 'package:flutter/material.dart';
 
 import '../onboarding/widgets/language_switch.dart';
-import 'forget_password_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
-  static const String routeName = "/Login";
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -74,7 +71,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           alignment: Alignment.centerRight,
                           child: TextButton(
                             onPressed: () {
-                              Navigator.of(context).pushNamed(ForgetPasswordScreen.routeName);
+                              Navigator.of(context).pushNamed(PageRoutesName.forgetPassword);
 
                             },
                             child: Text(
@@ -111,7 +108,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           buttonAction: () {
                             setState(() {
                               if (_formKey.currentState!.validate()) {
-                                Navigator.of(context).pushReplacementNamed(LayoutView.routeName);
+                                Navigator.of(context).pushReplacementNamed(PageRoutesName.layout);
                               }
                             });
                           },
@@ -126,7 +123,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                             TextButton(
                               onPressed: () {
-                                Navigator.of(context).pushNamed(CreateAccount.routeName);
+                                Navigator.of(context).pushNamed(PageRoutesName.register);
                               },
                               style: TextButton.styleFrom(
                                 padding: EdgeInsets.symmetric(horizontal: 2),

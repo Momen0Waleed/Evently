@@ -5,9 +5,10 @@ import 'package:evently/modules/onboarding/on_boarding_screen.dart';
 import 'package:evently/modules/onboarding/widgets/language_switch.dart';
 import 'package:flutter/material.dart';
 
+import '../../core/routes/page_routes_name.dart';
+
 class FirstSettingsScreen extends StatefulWidget {
   const FirstSettingsScreen({super.key});
-  static const String routeName = "/1st Settings";
 
   @override
   State<FirstSettingsScreen> createState() => _FirstSettingsScreenState();
@@ -184,7 +185,7 @@ class _FirstSettingsScreenState extends State<FirstSettingsScreen> {
             GestureDetector(
               onTap: () {
                 //TODO: Sending the Settings Data to the SharedPreferences
-                Navigator.pushNamed(context, OnBoardingScreen.routeName);
+                Navigator.pushNamed(context, PageRoutesName.onboarding);
               },
               child: Container(
                 width: dynamicSize.width,

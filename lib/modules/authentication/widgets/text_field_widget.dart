@@ -5,25 +5,29 @@ class TextFieldWidget extends StatefulWidget {
   const TextFieldWidget({
     super.key,
     required this.title,
-    required this.prefixIcon,
-    required this.isPassword,
-    required this.isName,
-    required this.isLogin,
+    this.prefixIcon,
+    this.isPassword = false,
+    this.isName = false,
+    this.isLogin = false,
+    this.maxlines = 1,
+    this.minlines,
     this.isConfirmPassword = false,
     this.originalPasswordController,
 
-    required this.controller,
+    this.controller,
 
   });
   final String title;
-  final Icon prefixIcon;
+  final Widget? prefixIcon;
   final bool isPassword;
   final bool isName;
   final bool isLogin;
   final bool isConfirmPassword;
   final TextEditingController? originalPasswordController;
+  final int? maxlines;
+  final int? minlines;
 
-  final TextEditingController controller;
+  final TextEditingController? controller;
 
 
   @override
@@ -45,14 +49,13 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
       child: TextFormField(
         // controller: !widget.isPassword ? _emailController : _passwordController,
         controller: widget.controller,
-
+        maxLines: widget.maxlines,
+        minLines: widget.minlines,
         validator: (value) {
           if (widget.isConfirmPassword) {
             return validateConfirmPassword(value);
           } else if (!widget.isName) {
-            // if (!widget.isPassword) {
-            //   return validateEmail(value);
-            // } else
+
             if (widget.isLogin) {
               return null;
             }
@@ -90,7 +93,7 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
             borderRadius: BorderRadius.circular(16),
             borderSide: BorderSide(color: EventlyColors.redError, width: 1),
           ),
-          prefixIcon: widget.prefixIcon,
+          prefixIcon: widget.prefixIcon ?? null,
           suffixIcon: widget.isPassword
               ? IconButton(
                   icon: Icon(

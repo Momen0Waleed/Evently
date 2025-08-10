@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 
 class ForgetPasswordScreen extends StatelessWidget {
   const ForgetPasswordScreen({super.key});
-  static const String routeName = "/Forget-Password";
 
   @override
   Widget build(BuildContext context) {
@@ -16,14 +15,10 @@ class ForgetPasswordScreen extends StatelessWidget {
           onPressed: () {
             Navigator.of(context).pop();
           },
-          icon: Icon(Icons.arrow_back, color: EventlyColors.black, size: 30),
+          icon: Icon(Icons.arrow_back, color: EventlyColors.blue, size: 30),
         ),
         title: Text(
           "Forget Password",
-          style: textTheme.bodyLarge!.copyWith(
-            fontSize: 20,
-            fontWeight: FontWeight.w600,
-          ),
         ),
       ),
       body: Container(
