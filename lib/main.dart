@@ -1,6 +1,9 @@
+import 'package:bot_toast/bot_toast.dart';
 import 'package:evently/core/constants/theme/evently_theme_manager.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
+import 'core/constants/services/loading_service.dart';
 import 'core/constants/services/local_storage_services.dart';
 import 'core/routes/app_routes.dart';
 import 'core/routes/page_routes_name.dart';
@@ -16,6 +19,9 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  configLoading();
+
   runApp(const MyApp());
 }
 
@@ -29,6 +35,7 @@ class MyApp extends StatelessWidget {
       theme: EventlyThemeManager.eventlyThemeData,
       initialRoute: PageRoutesName.splash,
       onGenerateRoute: AppRoutes.onGenerateRoute,
+      builder: EasyLoading.init(builder: BotToastInit()),
     );
   }
 }

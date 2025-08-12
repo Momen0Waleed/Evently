@@ -1,12 +1,12 @@
 class EventsData {
   static const String collectionName = "event_task";
   String? eventID;
-  final String eventTitle;
-  final String eventDescription;
-  final String eventCategoryImg;
-  final String? eventCategoryId;
+  String eventTitle;
+  String eventDescription;
+  String eventCategoryImg;
+  String? eventCategoryId;
   bool isFavourite;
-  final String selectedDate;
+  DateTime selectedDate;
 
   EventsData({
     this.eventID,
@@ -26,7 +26,7 @@ class EventsData {
       "eventCategoryImg": eventCategoryImg,
       "eventCategoryId": eventCategoryId,
       "isFavourite": isFavourite,
-      "selectedDate": selectedDate,
+      "selectedDate": selectedDate.millisecondsSinceEpoch,
     };
   }
 
@@ -37,8 +37,11 @@ class EventsData {
       eventDescription: json["eventDescription"],
       eventCategoryImg: json["eventCategoryImg"],
       eventCategoryId: json["eventCategoryId"],
-      isFavourite: json["isFavourite'"].toLowerCase == 'true',
-      selectedDate: json["selectedDate"],
+      isFavourite: json["isFavourite"],
+            // .toLowerCase == 'true'
+      // isFavourite: json["isFavourite"] ?? false,
+
+      selectedDate:DateTime.fromMillisecondsSinceEpoch(json["selectedDate"]) ,
     );
   }
 

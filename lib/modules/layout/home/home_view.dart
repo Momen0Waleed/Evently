@@ -1,5 +1,7 @@
 import 'package:evently/core/constants/colors/evently_colors.dart';
 import 'package:evently/core/constants/images/images_name.dart';
+import 'package:evently/core/utils/firebase_firestore.dart';
+import 'package:evently/models/database/events_data.dart';
 import 'package:evently/modules/layout/home/models/category_data.dart';
 import 'package:evently/modules/layout/home/widgets/event_item_widget.dart';
 import 'package:evently/modules/layout/home/widgets/tap_item_widget.dart';
@@ -165,17 +167,81 @@ class _HomeViewState extends State<HomeView> {
             ],
           ),
         ),
-        Expanded(
-          child: ListView.separated(
-            separatorBuilder: (context, index) {
-              return SizedBox(height: 16);
-            },
-            itemCount: categories.length,
-            itemBuilder: (context, index) {
-              return EventItemWidget();
-            },
+
+        StreamBuilder(
+          stream: FirebaseFirestoreUtils.readEventData(
+            catId: categories[currentTabIndex].categoryTitle,
           ),
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              return Center(
+                child: Text(
+                  snapshot.error.toString(),
+                  style: TextStyle(color: EventlyColors.redError),
+                ),
+              );
+            }
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            }
+            List<EventsData> eventDataList = snapshot.data!.docs.map((e) {
+              return e.data();
+            }).toList();
+            if (eventDataList.isEmpty) {
+              String categoryName =
+                  "${categories[currentTabIndex].categoryTitle} Events";
+              if (categoryName == "All Events") categoryName = "Events";
+
+              return Expanded(
+                child: Center(
+                  child: Text(
+                    'You don’t have any $categoryName yet',
+                    style: TextStyle(
+                      color: EventlyColors.blue,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              );
+            }
+            return Expanded(
+              child: ListView.separated(
+                separatorBuilder: (context, index) {
+                  return SizedBox(height: 16);
+                },
+                itemCount: eventDataList.length,
+                itemBuilder: (context, index) {
+                  return EventItemWidget(eventData: eventDataList[index]);
+                },
+              ),
+            );
+          },
         ),
+
+        // FutureBuilder<List<EventsData>>(
+        //     future: FirebaseFirestoreUtils.readEventData(),
+        //     builder: (context,snapshot){
+        //       if(snapshot.hasError){
+        //         return Center(child: Text(snapshot.error.toString(),style: TextStyle(color: EventlyColors.redError),),);
+        //       }
+        //       if(snapshot.connectionState == ConnectionState.waiting){
+        //         return Center(child: CircularProgressIndicator(),);
+        //       }
+        //       List<EventsData> eventDataList = snapshot.data ?? [];
+        //       return  Expanded(
+        //         child: ListView.separated(
+        //           separatorBuilder: (context, index) {
+        //             return SizedBox(height: 16);
+        //           },
+        //           itemCount: eventDataList.length,
+        //           itemBuilder: (context, index) {
+        //             return EventItemWidget(eventData: eventDataList[index]);
+        //           },
+        //         ),
+        //       );
+        //     }),
       ],
     );
   }
