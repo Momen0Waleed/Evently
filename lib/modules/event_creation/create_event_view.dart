@@ -1,0 +1,371 @@
+import 'package:evently/core/constants/images/images_name.dart';
+import 'package:evently/core/constants/services/snackbar_service.dart';
+import 'package:evently/core/utils/firebase_firestore.dart';
+import 'package:evently/models/database/events_data.dart';
+import 'package:evently/modules/authentication/widgets/register_button_widget.dart';
+import 'package:evently/modules/event_creation/widgets/tap_item_widget.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bounceable/flutter_bounceable.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:intl/intl.dart';
+
+import '../../core/constants/colors/evently_colors.dart';
+import '../authentication/widgets/text_field_widget.dart';
+import '../layout/home/models/category_data.dart';
+
+class CreateEventView extends StatefulWidget {
+  const CreateEventView({super.key});
+
+  @override
+  State<CreateEventView> createState() => _CreateEventViewState();
+}
+
+class _CreateEventViewState extends State<CreateEventView> {
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController descriptionController = TextEditingController();
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  DateTime? selectedDate;
+  DateTime? selectedTime;
+  bool isDateValid = true;
+  bool isTimeValid = true;
+
+  int currentTabIndex = 0;
+  List<CategoryData> categories = [
+    CategoryData(
+      categoryTitle: "Sport",
+      categoryIcon: ImagesName.sportIcon,
+      categoryImg: ImagesName.sportImageDark,
+    ),
+    CategoryData(
+      categoryTitle: "Birthday",
+      categoryIcon: ImagesName.birthdayIcon,
+      categoryImg: ImagesName.birthdayImageDark,
+    ),
+    CategoryData(
+      categoryTitle: "Meeting",
+      categoryIcon: ImagesName.sportIcon,
+      categoryImg: ImagesName.meetingImageDark,
+    ),
+    CategoryData(
+      categoryTitle: "Holiday",
+      categoryIcon: ImagesName.birthdayIcon,
+      categoryImg: ImagesName.holidayImageDark,
+    ),
+    CategoryData(
+      categoryTitle: "Gaming",
+      categoryIcon: ImagesName.sportIcon,
+      categoryImg: ImagesName.gamingImageDark,
+    ),
+    CategoryData(
+      categoryTitle: "Eating",
+      categoryIcon: ImagesName.sportIcon,
+      categoryImg: ImagesName.eatingImageDark,
+    ),
+    CategoryData(
+      categoryTitle: "Work Shop",
+      categoryIcon: ImagesName.birthdayIcon,
+      categoryImg: ImagesName.workShopImageDark,
+    ),
+    CategoryData(
+      categoryTitle: "Exhibition",
+      categoryIcon: ImagesName.sportIcon,
+      categoryImg: ImagesName.exhibitionImageDark,
+    ),
+    CategoryData(
+      categoryTitle: "Book Club",
+      categoryIcon: ImagesName.birthdayIcon,
+      categoryImg: ImagesName.bookClubImageDark,
+    ),
+  ];
+  @override
+  Widget build(BuildContext context) {
+    var theme = Theme.of(context);
+    return Scaffold(
+      appBar: AppBar(title: Text("Create Event")),
+      floatingActionButton: Container(
+        width: double.infinity,
+        padding: EdgeInsets.symmetric(horizontal: 16),
+        child: RegisterButtonWidget(
+          bgColor: EventlyColors.blue,
+          child: Text(
+            "Add Event",
+            style: theme.textTheme.titleSmall!.copyWith(
+              color: EventlyColors.white,
+            ),
+          ),
+          buttonAction: () {
+            setState(() {
+              // Validate fields
+              isDateValid = selectedDate != null;
+              isTimeValid = selectedTime != null;
+            });
+
+            if (formKey.currentState!.validate()) {
+              if (!isDateValid || !isTimeValid) {
+                // ScaffoldMessenger.of(context).showSnackBar(
+                //   SnackBar(content: Text('Please select both date and time')),
+                // );
+                return;
+              }
+              final DateTime combinedDateTime = DateTime(
+                selectedDate!.year,
+                selectedDate!.month,
+                selectedDate!.day,
+                selectedTime!.hour,
+                selectedTime!.minute,
+              );
+
+              var eventData = EventsData(
+                eventTitle: nameController.text,
+                eventDescription: descriptionController.text,
+                eventCategoryImg: categories[currentTabIndex].categoryImg,
+                eventCategoryId: categories[currentTabIndex].categoryTitle,
+                selectedDate: combinedDateTime,
+              );
+
+              EasyLoading.show();
+
+              FirebaseFirestoreUtils.createNewEvent(eventData).then((value) {
+                Future.delayed(Duration(seconds: 2), () {
+                  EasyLoading.dismiss();
+                  if (value) {
+                    Navigator.pop(context);
+                    SnackbarService.showSuccessNotification("Event Created");
+                  } else {
+                    SnackbarService.showErrorNotification(
+                      "Something Went Wrong",
+                    );
+                  }
+                });
+              });
+            }
+          },
+        ),
+      ),
+
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      body: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 16),
+        child: SingleChildScrollView(
+          physics: BouncingScrollPhysics(),
+          child: Form(
+            key: formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: Image.asset(categories[currentTabIndex].categoryImg),
+                ),
+                SizedBox(height: 10),
+                DefaultTabController(
+                  length: categories.length,
+                  child: TabBar(
+                    onTap: (index) {
+                      setState(() {
+                        currentTabIndex = index;
+                      });
+                    },
+                    isScrollable: true,
+                    dividerColor: Colors.transparent,
+                    indicator: BoxDecoration(),
+                    tabAlignment: TabAlignment.start,
+                    labelPadding: EdgeInsets.symmetric(horizontal: 4),
+                    tabs: categories.map((category) {
+                      return TapItemWidget(
+                        categoryData: category,
+                        isSelected:
+                            currentTabIndex == categories.indexOf(category),
+                      );
+                    }).toList(),
+                  ),
+                ),
+                SizedBox(height: 20),
+                Text("Title", style: theme.textTheme.bodyLarge),
+                SizedBox(height: 10),
+                TextFieldWidget(
+                  title: 'Event Item',
+                  prefixIcon: ImageIcon(
+                    AssetImage(ImagesName.editTextIcon),
+                    color: EventlyColors.gray,
+                  ),
+                  controller: nameController,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Title is Required";
+                    }
+                    return null;
+                  },
+                ),
+                SizedBox(height: 15),
+                Text("Description", style: theme.textTheme.bodyLarge),
+                SizedBox(height: 10),
+                TextFieldWidget(
+                  controller: descriptionController,
+                  title: 'Event Description',
+                  maxlines: 5,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Description is Required";
+                    }
+                    return null;
+                  },
+                ),
+                SizedBox(height: 20),
+                Row(
+                  children: [
+                    Icon(Icons.calendar_month),
+                    SizedBox(width: 5),
+                    Text("Event Date", style: theme.textTheme.bodyLarge),
+                    Spacer(),
+                    Bounceable(
+                      onTap: () {
+                        getCurrentDate();
+                      },
+                      child: Text(
+                        selectedDate == null
+                            ? "Choose Date"
+                            : DateFormat(
+                                "yyyy MMM dd",
+                              ).format(selectedDate!).toString(),
+                        style: theme.textTheme.bodyLarge!.copyWith(
+                          color: selectedDate == null
+                              ? (isDateValid ? EventlyColors.blue : Colors.red)
+                              : EventlyColors.blue,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 20),
+                // Row(
+                //   children: [
+                //     Icon(Icons.calendar_month),
+                //     SizedBox(width: 5),
+                //     Text("Event Time", style: theme.textTheme.bodyLarge),
+                //     Spacer(),
+                //     Bounceable(
+                //       onTap: () {},
+                //       child: Text(
+                //         "Choose Time",
+                //         style: theme.textTheme.bodyLarge!.copyWith(
+                //           color: EventlyColors.blue,
+                //         ),
+                //       ),
+                //     ),
+                //   ],
+                // ),
+                Row(
+                  children: [
+                    Icon(Icons.access_time),
+                    SizedBox(width: 5),
+                    Text("Event Time", style: theme.textTheme.bodyLarge),
+                    Spacer(),
+                    Bounceable(
+                      onTap: () {
+                        getCurrentTime();
+                      },
+                      child: Text(
+                        selectedTime == null
+                            ? "Choose Time"
+                            : DateFormat(
+                                "h:mm a",
+                              ).format(selectedTime!).toString(),
+                        style: theme.textTheme.bodyLarge!.copyWith(
+                          color: selectedTime == null
+                              ? (isTimeValid ? EventlyColors.blue : Colors.red)
+                              : EventlyColors.blue,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 20),
+                RegisterButtonWidget(
+                  bgColor: EventlyColors.white,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 5.0,
+                    ),
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 45,
+                          height: double.infinity,
+                          padding: const EdgeInsets.all(5.0),
+                          decoration: BoxDecoration(
+                            color: EventlyColors.blue,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Icon(
+                            Icons.my_location_rounded,
+                            size: 26,
+                            color: EventlyColors.white,
+                          ),
+                        ),
+                        SizedBox(width: 10),
+                        Text(
+                          "Choose Event Location",
+                          style: theme.textTheme.bodyLarge!.copyWith(
+                            color: EventlyColors.blue,
+                          ),
+                        ),
+                        Spacer(),
+                        Icon(
+                          Icons.arrow_forward_ios_rounded,
+                          color: EventlyColors.blue,
+                          size: 20,
+                        ),
+                      ],
+                    ),
+                  ),
+                  buttonAction: () {},
+                ),
+                SizedBox(height: 200),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void getCurrentDate() {
+    showDatePicker(
+      initialDate: DateTime.now(),
+      context: context,
+      firstDate: DateTime.now(),
+      lastDate: DateTime.now().add(Duration(days: 365)),
+    ).then((value) {
+      setState(() {
+        selectedDate = value;
+        isDateValid = true;
+      });
+    });
+  }
+
+  void getCurrentTime() async {
+    final TimeOfDay? pickedTime = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+    );
+
+    if (pickedTime != null) {
+      setState(() {
+        // Combine with selectedDate if it exists, or use today
+        final DateTime now = DateTime.now();
+        final DateTime baseDate =
+            selectedDate ?? DateTime(now.year, now.month, now.day);
+        selectedTime = DateTime(
+          baseDate.year,
+          baseDate.month,
+          baseDate.day,
+          pickedTime.hour,
+          pickedTime.minute,
+        );
+        isTimeValid = true;
+      });
+    }
+  }
+}

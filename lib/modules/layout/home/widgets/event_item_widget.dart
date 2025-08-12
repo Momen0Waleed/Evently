@@ -1,10 +1,13 @@
 import 'package:evently/core/constants/colors/evently_colors.dart';
-import 'package:evently/core/constants/images/images_name.dart';
+import 'package:evently/core/utils/firebase_firestore.dart';
+import 'package:evently/models/database/events_data.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bounceable/flutter_bounceable.dart';
+import 'package:intl/intl.dart';
 
 class EventItemWidget extends StatefulWidget {
-  const EventItemWidget({super.key});
-
+  const EventItemWidget({super.key, required this.eventData});
+ final EventsData eventData ;
   @override
   State<EventItemWidget> createState() => _EventItemWidgetState();
 }
@@ -20,7 +23,7 @@ class _EventItemWidgetState extends State<EventItemWidget> {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
         image: DecorationImage(
-          image: AssetImage(ImagesName.sportImageDark),
+          image: AssetImage(widget.eventData.eventCategoryImg),
           fit: BoxFit.cover,
         ),
       ),
@@ -39,7 +42,7 @@ class _EventItemWidgetState extends State<EventItemWidget> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
-                  "21",
+                  DateFormat("dd").format(widget.eventData.selectedDate),
                   style: theme.textTheme.titleSmall!.copyWith(
                     fontWeight: FontWeight.w900,
                   height: 1
@@ -47,7 +50,7 @@ class _EventItemWidgetState extends State<EventItemWidget> {
                   textAlign: TextAlign.center,
                 ),
                 Text(
-                  "Nov",
+                  DateFormat("MMM").format(widget.eventData.selectedDate),
                   style: theme.textTheme.bodyLarge!.copyWith(
                     fontWeight: FontWeight.w700,
                     color: EventlyColors.blue,
@@ -69,7 +72,7 @@ class _EventItemWidgetState extends State<EventItemWidget> {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8.0),
                     child: Text(
-                      "Meeting for Updating The Development Method ",
+                     widget.eventData.eventTitle,
                       style: theme.textTheme.bodyLarge!.copyWith(
                         fontWeight: FontWeight.w600,
                         height: 1.2,
@@ -81,9 +84,17 @@ class _EventItemWidgetState extends State<EventItemWidget> {
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: Icon(
-                    Icons.favorite_border,
-                    color: EventlyColors.black,
+                  child: Bounceable(
+                    onTap: (){
+                      widget.eventData.isFavourite = !widget.eventData.isFavourite;
+                      FirebaseFirestoreUtils.updateEventData(eventData: widget.eventData);
+                    },
+                    child: Icon(
+                      widget.eventData.isFavourite
+                      ? Icons.favorite
+                      : Icons.favorite_border,
+                      color: EventlyColors.blue,
+                    ),
                   ),
                 ),
               ],

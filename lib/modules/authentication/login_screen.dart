@@ -1,17 +1,14 @@
 import 'package:evently/core/constants/colors/evently_colors.dart';
 import 'package:evently/core/constants/images/images_name.dart';
-import 'package:evently/modules/authentication/create_account.dart';
+import 'package:evently/core/routes/page_routes_name.dart';
 import 'package:evently/modules/authentication/widgets/register_button_widget.dart';
 import 'package:evently/modules/authentication/widgets/text_field_widget.dart';
-import 'package:evently/modules/layout/layout_view.dart';
 import 'package:flutter/material.dart';
 
 import '../onboarding/widgets/language_switch.dart';
-import 'forget_password_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
-  static const String routeName = "/Login";
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -57,24 +54,19 @@ class _LoginScreenState extends State<LoginScreen> {
                         TextFieldWidget(
                           title: 'Email',
                           prefixIcon: Icon(Icons.mail_rounded),
-                          isPassword: false,
-                          isName: false,
-                          isLogin: true,
                           controller: mailController,
                         ),
                         TextFieldWidget(
                           title: 'Password',
                           prefixIcon: Icon(Icons.lock_rounded),
                           isPassword: true,
-                          isName: false,
-                          isLogin: true,
                           controller: passwordController,
                         ),
                         Align(
                           alignment: Alignment.centerRight,
                           child: TextButton(
                             onPressed: () {
-                              Navigator.of(context).pushNamed(ForgetPasswordScreen.routeName);
+                              Navigator.of(context).pushNamed(PageRoutesName.forgetPassword);
 
                             },
                             child: Text(
@@ -111,7 +103,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           buttonAction: () {
                             setState(() {
                               if (_formKey.currentState!.validate()) {
-                                Navigator.of(context).pushReplacementNamed(LayoutView.routeName);
+                                Navigator.of(context).pushReplacementNamed(PageRoutesName.layout);
                               }
                             });
                           },
@@ -126,7 +118,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                             TextButton(
                               onPressed: () {
-                                Navigator.of(context).pushNamed(CreateAccount.routeName);
+                                Navigator.of(context).pushNamed(PageRoutesName.register);
                               },
                               style: TextButton.styleFrom(
                                 padding: EdgeInsets.symmetric(horizontal: 2),
@@ -199,57 +191,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   });
                 },
               ),
-              // GestureDetector(
-              //   onTap: () {
-              //     setState(() {
-              //       isLanguageEN = !isLanguageEN;
-              //     });
-              //   },
-              //   child: AnimatedContainer(
-              //     duration: Duration(milliseconds: 800),
-              //     curve: Curves.easeInOut,
-              //     width: 100,
-              //     height: 40,
-              //     decoration: BoxDecoration(
-              //       color: EventlyColors.white,
-              //       borderRadius: BorderRadius.circular(30),
-              //       border: Border.all(width: 3, color: EventlyColors.blue),
-              //     ),
-              //     child: Row(
-              //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //       children: [
-              //         AnimatedContainer(
-              //           duration: Duration(milliseconds: 500),
-              //           decoration: BoxDecoration(
-              //             borderRadius: BorderRadius.circular(18),
-              //             color: isLanguageEN
-              //                 ? EventlyColors.blue
-              //                 : EventlyColors.white,
-              //           ),
-              //           padding: EdgeInsets.only(top: 3, bottom: 3, right: 3),
-              //           child: CircleAvatar(
-              //             radius: 18,
-              //             backgroundImage: AssetImage(ImagesName.flagUS),
-              //           ),
-              //         ),
-              //         AnimatedContainer(
-              //           duration: Duration(milliseconds: 500),
-              //           decoration: BoxDecoration(
-              //             borderRadius: BorderRadius.circular(18),
-              //             color: isLanguageEN
-              //                 ? EventlyColors.white
-              //                 : EventlyColors.blue,
-              //           ),
-              //           padding: EdgeInsets.only(top: 3, bottom: 3, left: 3),
-              //           child: CircleAvatar(
-              //             radius: 18,
-              //             backgroundImage: AssetImage(ImagesName.flagEG),
-              //           ),
-              //         ),
-              //       ],
-              //     ),
-              //   ),
-              // ),
             ),
           ],
         ),

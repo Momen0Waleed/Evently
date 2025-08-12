@@ -35,7 +35,7 @@ abstract class ImagesName{
   static const String birthdayImage = "assets/images/Birthday.png";
   static const String eatingImage = "assets/images/Eating.png";
   static const String holidayImage = "assets/images/Holiday.png";
-  static const String bookClubImage = "assets/images/Birthday.png";
+  static const String bookClubImage = "assets/images/Book Club.png";
   static const String gamingImage = "assets/images/Gaming.png";
   static const String workShopImage = "assets/images/Work Shop.png";
   static const String meetingImage = "assets/images/Meeting.png";
@@ -45,11 +45,12 @@ abstract class ImagesName{
   static const String birthdayImageDark = "assets/images/Birthday dark.png";
   static const String eatingImageDark = "assets/images/Eating dark.png";
   static const String holidayImageDark = "assets/images/Holiday dark.png";
-  static const String bookClubImageDark = "assets/images/Birthday dark.png";
+  static const String bookClubImageDark = "assets/images/Book Club dark.png";
   static const String gamingImageDark = "assets/images/Gaming dark.png";
   static const String workShopImageDark = "assets/images/Work Shop dark.png";
   static const String meetingImageDark = "assets/images/Meeting dark.png";
 
+  static const String editTextIcon = "assets/icons/edit text icon.png";
 }
 
 

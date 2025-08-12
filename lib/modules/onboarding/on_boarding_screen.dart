@@ -1,15 +1,14 @@
 import 'package:evently/core/constants/colors/evently_colors.dart';
+import 'package:evently/core/routes/page_routes_name.dart';
 import 'package:flutter/material.dart';
 
 import '../../core/constants/images/images_name.dart';
 import '../../core/constants/services/local_storage_keys.dart';
 import '../../core/constants/services/local_storage_services.dart';
 import '../../core/constants/strings/main_strings.dart';
-import '../authentication/login_screen.dart';
 
 class OnBoardingScreen extends StatefulWidget {
   const OnBoardingScreen({super.key});
-  static const String routeName = "/OnBoarding";
 
   @override
   State<OnBoardingScreen> createState() => _OnBoardingScreenState();
@@ -241,6 +240,6 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
 
     if (!mounted) return;
 
-    Navigator.pushNamedAndRemoveUntil(context, LoginScreen.routeName,(route) => false);
+    Navigator.pushNamedAndRemoveUntil(context, PageRoutesName.login,(route) => false);
   }
 }
