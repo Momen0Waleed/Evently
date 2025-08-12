@@ -26,7 +26,9 @@ abstract class FirebaseFirestoreUtils {
     }
   }
 
-  static Stream<QuerySnapshot<EventsData>> readEventData({required String catId,}) {
+  static Stream<QuerySnapshot<EventsData>> readEventData({
+    required String catId,
+  }) {
     Query<EventsData> collectionReference;
     if (catId == "All") {
       collectionReference = _getCollectionReference();
@@ -47,11 +49,16 @@ abstract class FirebaseFirestoreUtils {
     return collectionReference.snapshots();
   }
 
-  static Future<void> updateEventData({required EventsData eventData}) {
-    var collectionReference = _getCollectionReference();
-    var documentReference = collectionReference.doc(eventData.eventID);
+  static Future<bool> updateEventData({required EventsData eventData}) {
+    try {
+      var collectionReference = _getCollectionReference();
+      var documentReference = collectionReference.doc(eventData.eventID);
 
-    return documentReference.update(eventData.toJson());
+      documentReference.update(eventData.toJson());
+      return Future.value(true);
+    } catch (e) {
+      return Future.value(false);
+    }
   }
 
   static Future<void> deleteEventData({required EventsData eventData}) {

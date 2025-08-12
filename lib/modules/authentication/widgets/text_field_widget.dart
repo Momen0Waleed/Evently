@@ -13,7 +13,7 @@ class TextFieldWidget extends StatefulWidget {
 
     this.controller,
     this.validator,
-
+    this.onChanged
   });
   final String title;
   final Widget? prefixIcon;
@@ -23,6 +23,7 @@ class TextFieldWidget extends StatefulWidget {
 
   final TextEditingController? controller;
   String? Function(String?)? validator;
+  final ValueChanged<String>? onChanged;
 
   @override
   State<TextFieldWidget> createState() => _TextFieldWidgetState();
@@ -46,6 +47,7 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
         maxLines: widget.maxlines,
         minLines: widget.minlines,
         validator: widget.validator,
+        onChanged: widget.onChanged,
         obscureText: widget.isPassword
             ? (widget.isPassword ? obscurePassword : false)
             : false,
