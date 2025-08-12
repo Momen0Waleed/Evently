@@ -1,5 +1,6 @@
 import 'package:evently/core/constants/images/images_name.dart';
 import 'package:evently/core/constants/services/snackbar_service.dart';
+import 'package:evently/core/routes/page_routes_name.dart';
 import 'package:evently/core/utils/firebase_firestore.dart';
 import 'package:evently/models/database/events_data.dart';
 import 'package:evently/modules/authentication/widgets/register_button_widget.dart';
@@ -14,13 +15,39 @@ import '../authentication/widgets/text_field_widget.dart';
 import '../layout/home/models/category_data.dart';
 
 class CreateEventView extends StatefulWidget {
-  const CreateEventView({super.key});
+  const CreateEventView({super.key, this.eventsData});
+  final EventsData? eventsData;
 
   @override
   State<CreateEventView> createState() => _CreateEventViewState();
 }
 
 class _CreateEventViewState extends State<CreateEventView> {
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (widget.eventsData != null) {
+      // Fill text fields
+      nameController.text = widget.eventsData!.eventTitle;
+      descriptionController.text = widget.eventsData!.eventDescription;
+
+      // Set category index (find the matching category by title or img)
+      final index = categories.indexWhere(
+            (cat) => cat.categoryTitle == widget.eventsData!.eventCategoryId,
+      );
+      if (index != -1) {
+        currentTabIndex = index;
+      }
+
+      // Set date & time
+      selectedDate = widget.eventsData!.selectedDate;
+      selectedTime = widget.eventsData!.selectedDate; // same field since your model stores date+time
+    }
+  }
+
+
   final TextEditingController nameController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
@@ -81,14 +108,14 @@ class _CreateEventViewState extends State<CreateEventView> {
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
     return Scaffold(
-      appBar: AppBar(title: Text("Create Event")),
+      appBar: AppBar(title: Text( widget.eventsData == null ? "Create Event" : "Edit Event")),
       floatingActionButton: Container(
         width: double.infinity,
         padding: EdgeInsets.symmetric(horizontal: 16),
         child: RegisterButtonWidget(
           bgColor: EventlyColors.blue,
           child: Text(
-            "Add Event",
+            widget.eventsData == null ? "Add Event" : "Update Event",
             style: theme.textTheme.titleSmall!.copyWith(
               color: EventlyColors.white,
             ),
@@ -102,9 +129,6 @@ class _CreateEventViewState extends State<CreateEventView> {
 
             if (formKey.currentState!.validate()) {
               if (!isDateValid || !isTimeValid) {
-                // ScaffoldMessenger.of(context).showSnackBar(
-                //   SnackBar(content: Text('Please select both date and time')),
-                // );
                 return;
               }
               final DateTime combinedDateTime = DateTime(
@@ -116,6 +140,7 @@ class _CreateEventViewState extends State<CreateEventView> {
               );
 
               var eventData = EventsData(
+                eventID: widget.eventsData?.eventID,
                 eventTitle: nameController.text,
                 eventDescription: descriptionController.text,
                 eventCategoryImg: categories[currentTabIndex].categoryImg,
@@ -125,12 +150,37 @@ class _CreateEventViewState extends State<CreateEventView> {
 
               EasyLoading.show();
 
-              FirebaseFirestoreUtils.createNewEvent(eventData).then((value) {
+              // FirebaseFirestoreUtils.createNewEvent(eventData).then((value) {
+              //   Future.delayed(Duration(seconds: 2), () {
+              //     EasyLoading.dismiss();
+              //     if (value) {
+              //       Navigator.pop(context);
+              //       SnackbarService.showSuccessNotification("Event Created");
+              //     } else {
+              //       SnackbarService.showErrorNotification(
+              //         "Something Went Wrong",
+              //       );
+              //     }
+              //   });
+              // });
+
+              Future<bool> operation;
+              if (widget.eventsData == null) {
+                operation = FirebaseFirestoreUtils.createNewEvent(eventData);
+              } else {
+                operation = FirebaseFirestoreUtils.updateEventData(eventData: eventData);
+              }
+
+              operation.then((value) {
                 Future.delayed(Duration(seconds: 2), () {
                   EasyLoading.dismiss();
                   if (value) {
-                    Navigator.pop(context);
-                    SnackbarService.showSuccessNotification("Event Created");
+                    Navigator.pushNamed(context,PageRoutesName.layout);
+                    SnackbarService.showSuccessNotification(
+                      widget.eventsData == null
+                          ? "Event Created"
+                          : "Event Updated",
+                    );
                   } else {
                     SnackbarService.showErrorNotification(
                       "Something Went Wrong",

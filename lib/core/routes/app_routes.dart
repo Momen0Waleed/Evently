@@ -2,6 +2,7 @@ import 'package:evently/core/routes/page_routes_name.dart';
 import 'package:evently/modules/authentication/create_account.dart';
 import 'package:evently/modules/authentication/forget_password_screen.dart';
 import 'package:evently/modules/authentication/login_screen.dart';
+import 'package:evently/modules/event_details/view_event_details.dart';
 import 'package:evently/modules/layout/layout_view.dart';
 import 'package:evently/modules/onboarding/first_settings_screen.dart';
 import 'package:evently/modules/onboarding/on_boarding_screen.dart';
@@ -51,6 +52,11 @@ abstract class AppRoutes {
       case PageRoutesName.eventCreation:
         return MaterialPageRoute(
           builder: (_) => CreateEventView(),
+          settings: settings,
+        );
+      case PageRoutesName.eventDetails:
+        return MaterialPageRoute(
+          builder: (_) => ViewEventDetails(),
           settings: settings,
         );
         

@@ -51,6 +51,9 @@ abstract class ImagesName{
   static const String meetingImageDark = "assets/images/Meeting dark.png";
 
   static const String editTextIcon = "assets/icons/edit text icon.png";
+
+  static const String deleteEventIcon = "assets/icons/Delete Event Icon.png";
+  static const String updateEventIcon = "assets/icons/Update Event Icon.png";
 }
 
 

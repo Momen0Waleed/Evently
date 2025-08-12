@@ -6,8 +6,17 @@ import 'package:flutter/material.dart';
 
 import '../../authentication/widgets/text_field_widget.dart';
 
-class FavouriteView extends StatelessWidget {
+class FavouriteView extends StatefulWidget {
   const FavouriteView({super.key});
+
+  @override
+  State<FavouriteView> createState() => _FavouriteViewState();
+}
+
+class _FavouriteViewState extends State<FavouriteView> {
+
+  final TextEditingController _searchController = TextEditingController();
+  String _searchQuery = '';
 
   @override
   Widget build(BuildContext context) {
@@ -18,6 +27,12 @@ class FavouriteView extends StatelessWidget {
           child: TextFieldWidget(
             title: 'Search',
             prefixIcon: Icon(Icons.search_rounded, color: EventlyColors.blue),
+            controller: _searchController,
+            onChanged: (value) {
+              setState(() {
+                _searchQuery = value.toLowerCase();
+              });
+            },
           ),
         ),
         StreamBuilder(
@@ -34,9 +49,12 @@ class FavouriteView extends StatelessWidget {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(child: CircularProgressIndicator());
             }
-            List<EventsData> eventDataList = snapshot.data!.docs.map((e) {
-              return e.data();
-            }).toList();
+            List<EventsData> eventDataList = snapshot.data!.docs
+                .map((e) => e.data())
+                .where((event) => event.eventTitle
+                .toLowerCase()
+                .contains(_searchQuery))
+                .toList();
             if (eventDataList.isEmpty) {
               return Expanded(
                 child: Center(
