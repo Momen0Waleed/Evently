@@ -182,7 +182,10 @@ class _HomeViewState extends State<HomeView> {
               );
             }
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
+              return Padding(
+                padding: const EdgeInsets.only(top: 30.0),
+                child: Center(child: CircularProgressIndicator()),
+              );
             }
             List<EventsData> eventDataList = snapshot.data!.docs.map((e) {
               return e.data();

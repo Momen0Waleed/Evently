@@ -47,7 +47,10 @@ class _FavouriteViewState extends State<FavouriteView> {
               );
             }
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
+              return Padding(
+                padding: const EdgeInsets.only(top: 30.0),
+                child: Center(child: CircularProgressIndicator()),
+              );
             }
             List<EventsData> eventDataList = snapshot.data!.docs
                 .map((e) => e.data())
