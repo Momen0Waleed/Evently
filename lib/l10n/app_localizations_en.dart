@@ -89,4 +89,70 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get password_not_match => 'Passwords do not match';
+
+  @override
+  String get welcome_back => 'Welcome Back ✨';
+
+  @override
+  String get no_fav_events => 'You don’t have any Favourite Events yet';
+
+  @override
+  String get search => 'Search';
+
+  @override
+  String get logout => 'Logout';
+
+  @override
+  String get create_event => 'Create Event';
+
+  @override
+  String get edit_event => 'Edit Event';
+
+  @override
+  String get add_event => 'Add Event';
+
+  @override
+  String get update_event => 'Update Event';
+
+  @override
+  String get event_created => 'Event Created';
+
+  @override
+  String get event_updated => 'Event Updated';
+
+  @override
+  String get something_went_wrong => 'Something Went Wrong';
+
+  @override
+  String get title => 'Title';
+
+  @override
+  String get event_item => 'Event Item';
+
+  @override
+  String get title_required => 'Title is Required';
+
+  @override
+  String get description => 'Description';
+
+  @override
+  String get event_description => 'Event Description';
+
+  @override
+  String get description_is_required => 'Description is Required';
+
+  @override
+  String get event_date => 'Event Date';
+
+  @override
+  String get choose_date => 'Choose Date';
+
+  @override
+  String get event_time => 'Event Time';
+
+  @override
+  String get choose_time => 'Choose Time';
+
+  @override
+  String get choose_loc => 'Choose Event Location';
 }

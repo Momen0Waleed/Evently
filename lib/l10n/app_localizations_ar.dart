@@ -90,4 +90,70 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get password_not_match => 'كلمات المرور غير متطابقة';
+
+  @override
+  String get welcome_back => 'مرحباً بعودنك ✨';
+
+  @override
+  String get no_fav_events => 'ليس لديك أي أحداث مفضلة حتي الأن';
+
+  @override
+  String get search => 'بحث';
+
+  @override
+  String get logout => 'تسجيل الخروج';
+
+  @override
+  String get create_event => 'إنشاء حدث';
+
+  @override
+  String get edit_event => 'تعديل حدث';
+
+  @override
+  String get add_event => 'إضافة حدث';
+
+  @override
+  String get update_event => 'تعديل حدث';
+
+  @override
+  String get event_created => 'تم إنشاء الحدث';
+
+  @override
+  String get event_updated => 'تم تعديل الحدث';
+
+  @override
+  String get something_went_wrong => 'لقد حدث خطأ ما';
+
+  @override
+  String get title => 'العنوان';
+
+  @override
+  String get event_item => 'اسم الجدث';
+
+  @override
+  String get title_required => 'الإسم مطلوب';
+
+  @override
+  String get description => 'الوصف';
+
+  @override
+  String get event_description => 'وصف الحدث';
+
+  @override
+  String get description_is_required => 'الوصف مطلوب';
+
+  @override
+  String get event_date => 'تاريخ الحدث';
+
+  @override
+  String get choose_date => 'اختر التاريخ';
+
+  @override
+  String get event_time => 'وقت الحدث';
+
+  @override
+  String get choose_time => 'اختر الوقت';
+
+  @override
+  String get choose_loc => 'اختر موقع الحدث';
 }

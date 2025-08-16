@@ -1,8 +1,11 @@
 import 'package:evently/core/constants/colors/evently_colors.dart';
 import 'package:evently/core/utils/firebase_firestore.dart';
+import 'package:evently/l10n/app_localizations.dart';
 import 'package:evently/models/database/events_data.dart';
 import 'package:evently/modules/layout/home/widgets/event_item_widget.dart';
+import 'package:evently/modules/settings_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../authentication/widgets/text_field_widget.dart';
 
@@ -20,12 +23,15 @@ class _FavouriteViewState extends State<FavouriteView> {
 
   @override
   Widget build(BuildContext context) {
+    var local = AppLocalizations.of(context)!;
+    var provider = Provider.of<SettingsProvider>(context);
     return Column(
       children: [
         Padding(
           padding: const EdgeInsets.only(top: 40.0),
           child: TextFieldWidget(
-            title: 'Search',
+            color: provider.isDark() ? EventlyColors.dark : EventlyColors.white,
+            title: local.search,
             prefixIcon: Icon(Icons.search_rounded, color: EventlyColors.blue),
             controller: _searchController,
             onChanged: (value) {
@@ -62,7 +68,7 @@ class _FavouriteViewState extends State<FavouriteView> {
               return Expanded(
                 child: Center(
                   child: Text(
-                    'You don’t have any Favourite Events yet',
+                    local.no_fav_events,
                     style: TextStyle(
                       color: EventlyColors.blue,
                       fontSize: 16,

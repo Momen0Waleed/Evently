@@ -10,6 +10,7 @@ class TextFieldWidget extends StatefulWidget {
     this.isPassword = false,
     this.maxlines = 1,
     this.minlines,
+    this.color =  Colors.white,
 
     this.controller,
     this.validator,
@@ -20,6 +21,7 @@ class TextFieldWidget extends StatefulWidget {
   final bool isPassword;
   final int? maxlines;
   final int? minlines;
+  final Color color;
 
   final TextEditingController? controller;
   String? Function(String?)? validator;
@@ -53,7 +55,7 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
             : false,
         decoration: InputDecoration(
           filled: true,
-          fillColor: EventlyColors.white,
+          fillColor: widget.color,
           hintText: widget.title,
           hintStyle: theme.bodyMedium,
           enabledBorder: OutlineInputBorder(

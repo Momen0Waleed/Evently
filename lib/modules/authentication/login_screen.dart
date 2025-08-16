@@ -57,11 +57,13 @@ class _LoginScreenState extends State<LoginScreen> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         TextFieldWidget(
+                          color: provider.isDark() ? Colors.transparent : EventlyColors.white,
                           title: local.email,
                           prefixIcon: Icon(Icons.mail_rounded),
                           controller: mailController,
                         ),
                         TextFieldWidget(
+                          color: provider.isDark() ? Colors.transparent : EventlyColors.white,
                           title: local.password,
                           prefixIcon: Icon(Icons.lock_rounded),
                           isPassword: true,
@@ -119,7 +121,9 @@ class _LoginScreenState extends State<LoginScreen> {
                           children: [
                             Text(
                               local.dont_have_acc,
-                              style: theme.bodyLarge,
+                              style: theme.bodyLarge!.copyWith(
+                                  color: provider.isDark() ?  EventlyColors.white : EventlyColors.black,
+                              ),
                             ),
                             TextButton(
                               onPressed: () {
@@ -165,7 +169,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
                         /// Google Login Button
                         RegisterButtonWidget(
-                          bgColor: EventlyColors.white,
+                        bgColor: provider.isDark() ? Colors.transparent : EventlyColors.white,
+
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,

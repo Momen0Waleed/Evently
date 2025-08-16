@@ -1,6 +1,7 @@
 import 'package:animated_custom_dropdown/custom_dropdown.dart';
 import 'package:evently/core/constants/colors/evently_colors.dart';
 import 'package:evently/core/constants/images/images_name.dart';
+import 'package:evently/core/routes/page_routes_name.dart' show PageRoutesName;
 import 'package:evently/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart' show Provider;
@@ -33,7 +34,14 @@ class _ProfileViewState extends State<ProfileView> {
           padding: EdgeInsets.only(top: 25, left: 16, right: 16),
           decoration: BoxDecoration(
             color: theme.primaryColor,
-            borderRadius: BorderRadius.only(bottomLeft: Radius.circular(65)),
+            borderRadius: BorderRadius.only(
+              bottomLeft: provider.isEnglish()
+                  ? Radius.circular(65)
+                  : Radius.circular(0),
+              bottomRight: provider.isEnglish()
+                  ? Radius.circular(0)
+                  : Radius.circular(65),
+            ),
           ),
           child: Row(
             spacing: 16,
@@ -77,7 +85,9 @@ class _ProfileViewState extends State<ProfileView> {
           child: Text(
             local.languages,
             style: theme.textTheme.headlineSmall!.copyWith(
-              color: provider.isDark() ? EventlyColors.white :  EventlyColors.black,
+              color: provider.isDark()
+                  ? EventlyColors.white
+                  : EventlyColors.black,
             ),
           ),
         ),
@@ -85,7 +95,6 @@ class _ProfileViewState extends State<ProfileView> {
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 16),
           child: CustomDropdown<String>(
-
             items: languages,
             initialItem: provider.currentLanguage == "en"
                 ? "English"
@@ -94,7 +103,6 @@ class _ProfileViewState extends State<ProfileView> {
               provider.changeLanguage(value! == "English" ? "en" : "ar");
             },
             decoration: CustomDropdownDecoration(
-
               closedFillColor: Colors.transparent,
               // expandedFillColor: Colors.transparent,
               closedBorder: BoxBorder.all(
@@ -117,7 +125,9 @@ class _ProfileViewState extends State<ProfileView> {
           child: Text(
             local.theme_mode,
             style: theme.textTheme.headlineSmall!.copyWith(
-              color: provider.isDark() ? EventlyColors.white :  EventlyColors.black,
+              color: provider.isDark()
+                  ? EventlyColors.white
+                  : EventlyColors.black,
             ),
           ),
         ),
@@ -149,6 +159,40 @@ class _ProfileViewState extends State<ProfileView> {
             ),
           ),
         ),
+        Spacer(),
+        GestureDetector(
+          onTap: (){
+            Navigator.of(context).pushNamed(PageRoutesName.login);
+          },
+          child: Container(
+            width: double.infinity,
+            height: 55,
+            padding: const EdgeInsets.all(8.0),
+            margin:  const EdgeInsets.all(8.0),
+            decoration: BoxDecoration(
+              color: EventlyColors.redError,
+              borderRadius: BorderRadius.circular(16)
+            ),
+            child: Padding(
+              padding: const EdgeInsets.only(left: 16.0),
+              child: Row(
+                spacing: 10,
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Icon(Icons.logout,color: EventlyColors.white,size: 25,),
+                  Text(
+                  local.logout,
+                  style: theme.textTheme.titleMedium!.copyWith(
+                    color: EventlyColors.white,
+                  ),
+                ),
+                ]
+              ),
+            ),
+          ),
+        ),
+        SizedBox(height: 40,)
       ],
     );
   }

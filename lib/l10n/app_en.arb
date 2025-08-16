@@ -7,6 +7,7 @@
     "theme_mode": "Theme Mode",
     "light": "Light",
     "dark": "Dark",
+
     "email": "Email",
     "password": "Password",
     "forget_password": "Forget Password?",
@@ -25,5 +26,35 @@
     "pls_confirm_ur_password": "Please confirm your password",
     "enter_valid_email": "Enter a valid email (ex: example@mail.com)",
     "password_instructions": "Password must contain uppercase, lowercase,\nnumber, and special character.",
-    "password_not_match": "Passwords do not match"
+    "password_not_match": "Passwords do not match",
+
+    "welcome_back": "Welcome Back ✨",
+
+    "no_fav_events": "You don’t have any Favourite Events yet",
+    "search": "Search",
+
+    "logout": "Logout",
+
+    "create_event": "Create Event",
+    "edit_event": "Edit Event",
+    "add_event": "Add Event",
+    "update_event": "Update Event",
+    "event_created": "Event Created",
+    "event_updated": "Event Updated",
+    "something_went_wrong": "Something Went Wrong",
+    "title": "Title",
+    "event_item": "Event Item",
+    "title_required": "Title is Required",
+    "description": "Description",
+    "event_description": "Event Description",
+    "description_is_required": "Description is Required",
+    "event_date": "Event Date",
+    "choose_date": "Choose Date",
+    "event_time": "Event Time",
+    "choose_time": "Choose Time",
+    "choose_loc": "Choose Event Location"
+
+
+
+
 }

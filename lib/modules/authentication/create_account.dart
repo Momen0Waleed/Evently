@@ -36,6 +36,7 @@ class _CreateAccountState extends State<CreateAccount> {
 
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: provider.isDark() ? EventlyColors.dark:EventlyColors.white,
         leading: IconButton(
           onPressed: () {
             Navigator.of(context).pop();
@@ -63,6 +64,7 @@ class _CreateAccountState extends State<CreateAccount> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     TextFieldWidget(
+                      color: provider.isDark() ? Colors.transparent : EventlyColors.white,
                       title: local.name,
                       prefixIcon: Icon(
                         Icons.person_rounded,
@@ -72,6 +74,7 @@ class _CreateAccountState extends State<CreateAccount> {
                       controller:nameController,
                     ),
                     TextFieldWidget(
+                      color: provider.isDark() ? Colors.transparent : EventlyColors.white,
                       title: local.email,
                       prefixIcon: Icon(
                         Icons.mail_rounded,
@@ -81,6 +84,7 @@ class _CreateAccountState extends State<CreateAccount> {
                       controller:mailController,
                     ),
                     TextFieldWidget(
+                      color: provider.isDark() ? Colors.transparent : EventlyColors.white,
                       title: local.password,
                       prefixIcon: Icon(
                         Icons.lock_rounded,
@@ -91,6 +95,7 @@ class _CreateAccountState extends State<CreateAccount> {
                       controller: passwordController,
                     ),
                     TextFieldWidget(
+                      color: provider.isDark() ? Colors.transparent : EventlyColors.white,
                       title: local.re_password,
                       prefixIcon: Icon(
                         Icons.lock_rounded,
@@ -125,7 +130,9 @@ class _CreateAccountState extends State<CreateAccount> {
                       children: [
                         Text(
                           local.already_have_acc,
-                          style: textTheme.bodyLarge,
+                          style: textTheme.bodyLarge!.copyWith(
+                            color: provider.isDark() ? EventlyColors.white : EventlyColors.black,
+                          ),
                         ),
                         TextButton(
                           onPressed: () {
