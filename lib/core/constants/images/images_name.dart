@@ -54,6 +54,8 @@ abstract class ImagesName{
 
   static const String deleteEventIcon = "assets/icons/Delete Event Icon.png";
   static const String updateEventIcon = "assets/icons/Update Event Icon.png";
+
+  static const String profileImage = "assets/images/Route profile image.jpg";
 }
 
 
