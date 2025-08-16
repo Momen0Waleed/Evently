@@ -31,4 +31,63 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get dark => 'داكن';
+
+  @override
+  String get email => 'البريد الإلكتروني';
+
+  @override
+  String get password => 'كلمة المرور';
+
+  @override
+  String get forget_password => 'نسيت كلمة المرور؟';
+
+  @override
+  String get login => 'تسجيل الدخول';
+
+  @override
+  String get dont_have_acc => 'ليس لديك حساب ؟';
+
+  @override
+  String get create_acc => 'أنشئ حساب';
+
+  @override
+  String get or => 'أو';
+
+  @override
+  String get login_with_google => 'تسجيل بإستخدام جوجل';
+
+  @override
+  String get reset_password => 'إعادة تعيين كلمة المرور';
+
+  @override
+  String get register => 'تسجيل';
+
+  @override
+  String get name => 'الأسم';
+
+  @override
+  String get re_password => 'إعادة تعيين كلمة المرور';
+
+  @override
+  String get already_have_acc => 'هل لديك حساب بالفعل ؟';
+
+  @override
+  String get pass_is_required => 'مطلوبة';
+
+  @override
+  String get email_is_required => 'مطلوب';
+
+  @override
+  String get pls_confirm_ur_password => 'الرجاء تأكيد كلمة المرور';
+
+  @override
+  String get enter_valid_email =>
+      'ادخل كلمة مرور صحيحة (مثل: example@mail.com)';
+
+  @override
+  String get password_instructions =>
+      'كلمة المرور يجب أن تحتوي علي حرف كبير و حرف صغير\nو رقم و رمز';
+
+  @override
+  String get password_not_match => 'كلمات المرور غير متطابقة';
 }

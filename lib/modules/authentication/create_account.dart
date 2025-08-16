@@ -1,7 +1,10 @@
 import 'package:evently/core/routes/page_routes_name.dart';
+import 'package:evently/l10n/app_localizations.dart';
 import 'package:evently/modules/authentication/widgets/register_button_widget.dart';
 import 'package:evently/modules/authentication/widgets/text_field_widget.dart';
+import 'package:evently/modules/settings_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../core/constants/colors/evently_colors.dart';
 import '../../core/constants/images/images_name.dart';
@@ -28,6 +31,9 @@ class _CreateAccountState extends State<CreateAccount> {
     var textTheme = Theme.of(context).textTheme;
     var dynamicSize = MediaQuery.of(context).size;
 
+    var local = AppLocalizations.of(context)!;
+    var provider = Provider.of<SettingsProvider>(context);
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -37,8 +43,7 @@ class _CreateAccountState extends State<CreateAccount> {
           icon: Icon(Icons.arrow_back, color: EventlyColors.blue, size: 30),
         ),
         title: Text(
-          "Register",
-
+        local.register,
         ),
       ),
       body: Padding(
@@ -58,7 +63,7 @@ class _CreateAccountState extends State<CreateAccount> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     TextFieldWidget(
-                      title: 'Name',
+                      title: local.name,
                       prefixIcon: Icon(
                         Icons.person_rounded,
                         color: EventlyColors.gray,
@@ -67,7 +72,7 @@ class _CreateAccountState extends State<CreateAccount> {
                       controller:nameController,
                     ),
                     TextFieldWidget(
-                      title: 'Email',
+                      title: local.email,
                       prefixIcon: Icon(
                         Icons.mail_rounded,
                         color: EventlyColors.gray,
@@ -76,7 +81,7 @@ class _CreateAccountState extends State<CreateAccount> {
                       controller:mailController,
                     ),
                     TextFieldWidget(
-                      title: 'Password',
+                      title: local.password,
                       prefixIcon: Icon(
                         Icons.lock_rounded,
                         color: EventlyColors.gray,
@@ -86,7 +91,7 @@ class _CreateAccountState extends State<CreateAccount> {
                       controller: passwordController,
                     ),
                     TextFieldWidget(
-                      title: 'Re-Password',
+                      title: local.re_password,
                       prefixIcon: Icon(
                         Icons.lock_rounded,
                         color: EventlyColors.gray,
@@ -98,7 +103,7 @@ class _CreateAccountState extends State<CreateAccount> {
                     RegisterButtonWidget(
                       bgColor: EventlyColors.blue,
                       child: Text(
-                        "Create Account",
+                        local.create_acc,
                         style: textTheme.titleMedium!.copyWith(
                           color: EventlyColors.white,
                         ),
@@ -119,7 +124,7 @@ class _CreateAccountState extends State<CreateAccount> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
-                          "Already Have Account ?",
+                          local.already_have_acc,
                           style: textTheme.bodyLarge,
                         ),
                         TextButton(
@@ -129,7 +134,7 @@ class _CreateAccountState extends State<CreateAccount> {
                             ).pushNamed(PageRoutesName.login);
                           },
                           child: Text(
-                            "Login",
+                            local.login,
                             style: textTheme.bodyLarge!.copyWith(
                               color: EventlyColors.blue,
                               fontStyle: FontStyle.italic,
@@ -152,6 +157,11 @@ class _CreateAccountState extends State<CreateAccount> {
                   setState(() {
                     isLanguageEN = value;
                   });
+                  provider.changeLanguage(isLanguageEN ? "en" : "ar");
+                  // _formKey.currentState?.validate();
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    _formKey.currentState?.validate();
+                  });
                 },
               ),
             ),
@@ -162,34 +172,34 @@ class _CreateAccountState extends State<CreateAccount> {
   }
   String? validateEmail(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Email is required';
+      return "${AppLocalizations.of(context)!.email} ${AppLocalizations.of(context)!.email_is_required}";
     }
     final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
     if (!emailRegex.hasMatch(value)) {
-      return 'Enter a valid email (ex: example@mail.com)';
+      return AppLocalizations.of(context)!.enter_valid_email;
     }
     return null;
   }
 
   String? validatePassword(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Password is required';
+      return "${AppLocalizations.of(context)!.password} ${AppLocalizations.of(context)!.pass_is_required}";
     }
     final passwordRegex = RegExp(
       r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#\$&*~]).{8,}$',
     );
     if (!passwordRegex.hasMatch(value)) {
-      return 'Password must contain uppercase, lowercase,\nnumber, and special character.';
+      return AppLocalizations.of(context)!.password_instructions;
     }
     return null;
   }
 
   String? validateConfirmPassword(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Please confirm your password';
+      return AppLocalizations.of(context)!.pls_confirm_ur_password;
     }
     if (value != passwordController.text) {
-      return 'Passwords do not match';
+      return AppLocalizations.of(context)!.password_not_match;
     }
     return null;
   }

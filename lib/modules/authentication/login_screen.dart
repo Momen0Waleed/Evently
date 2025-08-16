@@ -1,9 +1,12 @@
 import 'package:evently/core/constants/colors/evently_colors.dart';
 import 'package:evently/core/constants/images/images_name.dart';
 import 'package:evently/core/routes/page_routes_name.dart';
+import 'package:evently/l10n/app_localizations.dart';
 import 'package:evently/modules/authentication/widgets/register_button_widget.dart';
 import 'package:evently/modules/authentication/widgets/text_field_widget.dart';
+import 'package:evently/modules/settings_provider.dart' show SettingsProvider;
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart' show Provider;
 
 import '../onboarding/widgets/language_switch.dart';
 
@@ -25,6 +28,8 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     var dynamicSize = MediaQuery.of(context).size;
     var theme = Theme.of(context).textTheme;
+    var local = AppLocalizations.of(context)!;
+    var provider = Provider.of<SettingsProvider>(context);
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -52,12 +57,12 @@ class _LoginScreenState extends State<LoginScreen> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         TextFieldWidget(
-                          title: 'Email',
+                          title: local.email,
                           prefixIcon: Icon(Icons.mail_rounded),
                           controller: mailController,
                         ),
                         TextFieldWidget(
-                          title: 'Password',
+                          title: local.password,
                           prefixIcon: Icon(Icons.lock_rounded),
                           isPassword: true,
                           controller: passwordController,
@@ -70,7 +75,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                             },
                             child: Text(
-                              "Forget Password?",
+                              local.forget_password,
                               style: theme.bodyLarge!.copyWith(
                                 color: EventlyColors.blue,
                                 fontStyle: FontStyle.italic,
@@ -94,7 +99,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         RegisterButtonWidget(
                           bgColor: EventlyColors.blue,
                           child: Text(
-                            "Login",
+                            local.login,
                             style: theme.titleMedium!.copyWith(
                               color: EventlyColors.white,
                             ),
@@ -113,7 +118,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text(
-                              "Don’t Have Account ?",
+                              local.dont_have_acc,
                               style: theme.bodyLarge,
                             ),
                             TextButton(
@@ -124,7 +129,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 padding: EdgeInsets.symmetric(horizontal: 2),
                               ),
                               child: Text(
-                                "Create Account",
+                                local.create_acc,
                                 style: theme.bodyLarge!.copyWith(
                                   color: EventlyColors.blue,
                                   fontStyle: FontStyle.italic,
@@ -146,7 +151,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 endIndent: 10,
                               ),
                             ),
-                            Text(" Or ", style: theme.bodyLarge),
+                            Text(" ${local.or} ", style: theme.bodyLarge),
                             Expanded(
                               child: Divider(
                                 height: 3,
@@ -168,7 +173,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               Image.asset(ImagesName.googleIcon, height: 30),
                               SizedBox(width: 10),
                               Text(
-                                "Login With Google",
+                                local.login_with_google,
                                 style: theme.titleSmall,
                               ),
                             ],
@@ -189,6 +194,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   setState(() {
                     isLanguageEN = value;
                   });
+                  provider.changeLanguage(isLanguageEN ? "en" : "ar");
                 },
               ),
             ),

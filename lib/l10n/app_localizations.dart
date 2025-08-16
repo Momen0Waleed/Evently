@@ -145,6 +145,120 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Dark'**
   String get dark;
+
+  /// No description provided for @email.
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get email;
+
+  /// No description provided for @password.
+  ///
+  /// In en, this message translates to:
+  /// **'Password'**
+  String get password;
+
+  /// No description provided for @forget_password.
+  ///
+  /// In en, this message translates to:
+  /// **'Forget Password?'**
+  String get forget_password;
+
+  /// No description provided for @login.
+  ///
+  /// In en, this message translates to:
+  /// **'Login'**
+  String get login;
+
+  /// No description provided for @dont_have_acc.
+  ///
+  /// In en, this message translates to:
+  /// **'Don\'t Have Account ?'**
+  String get dont_have_acc;
+
+  /// No description provided for @create_acc.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Account'**
+  String get create_acc;
+
+  /// No description provided for @or.
+  ///
+  /// In en, this message translates to:
+  /// **'Or'**
+  String get or;
+
+  /// No description provided for @login_with_google.
+  ///
+  /// In en, this message translates to:
+  /// **'Login With Google'**
+  String get login_with_google;
+
+  /// No description provided for @reset_password.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset Password'**
+  String get reset_password;
+
+  /// No description provided for @register.
+  ///
+  /// In en, this message translates to:
+  /// **'Register'**
+  String get register;
+
+  /// No description provided for @name.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get name;
+
+  /// No description provided for @re_password.
+  ///
+  /// In en, this message translates to:
+  /// **'Re-Password'**
+  String get re_password;
+
+  /// No description provided for @already_have_acc.
+  ///
+  /// In en, this message translates to:
+  /// **'Already Have Account ?'**
+  String get already_have_acc;
+
+  /// No description provided for @pass_is_required.
+  ///
+  /// In en, this message translates to:
+  /// **'is required'**
+  String get pass_is_required;
+
+  /// No description provided for @email_is_required.
+  ///
+  /// In en, this message translates to:
+  /// **'is required'**
+  String get email_is_required;
+
+  /// No description provided for @pls_confirm_ur_password.
+  ///
+  /// In en, this message translates to:
+  /// **'Please confirm your password'**
+  String get pls_confirm_ur_password;
+
+  /// No description provided for @enter_valid_email.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid email (ex: example@mail.com)'**
+  String get enter_valid_email;
+
+  /// No description provided for @password_instructions.
+  ///
+  /// In en, this message translates to:
+  /// **'Password must contain uppercase, lowercase,\nnumber, and special character.'**
+  String get password_instructions;
+
+  /// No description provided for @password_not_match.
+  ///
+  /// In en, this message translates to:
+  /// **'Passwords do not match'**
+  String get password_not_match;
 }
 
 class _AppLocalizationsDelegate
