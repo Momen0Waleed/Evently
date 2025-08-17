@@ -34,6 +34,10 @@ class _EventItemWidgetState extends State<EventItemWidget> {
             image: AssetImage(widget.eventData.eventCategoryImg),
             fit: BoxFit.cover,
           ),
+          border: BoxBorder.all(
+            width: 2,
+            color: provider.isDark() ? EventlyColors.blue : EventlyColors.black
+          )
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

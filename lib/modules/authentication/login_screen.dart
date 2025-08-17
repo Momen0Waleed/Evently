@@ -58,14 +58,20 @@ class _LoginScreenState extends State<LoginScreen> {
                       children: [
                         TextFieldWidget(
                           color: provider.isDark() ? Colors.transparent : EventlyColors.white,
+                          textColor: provider.isDark() ? EventlyColors.white : EventlyColors.gray,
+                          borderColor: provider.isDark() ? EventlyColors.blue : EventlyColors.gray,
+
                           title: local.email,
-                          prefixIcon: Icon(Icons.mail_rounded),
+                          prefixIcon: Icon(Icons.mail_rounded,color: provider.isDark() ? EventlyColors.white : EventlyColors.gray,),
                           controller: mailController,
                         ),
                         TextFieldWidget(
                           color: provider.isDark() ? Colors.transparent : EventlyColors.white,
+                          textColor: provider.isDark() ? EventlyColors.white : EventlyColors.gray,
+                          borderColor: provider.isDark() ? EventlyColors.blue : EventlyColors.gray,
+
                           title: local.password,
-                          prefixIcon: Icon(Icons.lock_rounded),
+                          prefixIcon: Icon(Icons.lock_rounded,color: provider.isDark() ? EventlyColors.white : EventlyColors.gray,),
                           isPassword: true,
                           controller: passwordController,
                         ),

@@ -248,9 +248,11 @@ class _CreateEventViewState extends State<CreateEventView> {
                 TextFieldWidget(
                   color: provider.isDark() ? EventlyColors.dark : EventlyColors.white,
                   title: local.event_item,
+                  textColor: provider.isDark() ? EventlyColors.white : EventlyColors.gray,
+                  borderColor: provider.isDark() ? EventlyColors.blue : EventlyColors.gray,
                   prefixIcon: ImageIcon(
                     AssetImage(ImagesName.editTextIcon),
-                    color: EventlyColors.gray,
+                    color: provider.isDark() ? EventlyColors.white :EventlyColors.gray,
                   ),
                   controller: nameController,
                   validator: (value) {
@@ -269,6 +271,9 @@ class _CreateEventViewState extends State<CreateEventView> {
                   color: provider.isDark() ? EventlyColors.dark : EventlyColors.white,
                   controller: descriptionController,
                   title: local.event_description,
+                  textColor: provider.isDark() ? EventlyColors.white : EventlyColors.gray,
+                  borderColor: provider.isDark() ? EventlyColors.blue : EventlyColors.gray,
+
                   maxlines: 5,
                   validator: (value) {
                     if (value == null || value.isEmpty) {

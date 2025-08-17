@@ -52,7 +52,9 @@
     "choose_date": "Choose Date",
     "event_time": "Event Time",
     "choose_time": "Choose Time",
-    "choose_loc": "Choose Event Location"
+    "choose_loc": "Choose Event Location",
+
+    "event_details": "Event Details",
 
 
 

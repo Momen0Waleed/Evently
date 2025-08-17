@@ -87,7 +87,7 @@ class _HomeViewState extends State<HomeView> {
           height: dynamic.height * 0.25,
           padding: EdgeInsets.only(left: 16, right: 16, top: 40, bottom: 20),
           decoration: BoxDecoration(
-            color: theme.primaryColor,
+            color:provider.isDark() ?EventlyColors.dark : theme.primaryColor,
             borderRadius: BorderRadius.only(
               bottomLeft: Radius.circular(24),
               bottomRight: Radius.circular(24),
@@ -131,7 +131,7 @@ class _HomeViewState extends State<HomeView> {
                             : Icon(
                                 Icons.dark_mode_outlined,
                                 size: 30,
-                                color: EventlyColors.dark,
+                                color: EventlyColors.white,
                               ),
                       ),
                       GestureDetector(
@@ -142,14 +142,13 @@ class _HomeViewState extends State<HomeView> {
                         child: Container(
                           padding: EdgeInsets.all(8),
                           decoration: BoxDecoration(
-                            // color: EventlyColors.white,
-                            color: provider.isDark() ?EventlyColors.dark : EventlyColors.white,
+                            color: EventlyColors.white,
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Text(
                             isEnglish ? "EN" : "AR",
                             style: theme.textTheme.labelSmall!.copyWith(
-                              color: EventlyColors.blue,
+                              color: provider.isDark() ? EventlyColors.dark : EventlyColors.blue,
                               fontWeight: FontWeight.w700,
                             ),
                           ),

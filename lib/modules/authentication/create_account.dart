@@ -25,7 +25,6 @@ class _CreateAccountState extends State<CreateAccount> {
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
 
-
   @override
   Widget build(BuildContext context) {
     var textTheme = Theme.of(context).textTheme;
@@ -36,16 +35,16 @@ class _CreateAccountState extends State<CreateAccount> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: provider.isDark() ? EventlyColors.dark:EventlyColors.white,
+        backgroundColor: provider.isDark()
+            ? EventlyColors.dark
+            : EventlyColors.white,
         leading: IconButton(
           onPressed: () {
             Navigator.of(context).pop();
           },
           icon: Icon(Icons.arrow_back, color: EventlyColors.blue, size: 30),
         ),
-        title: Text(
-        local.register,
-        ),
+        title: Text(local.register),
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 16),
@@ -64,42 +63,81 @@ class _CreateAccountState extends State<CreateAccount> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     TextFieldWidget(
-                      color: provider.isDark() ? Colors.transparent : EventlyColors.white,
+                      color: provider.isDark()
+                          ? Colors.transparent
+                          : EventlyColors.white,
                       title: local.name,
+                      textColor: provider.isDark()
+                          ? EventlyColors.white
+                          : EventlyColors.gray,
+                      borderColor: provider.isDark()
+                          ? EventlyColors.blue
+                          : EventlyColors.gray,
                       prefixIcon: Icon(
                         Icons.person_rounded,
-                        color: EventlyColors.gray,
-
+                        color: provider.isDark()
+                            ? EventlyColors.white
+                            : EventlyColors.gray,
                       ),
-                      controller:nameController,
+                      controller: nameController,
                     ),
                     TextFieldWidget(
-                      color: provider.isDark() ? Colors.transparent : EventlyColors.white,
+                      color: provider.isDark()
+                          ? Colors.transparent
+                          : EventlyColors.white,
                       title: local.email,
+                      textColor: provider.isDark()
+                          ? EventlyColors.white
+                          : EventlyColors.gray,
+                      borderColor: provider.isDark()
+                          ? EventlyColors.blue
+                          : EventlyColors.gray,
                       prefixIcon: Icon(
                         Icons.mail_rounded,
-                        color: EventlyColors.gray,
+                        color: provider.isDark()
+                            ? EventlyColors.white
+                            : EventlyColors.gray,
                       ),
                       validator: validateEmail,
-                      controller:mailController,
+                      controller: mailController,
                     ),
                     TextFieldWidget(
-                      color: provider.isDark() ? Colors.transparent : EventlyColors.white,
+                      color: provider.isDark()
+                          ? Colors.transparent
+                          : EventlyColors.white,
                       title: local.password,
+                      textColor: provider.isDark()
+                          ? EventlyColors.white
+                          : EventlyColors.gray,
+                      borderColor: provider.isDark()
+                          ? EventlyColors.blue
+                          : EventlyColors.gray,
                       prefixIcon: Icon(
                         Icons.lock_rounded,
-                        color: EventlyColors.gray,
+                        color: provider.isDark()
+                            ? EventlyColors.white
+                            : EventlyColors.gray,
                       ),
                       isPassword: true,
                       validator: validatePassword,
                       controller: passwordController,
                     ),
                     TextFieldWidget(
-                      color: provider.isDark() ? Colors.transparent : EventlyColors.white,
+                      color: provider.isDark()
+                          ? Colors.transparent
+                          : EventlyColors.white,
                       title: local.re_password,
+                      textColor: provider.isDark()
+                          ? EventlyColors.white
+                          : EventlyColors.gray,
+                      borderColor: provider.isDark()
+                          ? EventlyColors.blue
+                          : EventlyColors.gray,
                       prefixIcon: Icon(
                         Icons.lock_rounded,
-                        color: EventlyColors.gray,
+                        color: provider.isDark()
+                            ? EventlyColors.white
+                            : EventlyColors.gray,
                       ),
                       isPassword: true,
                       validator: validateConfirmPassword,
@@ -131,7 +169,9 @@ class _CreateAccountState extends State<CreateAccount> {
                         Text(
                           local.already_have_acc,
                           style: textTheme.bodyLarge!.copyWith(
-                            color: provider.isDark() ? EventlyColors.white : EventlyColors.black,
+                            color: provider.isDark()
+                                ? EventlyColors.white
+                                : EventlyColors.black,
                           ),
                         ),
                         TextButton(
@@ -177,6 +217,7 @@ class _CreateAccountState extends State<CreateAccount> {
       ),
     );
   }
+
   String? validateEmail(String? value) {
     if (value == null || value.isEmpty) {
       return "${AppLocalizations.of(context)!.email} ${AppLocalizations.of(context)!.email_is_required}";

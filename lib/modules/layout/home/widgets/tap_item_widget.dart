@@ -21,13 +21,15 @@ class TapItemWidget extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 6),
       decoration: BoxDecoration(
         color: isSelected
-            ? (provider.isDark() ? EventlyColors.dark : EventlyColors.white)
-            : EventlyColors.blue,
+            ?
+        (provider.isDark() ? EventlyColors.blue : EventlyColors.white)
+            :
+        Colors.transparent,
         borderRadius: BorderRadius.circular(30),
         border: Border.all(
           width: 1.5,
           color: isSelected ?
-          provider.isDark() ?EventlyColors.dark : EventlyColors.white
+          provider.isDark() ?EventlyColors.blue : EventlyColors.white
               : EventlyColors.white,
         ),
       ),
@@ -35,13 +37,18 @@ class TapItemWidget extends StatelessWidget {
         children: [
           Icon(
             Icons.menu_book_rounded,
-            color: isSelected ? EventlyColors.blue : EventlyColors.white,
+              color: isSelected ?
+              (provider.isDark() ? EventlyColors.white : EventlyColors.blue)
+                  :EventlyColors.white
+
           ),
           SizedBox(width: 8),
           Text(
             categoryData.categoryTitle,
             style: theme.textTheme.bodyLarge!.copyWith(
-              color: isSelected ? EventlyColors.blue : EventlyColors.white,
+                color: isSelected ?
+                (provider.isDark() ? EventlyColors.white : EventlyColors.blue)
+                    :EventlyColors.white
             ),
           ),
         ],
