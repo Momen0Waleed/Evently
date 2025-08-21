@@ -1,5 +1,7 @@
 import 'package:evently/core/constants/colors/evently_colors.dart';
 import 'package:evently/core/constants/images/images_name.dart';
+import 'package:evently/core/constants/services/local_storage_keys.dart';
+import 'package:evently/core/constants/services/local_storage_services.dart';
 import 'package:evently/core/routes/page_routes_name.dart';
 import 'package:evently/l10n/app_localizations.dart';
 import 'package:evently/modules/authentication/widgets/register_button_widget.dart';
@@ -18,7 +20,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  bool isLanguageEN = true;
+  // bool isLanguageEN = true;
   final _formKey = GlobalKey<FormState>();
   final mailController = TextEditingController();
   final passwordController = TextEditingController();
@@ -201,11 +203,13 @@ class _LoginScreenState extends State<LoginScreen> {
             Container(
               margin: EdgeInsets.only(top: 25),
               child: LanguageSwitch(
-                onLanguageChanged: (bool value) {
-                  setState(() {
-                    isLanguageEN = value;
-                  });
-                  provider.changeLanguage(isLanguageEN ? "en" : "ar");
+                onLanguageChanged: (bool value) async {
+                  provider.changeLanguage(value ? "en" : "ar");
+
+                  await LocalStorageServices.setString(
+                    LocalStorageKeys.languageKey,
+                    value ? "en" : "ar",
+                  );
                 },
               ),
             ),

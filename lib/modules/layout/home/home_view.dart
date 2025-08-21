@@ -1,5 +1,6 @@
 import 'package:evently/core/constants/colors/evently_colors.dart';
 import 'package:evently/core/constants/images/images_name.dart';
+import 'package:evently/core/constants/services/local_storage_services.dart';
 import 'package:evently/core/utils/firebase_firestore.dart';
 import 'package:evently/l10n/app_localizations.dart';
 import 'package:evently/models/database/events_data.dart';
@@ -9,6 +10,8 @@ import 'package:evently/modules/layout/home/widgets/tap_item_widget.dart';
 import 'package:evently/modules/settings_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import '../../../core/constants/services/local_storage_keys.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -72,8 +75,8 @@ class _HomeViewState extends State<HomeView> {
     ),
   ];
 
-  bool isLightMode = true;
-  bool isEnglish = true;
+  // bool isEnglish = true;
+  // bool isLightMode = true;
   @override
   Widget build(BuildContext context) {
     var dynamic = MediaQuery.of(context).size;
@@ -116,13 +119,17 @@ class _HomeViewState extends State<HomeView> {
                     spacing: 10,
                     children: [
                       GestureDetector(
-                        onTap: () {
-                          isLightMode = !isLightMode;
+                        onTap: () async {
+                          // isLightMode = !isLightMode;
                           provider.changeThemeMode(
-                            isLightMode ? ThemeMode.light : ThemeMode.dark,
+                            provider.isDark() ? ThemeMode.light : ThemeMode.dark,
+                          );
+                          await LocalStorageServices.setBool(
+                            LocalStorageKeys.darkThemeKey,
+                            provider.isDark(),
                           );
                         },
-                        child: isLightMode
+                        child: provider.isDark()
                             ? Icon(
                                 Icons.wb_sunny_outlined,
                                 size: 30,
@@ -136,8 +143,8 @@ class _HomeViewState extends State<HomeView> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          isEnglish = !isEnglish;
-                          provider.changeLanguage(isEnglish ? "en" : "ar");
+                          // isEnglish = !isEnglish;
+                          provider.changeLanguage(provider.isEnglish() ? "ar" : "en");
                         },
                         child: Container(
                           padding: EdgeInsets.all(8),
@@ -146,7 +153,7 @@ class _HomeViewState extends State<HomeView> {
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Text(
-                            isEnglish ? "EN" : "AR",
+                            provider.isEnglish() ? "EN" : "AR",
                             style: theme.textTheme.labelSmall!.copyWith(
                               color: provider.isDark() ? EventlyColors.dark : EventlyColors.blue,
                               fontWeight: FontWeight.w700,

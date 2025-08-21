@@ -1,6 +1,8 @@
 import 'package:animated_custom_dropdown/custom_dropdown.dart';
 import 'package:evently/core/constants/colors/evently_colors.dart';
 import 'package:evently/core/constants/images/images_name.dart';
+import 'package:evently/core/constants/services/local_storage_keys.dart';
+import 'package:evently/core/constants/services/local_storage_services.dart';
 import 'package:evently/core/routes/page_routes_name.dart' show PageRoutesName;
 import 'package:evently/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
@@ -99,8 +101,15 @@ class _ProfileViewState extends State<ProfileView> {
             initialItem: provider.currentLanguage == "en"
                 ? "English"
                 : "العربية",
-            onChanged: (value) {
-              provider.changeLanguage(value! == "English" ? "en" : "ar");
+            onChanged: (value) async {
+              // provider.changeLanguage(value! == "English" ? "en" : "ar");
+              final langCode = value! == "English" ? "en" : "ar";
+              provider.changeLanguage(langCode);
+
+              await LocalStorageServices.setString(
+                LocalStorageKeys.languageKey,
+                langCode,
+              );
             },
             decoration: CustomDropdownDecoration(
               closedFillColor: Colors.transparent,
@@ -138,10 +147,14 @@ class _ProfileViewState extends State<ProfileView> {
             items: themes,
             // initialItem: provider.isDark() ? "Dark" : "Light",
             initialItem: provider.isDark() ? local.dark : local.light,
-            onChanged: (value) {
+            onChanged: (value) async {
               provider.changeThemeMode(
                 // value! == "Light" ? ThemeMode.light : ThemeMode.dark,
                 value == local.light ? ThemeMode.light : ThemeMode.dark,
+              );
+              await LocalStorageServices.setBool(
+                LocalStorageKeys.darkThemeKey,
+                value == local.dark,
               );
             },
             decoration: CustomDropdownDecoration(

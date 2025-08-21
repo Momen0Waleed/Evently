@@ -155,4 +155,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get choose_loc => 'Choose Event Location';
+
+  @override
+  String get event_details => 'Event Details';
 }
