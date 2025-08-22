@@ -158,5 +158,57 @@ class AppLocalizationsAr extends AppLocalizations {
   String get choose_loc => 'اختر موقع الحدث';
 
   @override
-  String get event_details => 'Event Details';
+  String get event_details => 'تفاصيل الحدث';
+
+  @override
+  String get confirm_del => 'تأكيد الحذف';
+
+  @override
+  String get are_u_sure => 'هل أنت متأكد أنك تريد حذف هذا الحدث؟';
+
+  @override
+  String get cancel => 'إلغاء';
+
+  @override
+  String get delete => 'حذف';
+
+  @override
+  String get language => 'اللغة';
+
+  @override
+  String get theme => 'المظهر';
+
+  @override
+  String get personalize => 'خصص تجربتك';
+
+  @override
+  String get find_event => 'اكتشف فعاليات تُلهمك';
+
+  @override
+  String get effortless => 'تخطيط فعاليات بسهولة';
+
+  @override
+  String get connect => 'تواصل مع الأصدقاء وشارك اللحظات';
+
+  @override
+  String get firstSettingsDescription =>
+      'اختر اللغة والمظهر المفضل لديك لتبدأ تجربة مريحة ومصممة خصيصًا لتناسب أسلوبك.';
+
+  @override
+  String get onBoarding1Description =>
+      'انغمس في عالم من الفعاليات المصممة لتناسب اهتماماتك الفريدة. سواء كنت من محبي الموسيقى الحية أو ورش العمل الفنية أو التواصل المهني أو مجرد اكتشاف تجارب جديدة، ستجد ما يناسبك. توصياتنا المختارة بعناية ستساعدك على الاستكشاف والتواصل والاستفادة من كل فرصة من حولك.';
+
+  @override
+  String get onBoarding2Description =>
+      'تخلص من عناء تنظيم الفعاليات باستخدام أدواتنا المتكاملة للتخطيط. من إعداد الدعوات وإدارة الردود وجدولة التذكيرات إلى تنسيق التفاصيل، نحن نوفر لك كل ما تحتاجه. خطط بسهولة وركز على ما هو أهم – خلق تجربة لا تُنسى لك ولضيوفك.';
+
+  @override
+  String get onBoarding3Description =>
+      'اجعل كل فعالية ذكرى لا تُنسى بمشاركتها مع الآخرين. منصتنا تتيح لك دعوة الأصدقاء، إبقاء الجميع على اطلاع، والاحتفال معًا. التقط وشارك اللحظات المميزة مع شبكتك لتستعيد الذكريات الجميلة دائمًا.';
+
+  @override
+  String get lets_start => 'لنبدأ';
+
+  @override
+  String get skip => 'تخطي';
 }

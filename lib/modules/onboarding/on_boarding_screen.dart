@@ -1,11 +1,13 @@
 import 'package:evently/core/constants/colors/evently_colors.dart';
 import 'package:evently/core/routes/page_routes_name.dart';
+import 'package:evently/l10n/app_localizations.dart';
+import 'package:evently/modules/settings_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../core/constants/images/images_name.dart';
 import '../../core/constants/services/local_storage_keys.dart';
 import '../../core/constants/services/local_storage_services.dart';
-import '../../core/constants/strings/main_strings.dart';
 
 class OnBoardingScreen extends StatefulWidget {
   const OnBoardingScreen({super.key});
@@ -18,22 +20,30 @@ final int _numPages = 3;
 final PageController _pageController = PageController(initialPage: 0);
 int _currentPage = 0;
 
-List<Widget> _buildPageIndicator() {
+List<Widget> _buildPageIndicator(BuildContext context) {
   List<Widget> list = [];
   for (int i = 0; i < _numPages; i++) {
-    list.add(i == _currentPage ? _indicator(true) : _indicator(false));
+    list.add(
+      i == _currentPage
+          ? _indicator(true, context)
+          : _indicator(false, context),
+    );
   }
   return list;
 }
 
-Widget _indicator(bool isActive) {
+Widget _indicator(bool isActive, BuildContext context) {
   return AnimatedContainer(
     duration: Duration(milliseconds: 200),
     margin: EdgeInsets.symmetric(horizontal: 8.0),
     height: 6.0,
     width: isActive ? 24.0 : 10.0,
     decoration: BoxDecoration(
-      color: isActive ? EventlyColors.blue : EventlyColors.black,
+      color: isActive
+          ? EventlyColors.blue
+          : (Provider.of<SettingsProvider>(context).isDark()
+                ? EventlyColors.white
+                : EventlyColors.black),
       borderRadius: BorderRadius.all(Radius.circular(12)),
     ),
   );
@@ -45,6 +55,8 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
     var dynamicSize = MediaQuery.of(context).size;
     var theme = Theme.of(context).textTheme;
 
+    var local = AppLocalizations.of(context)!;
+    var provider = Provider.of<SettingsProvider>(context);
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
       floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
@@ -56,7 +68,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                 _completeOnboarding();
               },
               child: Text(
-                "Skip",
+                local.skip,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   color: EventlyColors.blue,
@@ -87,78 +99,90 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                 children: [
                   Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Image.asset(
-                        ImagesName.headerLogo,
-                        width: dynamicSize.width * 0.4,
+                      Align(
+                        alignment: Alignment.center,
+                        child: Image.asset(
+                          ImagesName.headerLogo,
+                          width: dynamicSize.width * 0.4,
+                        ),
                       ),
                       Image.asset(ImagesName.onboarding1),
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          "Find Events That Inspire You",
-                          style: theme.titleMedium,
-                          softWrap: true,
-                        ),
+                      Text(
+                        local.find_event,
+                        style: theme.titleMedium,
+                        softWrap: true,
                       ),
                       Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          MainStrings.onBoarding1Description,
-                          style: theme.bodyLarge,
+                          local.onBoarding1Description,
+                          style: theme.bodyLarge!.copyWith(
+                            color: provider.isDark()
+                                ? EventlyColors.white
+                                : EventlyColors.black,
+                          ),
                         ),
                       ),
                     ],
                   ),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Image.asset(
-                        ImagesName.headerLogo,
-                        width: dynamicSize.width * 0.4,
+                      Align(
+                        alignment: Alignment.center,
+                        child: Image.asset(
+                          ImagesName.headerLogo,
+                          width: dynamicSize.width * 0.4,
+                        ),
                       ),
                       Image.asset(ImagesName.onboarding2),
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          "Effortless Event Planning",
-                          style: theme.titleMedium,
-                          softWrap: true,
-                        ),
+                      Text(
+                        local.effortless,
+                        style: theme.titleMedium,
+                        softWrap: true,
                       ),
                       Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          MainStrings.onBoarding2Description,
-                          style: theme.bodyLarge,
+                          local.onBoarding2Description,
+                          style: theme.bodyLarge!.copyWith(
+                            color: provider.isDark()
+                                ? EventlyColors.white
+                                : EventlyColors.black,
+                          ),
                         ),
                       ),
                     ],
                   ),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Image.asset(
-                        ImagesName.headerLogo,
-                        width: dynamicSize.width * 0.4,
-                      ),
-                      Image.asset(ImagesName.onboarding3),
                       Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          "Connect with Friends & Share Moments",
-                          style: theme.titleMedium,
-                          softWrap: true,
+                        alignment: Alignment.center,
+                        child: Image.asset(
+                          ImagesName.headerLogo,
+                          width: dynamicSize.width * 0.4,
                         ),
                       ),
+                      Image.asset(ImagesName.onboarding3),
+                      Text(
+                        local.connect,
+                        style: theme.titleMedium,
+                        softWrap: true,
+                      ),
                       Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          MainStrings.onBoarding3Description,
-                          style: theme.bodyLarge,
+                          local.onBoarding3Description,
+                          style: theme.bodyLarge!.copyWith(
+                            color: provider.isDark()
+                                ? EventlyColors.white
+                                : EventlyColors.black,
+                          ),
                         ),
                       ),
                     ],
@@ -166,7 +190,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                 ],
               ),
             ),
-            SizedBox(height: 30,),
+            SizedBox(height: 30),
             SizedBox(
               height: 60,
               child: Row(
@@ -187,7 +211,8 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                       width: 40,
                       height: 40,
                       decoration: BoxDecoration(
-                        color: EventlyColors.white,
+                        color: Colors.transparent,
+
                         borderRadius: BorderRadius.circular(30),
                         border: Border.all(width: 1, color: EventlyColors.blue),
                       ),
@@ -196,7 +221,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: _buildPageIndicator(),
+                    children: _buildPageIndicator(context),
                   ),
                   GestureDetector(
                     onTap: _currentPage == _numPages - 1
@@ -213,7 +238,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                       width: 40,
                       height: 40,
                       decoration: BoxDecoration(
-                        color: EventlyColors.white,
+                        color: Colors.transparent,
                         borderRadius: BorderRadius.circular(30),
                         border: Border.all(width: 1, color: EventlyColors.blue),
                       ),
@@ -240,6 +265,10 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
 
     if (!mounted) return;
 
-    Navigator.pushNamedAndRemoveUntil(context, PageRoutesName.login,(route) => false);
+    Navigator.pushNamedAndRemoveUntil(
+      context,
+      PageRoutesName.login,
+      (route) => false,
+    );
   }
 }

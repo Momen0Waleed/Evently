@@ -32,7 +32,7 @@ class ViewEventDetails extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: provider.isDark() ? EventlyColors.dark:EventlyColors.white,
-        title: Text("Event Details"),
+        title: Text(local.event_details,),
         actions: [
           IconButton(
             onPressed: () {
@@ -191,7 +191,7 @@ class ViewEventDetails extends StatelessWidget {
               ),
               Align(
                 alignment: Alignment.centerLeft,
-                child: Text("Description", style: theme.textTheme.titleSmall),
+                child: Text(local.description, style: theme.textTheme.titleSmall),
               ),
               Text(
                 eventData.eventDescription,
@@ -207,6 +207,7 @@ class ViewEventDetails extends StatelessWidget {
   }
 
   Future<bool?> showEnsureDeletionDialog(BuildContext context) {
+    var local = AppLocalizations.of(context)!;
     return showDialog<bool>(
       context: context,
       barrierDismissible: true, // Prevents closing by tapping outside
@@ -216,10 +217,10 @@ class ViewEventDetails extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
-          title: Text("Confirm Deletion",style: TextStyle(
+          title: Text(local.confirm_del,style: TextStyle(
             color: Provider.of<SettingsProvider>(context).isDark() ? EventlyColors.white : EventlyColors.black
           ),),
-          content: Text("Are you sure you want to delete this event ?",style: TextStyle(
+          content: Text(local.are_u_sure,style: TextStyle(
           color: Provider.of<SettingsProvider>(context).isDark() ? EventlyColors.white : EventlyColors.black
         )),
           actions: [
@@ -228,7 +229,7 @@ class ViewEventDetails extends StatelessWidget {
                 Navigator.of(context).pop(false); // Cancel
               },
               child: Text(
-                "Cancel",style: TextStyle(
+                local.cancel,style: TextStyle(
                   color: Provider.of<SettingsProvider>(context).isDark() ? EventlyColors.white : EventlyColors.black
               ),
               ),
@@ -241,7 +242,7 @@ class ViewEventDetails extends StatelessWidget {
                 Navigator.of(context).pop(true); // Confirm
               },
               child: Text(
-                "Delete",
+                local.delete,
                 style: TextStyle(color: EventlyColors.white),
               ),
             ),
