@@ -2,7 +2,6 @@ import 'package:evently/core/constants/colors/evently_colors.dart';
 import 'package:evently/core/constants/images/images_name.dart';
 import 'package:evently/core/constants/services/local_storage_keys.dart';
 import 'package:evently/core/constants/services/local_storage_services.dart';
-import 'package:evently/core/constants/strings/main_strings.dart';
 import 'package:evently/l10n/app_localizations.dart';
 import 'package:evently/modules/onboarding/widgets/language_switch.dart';
 import 'package:evently/modules/settings_provider.dart';
@@ -19,8 +18,6 @@ class FirstSettingsScreen extends StatefulWidget {
 }
 
 class _FirstSettingsScreenState extends State<FirstSettingsScreen> {
-  // bool isLanguageEN = true;
-  // bool isLightMode = true;
 
   @override
   Widget build(BuildContext context) {
