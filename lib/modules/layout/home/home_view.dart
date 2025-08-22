@@ -1,11 +1,17 @@
 import 'package:evently/core/constants/colors/evently_colors.dart';
 import 'package:evently/core/constants/images/images_name.dart';
+import 'package:evently/core/constants/services/local_storage_services.dart';
 import 'package:evently/core/utils/firebase_firestore.dart';
+import 'package:evently/l10n/app_localizations.dart';
 import 'package:evently/models/database/events_data.dart';
 import 'package:evently/modules/layout/home/models/category_data.dart';
 import 'package:evently/modules/layout/home/widgets/event_item_widget.dart';
 import 'package:evently/modules/layout/home/widgets/tap_item_widget.dart';
+import 'package:evently/modules/settings_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../../../core/constants/services/local_storage_keys.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -68,17 +74,23 @@ class _HomeViewState extends State<HomeView> {
       categoryImg: ImagesName.bookClubImageDark,
     ),
   ];
+
+  // bool isEnglish = true;
+  // bool isLightMode = true;
   @override
   Widget build(BuildContext context) {
     var dynamic = MediaQuery.of(context).size;
     var theme = Theme.of(context);
+
+    var local = AppLocalizations.of(context)!;
+    var provider = Provider.of<SettingsProvider>(context);
     return Column(
       children: [
         Container(
           height: dynamic.height * 0.25,
           padding: EdgeInsets.only(left: 16, right: 16, top: 40, bottom: 20),
           decoration: BoxDecoration(
-            color: theme.primaryColor,
+            color:provider.isDark() ?EventlyColors.dark : theme.primaryColor,
             borderRadius: BorderRadius.only(
               bottomLeft: Radius.circular(24),
               bottomRight: Radius.circular(24),
@@ -95,7 +107,10 @@ class _HomeViewState extends State<HomeView> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("Welcome Back ✨", style: theme.textTheme.labelSmall),
+                      Text(
+                        local.welcome_back,
+                        style: theme.textTheme.labelSmall,
+                      ),
                       Text("Momen Waleed", style: theme.textTheme.titleLarge),
                     ],
                   ),
@@ -103,22 +118,46 @@ class _HomeViewState extends State<HomeView> {
                   Row(
                     spacing: 10,
                     children: [
-                      Icon(
-                        Icons.wb_sunny_outlined,
-                        size: 30,
-                        color: EventlyColors.white,
+                      GestureDetector(
+                        onTap: () async {
+                          // isLightMode = !isLightMode;
+                          provider.changeThemeMode(
+                            provider.isDark() ? ThemeMode.light : ThemeMode.dark,
+                          );
+                          await LocalStorageServices.setBool(
+                            LocalStorageKeys.darkThemeKey,
+                            provider.isDark(),
+                          );
+                        },
+                        child: provider.isDark()
+                            ? Icon(
+                                Icons.wb_sunny_outlined,
+                                size: 30,
+                                color: EventlyColors.white,
+                              )
+                            : Icon(
+                                Icons.dark_mode_outlined,
+                                size: 30,
+                                color: EventlyColors.white,
+                              ),
                       ),
-                      Container(
-                        padding: EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: EventlyColors.white,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Text(
-                          "EN",
-                          style: theme.textTheme.labelSmall!.copyWith(
-                            color: EventlyColors.blue,
-                            fontWeight: FontWeight.w700,
+                      GestureDetector(
+                        onTap: () {
+                          // isEnglish = !isEnglish;
+                          provider.changeLanguage(provider.isEnglish() ? "ar" : "en");
+                        },
+                        child: Container(
+                          padding: EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: EventlyColors.white,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Text(
+                            provider.isEnglish() ? "EN" : "AR",
+                            style: theme.textTheme.labelSmall!.copyWith(
+                              color: provider.isDark() ? EventlyColors.dark : EventlyColors.blue,
+                              fontWeight: FontWeight.w700,
+                            ),
                           ),
                         ),
                       ),
@@ -222,29 +261,6 @@ class _HomeViewState extends State<HomeView> {
             );
           },
         ),
-
-        // FutureBuilder<List<EventsData>>(
-        //     future: FirebaseFirestoreUtils.readEventData(),
-        //     builder: (context,snapshot){
-        //       if(snapshot.hasError){
-        //         return Center(child: Text(snapshot.error.toString(),style: TextStyle(color: EventlyColors.redError),),);
-        //       }
-        //       if(snapshot.connectionState == ConnectionState.waiting){
-        //         return Center(child: CircularProgressIndicator(),);
-        //       }
-        //       List<EventsData> eventDataList = snapshot.data ?? [];
-        //       return  Expanded(
-        //         child: ListView.separated(
-        //           separatorBuilder: (context, index) {
-        //             return SizedBox(height: 16);
-        //           },
-        //           itemCount: eventDataList.length,
-        //           itemBuilder: (context, index) {
-        //             return EventItemWidget(eventData: eventDataList[index]);
-        //           },
-        //         ),
-        //       );
-        //     }),
       ],
     );
   }

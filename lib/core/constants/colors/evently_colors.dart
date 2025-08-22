@@ -7,4 +7,6 @@ abstract class EventlyColors{
   static Color black = Color(0xFF1C1C1C);
   static Color gray = Color(0xFF7B7B7B);
   static Color redError = Colors.redAccent;
+
+  static Color dark = Color(0xFF101127);
 }

@@ -2,8 +2,11 @@ import 'package:evently/core/constants/colors/evently_colors.dart';
 import 'package:evently/core/constants/images/images_name.dart';
 import 'package:evently/core/constants/layout_constants/layout_widgets.dart';
 import 'package:evently/core/routes/page_routes_name.dart';
+import 'package:evently/l10n/app_localizations.dart';
+import 'package:evently/modules/settings_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
+import 'package:provider/provider.dart';
 
 class LayoutView extends StatefulWidget {
   const LayoutView({super.key});
@@ -13,9 +16,9 @@ class LayoutView extends StatefulWidget {
 }
 
 class _LayoutViewState extends State<LayoutView> {
-  int selectedIndex = 0;
   @override
   Widget build(BuildContext context) {
+    var local = AppLocalizations.of(context);
     return Scaffold(
       floatingActionButton: Bounceable(
         onTap: () {
@@ -26,7 +29,7 @@ class _LayoutViewState extends State<LayoutView> {
           backgroundColor: EventlyColors.white,
           child: CircleAvatar(
             radius: 30,
-            backgroundColor: EventlyColors.blue,
+            backgroundColor: Provider.of<SettingsProvider>(context).isDark() ?EventlyColors.dark: EventlyColors.blue,
             child: Icon(Icons.add,color: EventlyColors.white,size: 40,),
           ),
 
@@ -47,12 +50,12 @@ class _LayoutViewState extends State<LayoutView> {
             BottomNavigationBarItem(
               icon: ImageIcon(AssetImage(ImagesName.outlinedHouseIcon)),
               activeIcon: ImageIcon(AssetImage(ImagesName.filledHouseIcon)),
-              label: "Home",
+              label: local?.home,
             ),
             BottomNavigationBarItem(
               icon: ImageIcon(AssetImage(ImagesName.outlinedMapIcon)),
               activeIcon: ImageIcon(AssetImage(ImagesName.filledMapIcon)),
-              label: "Maps",
+              label: local?.maps,
             ),
             BottomNavigationBarItem(
               icon:  ImageIcon(AssetImage(ImagesName.nothingIcon)),
@@ -61,12 +64,12 @@ class _LayoutViewState extends State<LayoutView> {
             BottomNavigationBarItem(
               icon: ImageIcon(AssetImage(ImagesName.outlinedLoveIcon)),
               activeIcon: ImageIcon(AssetImage(ImagesName.filledLoveIcon)),
-              label: "Favourite",
+              label: local?.favourite,
             ),
             BottomNavigationBarItem(
               icon: ImageIcon(AssetImage(ImagesName.outlinedProfileIcon)),
               activeIcon: ImageIcon(AssetImage(ImagesName.filledProfileIcon)),
-              label: "Profile",
+              label: local?.profile,
             ),
 
             ]
@@ -75,4 +78,5 @@ class _LayoutViewState extends State<LayoutView> {
 
     );
   }
+  int selectedIndex = 0;
 }

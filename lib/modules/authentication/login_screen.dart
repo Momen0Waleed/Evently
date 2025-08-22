@@ -1,9 +1,14 @@
 import 'package:evently/core/constants/colors/evently_colors.dart';
 import 'package:evently/core/constants/images/images_name.dart';
+import 'package:evently/core/constants/services/local_storage_keys.dart';
+import 'package:evently/core/constants/services/local_storage_services.dart';
 import 'package:evently/core/routes/page_routes_name.dart';
+import 'package:evently/l10n/app_localizations.dart';
 import 'package:evently/modules/authentication/widgets/register_button_widget.dart';
 import 'package:evently/modules/authentication/widgets/text_field_widget.dart';
+import 'package:evently/modules/settings_provider.dart' show SettingsProvider;
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart' show Provider;
 
 import '../onboarding/widgets/language_switch.dart';
 
@@ -15,7 +20,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  bool isLanguageEN = true;
+  // bool isLanguageEN = true;
   final _formKey = GlobalKey<FormState>();
   final mailController = TextEditingController();
   final passwordController = TextEditingController();
@@ -25,6 +30,8 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     var dynamicSize = MediaQuery.of(context).size;
     var theme = Theme.of(context).textTheme;
+    var local = AppLocalizations.of(context)!;
+    var provider = Provider.of<SettingsProvider>(context);
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -52,13 +59,21 @@ class _LoginScreenState extends State<LoginScreen> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         TextFieldWidget(
-                          title: 'Email',
-                          prefixIcon: Icon(Icons.mail_rounded),
+                          color: provider.isDark() ? Colors.transparent : EventlyColors.white,
+                          textColor: provider.isDark() ? EventlyColors.white : EventlyColors.gray,
+                          borderColor: provider.isDark() ? EventlyColors.blue : EventlyColors.gray,
+
+                          title: local.email,
+                          prefixIcon: Icon(Icons.mail_rounded,color: provider.isDark() ? EventlyColors.white : EventlyColors.gray,),
                           controller: mailController,
                         ),
                         TextFieldWidget(
-                          title: 'Password',
-                          prefixIcon: Icon(Icons.lock_rounded),
+                          color: provider.isDark() ? Colors.transparent : EventlyColors.white,
+                          textColor: provider.isDark() ? EventlyColors.white : EventlyColors.gray,
+                          borderColor: provider.isDark() ? EventlyColors.blue : EventlyColors.gray,
+
+                          title: local.password,
+                          prefixIcon: Icon(Icons.lock_rounded,color: provider.isDark() ? EventlyColors.white : EventlyColors.gray,),
                           isPassword: true,
                           controller: passwordController,
                         ),
@@ -70,7 +85,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                             },
                             child: Text(
-                              "Forget Password?",
+                              local.forget_password,
                               style: theme.bodyLarge!.copyWith(
                                 color: EventlyColors.blue,
                                 fontStyle: FontStyle.italic,
@@ -94,7 +109,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         RegisterButtonWidget(
                           bgColor: EventlyColors.blue,
                           child: Text(
-                            "Login",
+                            local.login,
                             style: theme.titleMedium!.copyWith(
                               color: EventlyColors.white,
                             ),
@@ -113,8 +128,10 @@ class _LoginScreenState extends State<LoginScreen> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text(
-                              "Don’t Have Account ?",
-                              style: theme.bodyLarge,
+                              local.dont_have_acc,
+                              style: theme.bodyLarge!.copyWith(
+                                  color: provider.isDark() ?  EventlyColors.white : EventlyColors.black,
+                              ),
                             ),
                             TextButton(
                               onPressed: () {
@@ -124,7 +141,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 padding: EdgeInsets.symmetric(horizontal: 2),
                               ),
                               child: Text(
-                                "Create Account",
+                                local.create_acc,
                                 style: theme.bodyLarge!.copyWith(
                                   color: EventlyColors.blue,
                                   fontStyle: FontStyle.italic,
@@ -146,7 +163,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 endIndent: 10,
                               ),
                             ),
-                            Text(" Or ", style: theme.bodyLarge),
+                            Text(" ${local.or} ", style: theme.bodyLarge),
                             Expanded(
                               child: Divider(
                                 height: 3,
@@ -160,7 +177,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
                         /// Google Login Button
                         RegisterButtonWidget(
-                          bgColor: EventlyColors.white,
+                        bgColor: provider.isDark() ? Colors.transparent : EventlyColors.white,
+
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -168,7 +186,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               Image.asset(ImagesName.googleIcon, height: 30),
                               SizedBox(width: 10),
                               Text(
-                                "Login With Google",
+                                local.login_with_google,
                                 style: theme.titleSmall,
                               ),
                             ],
@@ -185,10 +203,13 @@ class _LoginScreenState extends State<LoginScreen> {
             Container(
               margin: EdgeInsets.only(top: 25),
               child: LanguageSwitch(
-                onLanguageChanged: (bool value) {
-                  setState(() {
-                    isLanguageEN = value;
-                  });
+                onLanguageChanged: (bool value) async {
+                  provider.changeLanguage(value ? "en" : "ar");
+
+                  await LocalStorageServices.setString(
+                    LocalStorageKeys.languageKey,
+                    value ? "en" : "ar",
+                  );
                 },
               ),
             ),

@@ -2,9 +2,11 @@ import 'package:evently/core/constants/colors/evently_colors.dart';
 import 'package:evently/core/routes/page_routes_name.dart';
 import 'package:evently/core/utils/firebase_firestore.dart';
 import 'package:evently/models/database/events_data.dart';
+import 'package:evently/modules/settings_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class EventItemWidget extends StatefulWidget {
   const EventItemWidget({super.key, required this.eventData});
@@ -17,6 +19,7 @@ class _EventItemWidgetState extends State<EventItemWidget> {
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
+    var provider = Provider.of<SettingsProvider>(context);
     return Bounceable(
       onTap: (){
         Navigator.of(context).pushNamed(PageRoutesName.eventDetails,arguments: widget.eventData);
@@ -31,6 +34,10 @@ class _EventItemWidgetState extends State<EventItemWidget> {
             image: AssetImage(widget.eventData.eventCategoryImg),
             fit: BoxFit.cover,
           ),
+          border: BoxBorder.all(
+            width: 2,
+            color: provider.isDark() ? EventlyColors.blue : EventlyColors.black
+          )
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -40,7 +47,7 @@ class _EventItemWidgetState extends State<EventItemWidget> {
               padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
-                color: EventlyColors.white,
+                color: provider.isDark() ?EventlyColors.dark : EventlyColors.white,
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -69,7 +76,8 @@ class _EventItemWidgetState extends State<EventItemWidget> {
               padding: EdgeInsets.all(8),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
-                color: EventlyColors.white,
+                // color: EventlyColors.white,
+                color: provider.isDark() ?EventlyColors.dark : EventlyColors.white,
               ),
               child: Row(
                 children: [
@@ -81,7 +89,10 @@ class _EventItemWidgetState extends State<EventItemWidget> {
                         style: theme.textTheme.bodyLarge!.copyWith(
                           fontWeight: FontWeight.w600,
                           height: 1.2,
-                          color: EventlyColors.black,
+                          // color: EventlyColors.black,
+                          color: provider.isDark() ?EventlyColors.blue
+                              : EventlyColors.black,
+
                         ),
                         textAlign: TextAlign.start,
                       ),

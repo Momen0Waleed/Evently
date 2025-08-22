@@ -10,6 +10,9 @@ class TextFieldWidget extends StatefulWidget {
     this.isPassword = false,
     this.maxlines = 1,
     this.minlines,
+    this.color =  Colors.white,
+    this.textColor =  Colors.grey,
+    this.borderColor =  Colors.grey,
 
     this.controller,
     this.validator,
@@ -20,6 +23,9 @@ class TextFieldWidget extends StatefulWidget {
   final bool isPassword;
   final int? maxlines;
   final int? minlines;
+  final Color color;
+  final Color textColor;
+  final Color borderColor;
 
   final TextEditingController? controller;
   String? Function(String?)? validator;
@@ -51,18 +57,23 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
         obscureText: widget.isPassword
             ? (widget.isPassword ? obscurePassword : false)
             : false,
+        style: theme.bodyMedium!.copyWith(
+          color: widget.textColor,
+        ),
         decoration: InputDecoration(
           filled: true,
-          fillColor: EventlyColors.white,
+          fillColor: widget.color,
           hintText: widget.title,
-          hintStyle: theme.bodyMedium,
+          hintStyle: theme.bodyMedium!.copyWith(
+            color: widget.textColor
+          ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(16),
-            borderSide: BorderSide(width: 1, color: EventlyColors.gray),
+            borderSide: BorderSide(width: 1, color:widget.borderColor),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(16),
-            borderSide: BorderSide(width: 1, color: EventlyColors.gray),
+            borderSide: BorderSide(width: 1, color: widget.borderColor),
           ),
           errorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(16),

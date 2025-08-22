@@ -2,11 +2,14 @@ import 'package:evently/core/constants/colors/evently_colors.dart';
 import 'package:evently/core/constants/images/images_name.dart';
 import 'package:evently/core/routes/page_routes_name.dart';
 import 'package:evently/core/utils/firebase_firestore.dart';
+import 'package:evently/l10n/app_localizations.dart';
 import 'package:evently/models/database/events_data.dart';
 import 'package:evently/modules/authentication/widgets/register_button_widget.dart';
 import 'package:evently/modules/event_creation/create_event_view.dart';
+import 'package:evently/modules/settings_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class ViewEventDetails extends StatelessWidget {
   const ViewEventDetails({super.key});
@@ -24,9 +27,12 @@ class ViewEventDetails extends StatelessWidget {
 
     final eventData = args;
     var theme = Theme.of(context);
+    var provider = Provider.of<SettingsProvider>(context);
+    var local = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: Text("Event Details"),
+        backgroundColor: provider.isDark() ? EventlyColors.dark:EventlyColors.white,
+        title: Text(local.event_details,),
         actions: [
           IconButton(
             onPressed: () {
@@ -85,7 +91,7 @@ class ViewEventDetails extends StatelessWidget {
                 ),
               ),
               RegisterButtonWidget(
-                bgColor: EventlyColors.white,
+                bgColor: provider.isDark() ?EventlyColors.dark: EventlyColors.white,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 8,
@@ -113,7 +119,7 @@ class ViewEventDetails extends StatelessWidget {
                         children: [
                           Text(
                             DateFormat(
-                              "dd MONTH yyyy",
+                              "dd MMM yyyy",
                             ).format(eventData.selectedDate).toString(),
                             style: theme.textTheme.bodyMedium!.copyWith(
                               color: EventlyColors.blue,
@@ -123,7 +129,9 @@ class ViewEventDetails extends StatelessWidget {
                             DateFormat(
                               "hh:mm a",
                             ).format(eventData.selectedDate).toString(),
-                            style: theme.textTheme.bodyLarge,
+                            style: theme.textTheme.bodyLarge!.copyWith(
+                              color: provider.isDark() ? EventlyColors.white : EventlyColors.black
+                            ),
                           ),
                         ],
                       ),
@@ -132,7 +140,7 @@ class ViewEventDetails extends StatelessWidget {
                 ),
               ),
               RegisterButtonWidget(
-                bgColor: EventlyColors.white,
+                bgColor:provider.isDark() ? EventlyColors.dark : EventlyColors.white,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 8,
@@ -183,11 +191,13 @@ class ViewEventDetails extends StatelessWidget {
               ),
               Align(
                 alignment: Alignment.centerLeft,
-                child: Text("Description", style: theme.textTheme.titleSmall),
+                child: Text(local.description, style: theme.textTheme.titleSmall),
               ),
               Text(
                 eventData.eventDescription,
-                style: theme.textTheme.bodyLarge,
+                style: theme.textTheme.bodyLarge!.copyWith(
+                  color: provider.isDark() ? EventlyColors.white: EventlyColors.black
+                ),
               ),
             ],
           ),
@@ -197,25 +207,31 @@ class ViewEventDetails extends StatelessWidget {
   }
 
   Future<bool?> showEnsureDeletionDialog(BuildContext context) {
+    var local = AppLocalizations.of(context)!;
     return showDialog<bool>(
       context: context,
       barrierDismissible: true, // Prevents closing by tapping outside
       builder: (context) {
         return AlertDialog(
-          backgroundColor: EventlyColors.white,
+          backgroundColor:Provider.of<SettingsProvider>(context).isDark() ? EventlyColors.dark : EventlyColors.white,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
-          title: Text("Confirm Deletion"),
-          content: Text("Are you sure you want to delete this event ?"),
+          title: Text(local.confirm_del,style: TextStyle(
+            color: Provider.of<SettingsProvider>(context).isDark() ? EventlyColors.white : EventlyColors.black
+          ),),
+          content: Text(local.are_u_sure,style: TextStyle(
+          color: Provider.of<SettingsProvider>(context).isDark() ? EventlyColors.white : EventlyColors.black
+        )),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(false); // Cancel
               },
               child: Text(
-                "Cancel",
-                style: TextStyle(color: EventlyColors.black),
+                local.cancel,style: TextStyle(
+                  color: Provider.of<SettingsProvider>(context).isDark() ? EventlyColors.white : EventlyColors.black
+              ),
               ),
             ),
             ElevatedButton(
@@ -226,7 +242,7 @@ class ViewEventDetails extends StatelessWidget {
                 Navigator.of(context).pop(true); // Confirm
               },
               child: Text(
-                "Delete",
+                local.delete,
                 style: TextStyle(color: EventlyColors.white),
               ),
             ),

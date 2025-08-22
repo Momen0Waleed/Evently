@@ -2,13 +2,16 @@ import 'package:evently/core/constants/images/images_name.dart';
 import 'package:evently/core/constants/services/snackbar_service.dart';
 import 'package:evently/core/routes/page_routes_name.dart';
 import 'package:evently/core/utils/firebase_firestore.dart';
+import 'package:evently/l10n/app_localizations.dart';
 import 'package:evently/models/database/events_data.dart';
 import 'package:evently/modules/authentication/widgets/register_button_widget.dart';
 import 'package:evently/modules/event_creation/widgets/tap_item_widget.dart';
+import 'package:evently/modules/settings_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart' show Provider;
 
 import '../../core/constants/colors/evently_colors.dart';
 import '../authentication/widgets/text_field_widget.dart';
@@ -23,7 +26,6 @@ class CreateEventView extends StatefulWidget {
 }
 
 class _CreateEventViewState extends State<CreateEventView> {
-
   @override
   void initState() {
     super.initState();
@@ -35,7 +37,7 @@ class _CreateEventViewState extends State<CreateEventView> {
 
       // Set category index (find the matching category by title or img)
       final index = categories.indexWhere(
-            (cat) => cat.categoryTitle == widget.eventsData!.eventCategoryId,
+        (cat) => cat.categoryTitle == widget.eventsData!.eventCategoryId,
       );
       if (index != -1) {
         currentTabIndex = index;
@@ -43,10 +45,11 @@ class _CreateEventViewState extends State<CreateEventView> {
 
       // Set date & time
       selectedDate = widget.eventsData!.selectedDate;
-      selectedTime = widget.eventsData!.selectedDate; // same field since your model stores date+time
+      selectedTime = widget
+          .eventsData!
+          .selectedDate; // same field since your model stores date+time
     }
   }
-
 
   final TextEditingController nameController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
@@ -107,15 +110,20 @@ class _CreateEventViewState extends State<CreateEventView> {
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
+    var local = AppLocalizations.of(context)!;
+    var provider = Provider.of<SettingsProvider>(context);
     return Scaffold(
-      appBar: AppBar(title: Text( widget.eventsData == null ? "Create Event" : "Edit Event")),
+      appBar: AppBar(
+        backgroundColor: provider.isDark() ? EventlyColors.dark:EventlyColors.white,
+        title: Text(widget.eventsData == null ? local.create_event : local.edit_event),
+      ),
       floatingActionButton: Container(
         width: double.infinity,
         padding: EdgeInsets.symmetric(horizontal: 16),
         child: RegisterButtonWidget(
           bgColor: EventlyColors.blue,
           child: Text(
-            widget.eventsData == null ? "Add Event" : "Update Event",
+            widget.eventsData == null ? local.add_event : local.update_event,
             style: theme.textTheme.titleSmall!.copyWith(
               color: EventlyColors.white,
             ),
@@ -168,22 +176,24 @@ class _CreateEventViewState extends State<CreateEventView> {
               if (widget.eventsData == null) {
                 operation = FirebaseFirestoreUtils.createNewEvent(eventData);
               } else {
-                operation = FirebaseFirestoreUtils.updateEventData(eventData: eventData);
+                operation = FirebaseFirestoreUtils.updateEventData(
+                  eventData: eventData,
+                );
               }
 
               operation.then((value) {
                 Future.delayed(Duration(seconds: 2), () {
                   EasyLoading.dismiss();
                   if (value) {
-                    Navigator.pushNamed(context,PageRoutesName.layout);
+                    Navigator.pushNamed(context, PageRoutesName.layout);
                     SnackbarService.showSuccessNotification(
                       widget.eventsData == null
-                          ? "Event Created"
-                          : "Event Updated",
+                          ? local.event_created
+                          : local.event_updated,
                     );
                   } else {
                     SnackbarService.showErrorNotification(
-                      "Something Went Wrong",
+                      local.something_went_wrong,
                     );
                   }
                 });
@@ -231,32 +241,43 @@ class _CreateEventViewState extends State<CreateEventView> {
                   ),
                 ),
                 SizedBox(height: 20),
-                Text("Title", style: theme.textTheme.bodyLarge),
+                Text(local.title, style: theme.textTheme.bodyLarge!.copyWith(
+                  color: provider.isDark() ? EventlyColors.white : EventlyColors.black
+                )),
                 SizedBox(height: 10),
                 TextFieldWidget(
-                  title: 'Event Item',
+                  color: provider.isDark() ? EventlyColors.dark : EventlyColors.white,
+                  title: local.event_item,
+                  textColor: provider.isDark() ? EventlyColors.white : EventlyColors.gray,
+                  borderColor: provider.isDark() ? EventlyColors.blue : EventlyColors.gray,
                   prefixIcon: ImageIcon(
                     AssetImage(ImagesName.editTextIcon),
-                    color: EventlyColors.gray,
+                    color: provider.isDark() ? EventlyColors.white :EventlyColors.gray,
                   ),
                   controller: nameController,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return "Title is Required";
+                      return local.title_required;
                     }
                     return null;
                   },
                 ),
                 SizedBox(height: 15),
-                Text("Description", style: theme.textTheme.bodyLarge),
+                Text(local.description, style: theme.textTheme.bodyLarge!.copyWith(
+                  color: provider.isDark() ? EventlyColors.white : EventlyColors.black,
+                )),
                 SizedBox(height: 10),
                 TextFieldWidget(
+                  color: provider.isDark() ? EventlyColors.dark : EventlyColors.white,
                   controller: descriptionController,
-                  title: 'Event Description',
+                  title: local.event_description,
+                  textColor: provider.isDark() ? EventlyColors.white : EventlyColors.gray,
+                  borderColor: provider.isDark() ? EventlyColors.blue : EventlyColors.gray,
+
                   maxlines: 5,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return "Description is Required";
+                      return local.description_is_required;
                     }
                     return null;
                   },
@@ -264,9 +285,13 @@ class _CreateEventViewState extends State<CreateEventView> {
                 SizedBox(height: 20),
                 Row(
                   children: [
-                    Icon(Icons.calendar_month),
-                    SizedBox(width: 5),
-                    Text("Event Date", style: theme.textTheme.bodyLarge),
+                    Icon(Icons.calendar_month,
+                      color: provider.isDark() ? EventlyColors.white : EventlyColors.black,
+                    ),
+                    SizedBox(width: 10),
+                    Text(local.event_date, style: theme.textTheme.bodyLarge!.copyWith(
+                      color: provider.isDark() ? EventlyColors.white : EventlyColors.black,
+                    )),
                     Spacer(),
                     Bounceable(
                       onTap: () {
@@ -274,7 +299,7 @@ class _CreateEventViewState extends State<CreateEventView> {
                       },
                       child: Text(
                         selectedDate == null
-                            ? "Choose Date"
+                            ? local.choose_date
                             : DateFormat(
                                 "yyyy MMM dd",
                               ).format(selectedDate!).toString(),
@@ -288,28 +313,17 @@ class _CreateEventViewState extends State<CreateEventView> {
                   ],
                 ),
                 SizedBox(height: 20),
-                // Row(
-                //   children: [
-                //     Icon(Icons.calendar_month),
-                //     SizedBox(width: 5),
-                //     Text("Event Time", style: theme.textTheme.bodyLarge),
-                //     Spacer(),
-                //     Bounceable(
-                //       onTap: () {},
-                //       child: Text(
-                //         "Choose Time",
-                //         style: theme.textTheme.bodyLarge!.copyWith(
-                //           color: EventlyColors.blue,
-                //         ),
-                //       ),
-                //     ),
-                //   ],
-                // ),
                 Row(
                   children: [
-                    Icon(Icons.access_time),
-                    SizedBox(width: 5),
-                    Text("Event Time", style: theme.textTheme.bodyLarge),
+                    Icon(Icons.access_time,
+                      color: provider.isDark() ? EventlyColors.white : EventlyColors.black,
+
+                    ),
+                    SizedBox(width: 10),
+                    Text(local.event_time, style: theme.textTheme.bodyLarge!.copyWith(
+                      color: provider.isDark() ? EventlyColors.white : EventlyColors.black,
+
+                    )),
                     Spacer(),
                     Bounceable(
                       onTap: () {
@@ -317,7 +331,7 @@ class _CreateEventViewState extends State<CreateEventView> {
                       },
                       child: Text(
                         selectedTime == null
-                            ? "Choose Time"
+                            ? local.choose_time
                             : DateFormat(
                                 "h:mm a",
                               ).format(selectedTime!).toString(),
@@ -332,7 +346,7 @@ class _CreateEventViewState extends State<CreateEventView> {
                 ),
                 SizedBox(height: 20),
                 RegisterButtonWidget(
-                  bgColor: EventlyColors.white,
+                bgColor: provider.isDark() ? EventlyColors.dark : EventlyColors.white,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 8,
@@ -356,7 +370,7 @@ class _CreateEventViewState extends State<CreateEventView> {
                         ),
                         SizedBox(width: 10),
                         Text(
-                          "Choose Event Location",
+                          local.choose_loc,
                           style: theme.textTheme.bodyLarge!.copyWith(
                             color: EventlyColors.blue,
                           ),
