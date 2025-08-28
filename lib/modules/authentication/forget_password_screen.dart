@@ -6,6 +6,8 @@ import 'package:evently/modules/settings_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/routes/page_routes_name.dart';
+
 class ForgetPasswordScreen extends StatelessWidget {
   const ForgetPasswordScreen({super.key});
 
@@ -44,7 +46,11 @@ var provider = Provider.of<SettingsProvider>(context);
                 ).textTheme.titleMedium!.copyWith(color: EventlyColors.white),
                 textAlign: TextAlign.center,
               ),
-              buttonAction: () {},
+              buttonAction: () {
+                Navigator.of(
+                  context,
+                ).pushReplacementNamed(PageRoutesName.layout);
+              },
             ),
           ],
         ),

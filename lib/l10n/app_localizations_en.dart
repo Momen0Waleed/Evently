@@ -213,4 +213,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get skip => 'Skip';
+
+  @override
+  String get select_loc => 'Tap on location to select';
 }

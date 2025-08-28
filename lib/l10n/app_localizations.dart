@@ -499,6 +499,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Skip'**
   String get skip;
+
+  /// No description provided for @select_loc.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap on location to select'**
+  String get select_loc;
 }
 
 class _AppLocalizationsDelegate
