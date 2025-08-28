@@ -21,6 +21,7 @@
     "name": "Name",
     "re_password": "Re-Password",
     "already_have_acc": "Already Have Account ?",
+    "name_req": "Name is Required",
     "pass_is_required": "is required",
     "email_is_required": "is required",
     "pls_confirm_ur_password": "Please confirm your password",

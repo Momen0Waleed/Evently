@@ -72,6 +72,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get already_have_acc => 'هل لديك حساب بالفعل ؟';
 
   @override
+  String get name_req => 'الإسم مطلوب';
+
+  @override
   String get pass_is_required => 'مطلوبة';
 
   @override

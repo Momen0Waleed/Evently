@@ -72,6 +72,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get already_have_acc => 'Already Have Account ?';
 
   @override
+  String get name_req => 'Name is Required';
+
+  @override
   String get pass_is_required => 'is required';
 
   @override

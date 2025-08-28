@@ -1,9 +1,11 @@
 import 'package:evently/core/routes/page_routes_name.dart';
+import 'package:evently/core/utils/firebase_authentication_utils.dart';
 import 'package:evently/l10n/app_localizations.dart';
 import 'package:evently/modules/authentication/widgets/register_button_widget.dart';
 import 'package:evently/modules/authentication/widgets/text_field_widget.dart';
 import 'package:evently/modules/settings_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
 
 import '../../core/constants/colors/evently_colors.dart';
@@ -79,6 +81,7 @@ class _CreateAccountState extends State<CreateAccount> {
                             ? EventlyColors.white
                             : EventlyColors.gray,
                       ),
+                      validator: validateName,
                       controller: nameController,
                     ),
                     TextFieldWidget(
@@ -155,9 +158,19 @@ class _CreateAccountState extends State<CreateAccount> {
                       buttonAction: () {
                         setState(() {
                           if (_formKey.currentState!.validate()) {
-                            Navigator.of(
-                              context,
-                            ).pushReplacementNamed(PageRoutesName.layout);
+                            // Navigator.of(
+                            //   context,
+                            // ).pushReplacementNamed(PageRoutesName.layout);
+                            EasyLoading.show();
+                            FirebaseAuthenticationUtils.createUserWithEmailAndPassword(
+                              emailAddress: mailController.text,
+                              password: passwordController.text,
+                            ).then((value) {
+                              EasyLoading.dismiss();
+                              if (value) {
+                                Navigator.pop(context);
+                              }
+                            });
                           }
                         });
                       },
@@ -216,6 +229,13 @@ class _CreateAccountState extends State<CreateAccount> {
         ),
       ),
     );
+  }
+
+  String? validateName(String? value) {
+    if (value == null || value.isEmpty) {
+      return AppLocalizations.of(context)!.name_req;
+    }
+    return null;
   }
 
   String? validateEmail(String? value) {

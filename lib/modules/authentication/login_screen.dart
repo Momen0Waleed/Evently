@@ -3,11 +3,13 @@ import 'package:evently/core/constants/images/images_name.dart';
 import 'package:evently/core/constants/services/local_storage_keys.dart';
 import 'package:evently/core/constants/services/local_storage_services.dart';
 import 'package:evently/core/routes/page_routes_name.dart';
+import 'package:evently/core/utils/firebase_authentication_utils.dart';
 import 'package:evently/l10n/app_localizations.dart';
 import 'package:evently/modules/authentication/widgets/register_button_widget.dart';
 import 'package:evently/modules/authentication/widgets/text_field_widget.dart';
 import 'package:evently/modules/settings_provider.dart' show SettingsProvider;
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart' show Provider;
 
 import '../onboarding/widgets/language_switch.dart';
@@ -20,11 +22,10 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  // bool isLanguageEN = true;
+  bool isLanguageEN = true;
   final _formKey = GlobalKey<FormState>();
   final mailController = TextEditingController();
   final passwordController = TextEditingController();
-
 
   @override
   Widget build(BuildContext context) {
@@ -52,37 +53,73 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Column(
                 children: [
                   Container(
-                    height: dynamicSize.height * 0.22,
+                    // height: dynamicSize.height * 0.225,
                     margin: EdgeInsets.symmetric(vertical: 25),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         TextFieldWidget(
-                          color: provider.isDark() ? Colors.transparent : EventlyColors.white,
-                          textColor: provider.isDark() ? EventlyColors.white : EventlyColors.gray,
-                          borderColor: provider.isDark() ? EventlyColors.blue : EventlyColors.gray,
+                          color: provider.isDark()
+                              ? Colors.transparent
+                              : EventlyColors.white,
+                          textColor: provider.isDark()
+                              ? EventlyColors.white
+                              : EventlyColors.gray,
+                          borderColor: provider.isDark()
+                              ? EventlyColors.blue
+                              : EventlyColors.gray,
 
                           title: local.email,
-                          prefixIcon: Icon(Icons.mail_rounded,color: provider.isDark() ? EventlyColors.white : EventlyColors.gray,),
+                          prefixIcon: Icon(
+                            Icons.mail_rounded,
+                            color: provider.isDark()
+                                ? EventlyColors.white
+                                : EventlyColors.gray,
+                          ),
                           controller: mailController,
+                          validator: (String? value) {
+                            if (value == null || value.isEmpty) {
+                              return "${AppLocalizations.of(context)!.email} ${AppLocalizations.of(context)!.email_is_required}";
+                            }
+                            return null;
+                          },
                         ),
+                        SizedBox(height: 10,),
                         TextFieldWidget(
-                          color: provider.isDark() ? Colors.transparent : EventlyColors.white,
-                          textColor: provider.isDark() ? EventlyColors.white : EventlyColors.gray,
-                          borderColor: provider.isDark() ? EventlyColors.blue : EventlyColors.gray,
+                          color: provider.isDark()
+                              ? Colors.transparent
+                              : EventlyColors.white,
+                          textColor: provider.isDark()
+                              ? EventlyColors.white
+                              : EventlyColors.gray,
+                          borderColor: provider.isDark()
+                              ? EventlyColors.blue
+                              : EventlyColors.gray,
 
                           title: local.password,
-                          prefixIcon: Icon(Icons.lock_rounded,color: provider.isDark() ? EventlyColors.white : EventlyColors.gray,),
+                          prefixIcon: Icon(
+                            Icons.lock_rounded,
+                            color: provider.isDark()
+                                ? EventlyColors.white
+                                : EventlyColors.gray,
+                          ),
                           isPassword: true,
                           controller: passwordController,
+                          validator: (String? value) {
+                            if (value == null || value.isEmpty) {
+                              return "${AppLocalizations.of(context)!.password} ${AppLocalizations.of(context)!.pass_is_required}";
+                            }
+                            return null;
+                          },
                         ),
                         Align(
                           alignment: Alignment.centerRight,
                           child: TextButton(
                             onPressed: () {
-                              Navigator.of(context).pushNamed(PageRoutesName.forgetPassword);
-
+                              Navigator.of(
+                                context,
+                              ).pushNamed(PageRoutesName.forgetPassword);
                             },
                             child: Text(
                               local.forget_password,
@@ -103,7 +140,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   SizedBox(
                     height: dynamicSize.height * 0.3,
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         RegisterButtonWidget(
@@ -118,7 +155,16 @@ class _LoginScreenState extends State<LoginScreen> {
                           buttonAction: () {
                             setState(() {
                               if (_formKey.currentState!.validate()) {
-                                Navigator.of(context).pushReplacementNamed(PageRoutesName.layout);
+                                EasyLoading.show();
+                                FirebaseAuthenticationUtils.signInWithEmailAndPassword(
+                                  emailAddress: mailController.text,
+                                  password: passwordController.text,
+                                ).then(((value) {
+                                  EasyLoading.dismiss();
+                                  Navigator.of(
+                                    context,
+                                  ).pushReplacementNamed(PageRoutesName.layout);
+                                }));
                               }
                             });
                           },
@@ -130,12 +176,16 @@ class _LoginScreenState extends State<LoginScreen> {
                             Text(
                               local.dont_have_acc,
                               style: theme.bodyLarge!.copyWith(
-                                  color: provider.isDark() ?  EventlyColors.white : EventlyColors.black,
+                                color: provider.isDark()
+                                    ? EventlyColors.white
+                                    : EventlyColors.black,
                               ),
                             ),
                             TextButton(
                               onPressed: () {
-                                Navigator.of(context).pushNamed(PageRoutesName.register);
+                                Navigator.of(
+                                  context,
+                                ).pushNamed(PageRoutesName.register);
                               },
                               style: TextButton.styleFrom(
                                 padding: EdgeInsets.symmetric(horizontal: 2),
@@ -163,7 +213,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                 endIndent: 10,
                               ),
                             ),
-                            Text(" ${local.or} ", style: theme.bodyLarge),
+                            Text(" ${local.or} ", style: theme.bodyLarge!.copyWith(
+                              color: provider.isDark() ? EventlyColors.white : EventlyColors.black
+                            )),
                             Expanded(
                               child: Divider(
                                 height: 3,
@@ -177,7 +229,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
                         /// Google Login Button
                         RegisterButtonWidget(
-                        bgColor: provider.isDark() ? Colors.transparent : EventlyColors.white,
+                          bgColor: provider.isDark()
+                              ? Colors.transparent
+                              : EventlyColors.white,
 
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -204,13 +258,18 @@ class _LoginScreenState extends State<LoginScreen> {
               margin: EdgeInsets.only(top: 25),
               child: LanguageSwitch(
                 onLanguageChanged: (bool value) async {
-                  provider.changeLanguage(value ? "en" : "ar");
-
+                  setState(() {
+                    isLanguageEN = value;
+                  });
+                  provider.changeLanguage(isLanguageEN ? "en" : "ar");
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    _formKey.currentState?.validate();
+                  });
                   await LocalStorageServices.setString(
                     LocalStorageKeys.languageKey,
                     value ? "en" : "ar",
                   );
-                },
+                  },
               ),
             ),
           ],

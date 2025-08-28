@@ -13,6 +13,7 @@ import 'core/routes/page_routes_name.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
+import 'modules/manager/app_provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,11 +22,15 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => SettingsProvider(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => SettingsProvider()),
+        ChangeNotifierProvider(create: (_) => AppProvider()), // ✅ add this
+      ],
       child: const MyApp(),
     ),
   );
+
 
   configLoading();
 }
@@ -36,17 +41,22 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var provider = Provider.of<SettingsProvider>(context);
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      themeMode: provider.currentThemeMode,
-      theme: EventlyThemeManager.eventlyThemeData,
-      darkTheme: EventlyThemeManager.eventlyDarkThemeData,
-      initialRoute: PageRoutesName.splash,
-      onGenerateRoute: AppRoutes.onGenerateRoute,
-      locale: Locale(provider.currentLanguage),
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
-      builder: EasyLoading.init(builder: BotToastInit()),
+    return Consumer<SettingsProvider>(
+      builder: (context, provider, child) {
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          themeMode: provider.currentThemeMode,
+          theme: EventlyThemeManager.eventlyThemeData,
+          darkTheme: EventlyThemeManager.eventlyDarkThemeData,
+          initialRoute: PageRoutesName.splash,
+          onGenerateRoute: AppRoutes.onGenerateRoute,
+          locale: Locale(provider.currentLanguage),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          builder: EasyLoading.init(builder: BotToastInit()),
+        );
+      },
+
     );
   }
 }

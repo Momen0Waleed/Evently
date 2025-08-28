@@ -21,6 +21,7 @@
   "name": "الأسم",
   "re_password": "إعادة تعيين كلمة المرور",
   "already_have_acc": "هل لديك حساب بالفعل ؟",
+  "name_req": "الإسم مطلوب",
   "email_is_required": "مطلوب",
   "pass_is_required": "مطلوبة",
   "pls_confirm_ur_password": "الرجاء تأكيد كلمة المرور",

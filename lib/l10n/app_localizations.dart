@@ -224,6 +224,12 @@ abstract class AppLocalizations {
   /// **'Already Have Account ?'**
   String get already_have_acc;
 
+  /// No description provided for @name_req.
+  ///
+  /// In en, this message translates to:
+  /// **'Name is Required'**
+  String get name_req;
+
   /// No description provided for @pass_is_required.
   ///
   /// In en, this message translates to:
