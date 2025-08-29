@@ -6,12 +6,13 @@ import 'package:evently/l10n/app_localizations.dart';
 import 'package:evently/models/database/events_data.dart';
 import 'package:evently/modules/authentication/widgets/register_button_widget.dart';
 import 'package:evently/modules/event_creation/widgets/tap_item_widget.dart';
-import 'package:evently/modules/settings_provider.dart';
+import 'package:evently/modules/manager/app_provider.dart';
+import 'package:evently/modules/manager/settings_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart' show Provider;
+import 'package:provider/provider.dart' show Provider, Consumer;
 
 import '../../core/constants/colors/evently_colors.dart';
 import '../authentication/widgets/text_field_widget.dart';
@@ -29,6 +30,7 @@ class _CreateEventViewState extends State<CreateEventView> {
   @override
   void initState() {
     super.initState();
+    appProvider = Provider.of<AppProvider>(context,listen:  false);
 
     if (widget.eventsData != null) {
       // Fill text fields
@@ -47,9 +49,10 @@ class _CreateEventViewState extends State<CreateEventView> {
       selectedDate = widget.eventsData!.selectedDate;
       selectedTime = widget
           .eventsData!
-          .selectedDate; // same field since your model stores date+time
+          .selectedDate;
     }
   }
+  late AppProvider appProvider;
 
   final TextEditingController nameController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
@@ -114,102 +117,19 @@ class _CreateEventViewState extends State<CreateEventView> {
     var provider = Provider.of<SettingsProvider>(context);
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: provider.isDark() ? EventlyColors.dark:EventlyColors.white,
-        title: Text(widget.eventsData == null ? local.create_event : local.edit_event),
-      ),
-      floatingActionButton: Container(
-        width: double.infinity,
-        padding: EdgeInsets.symmetric(horizontal: 16),
-        child: RegisterButtonWidget(
-          bgColor: EventlyColors.blue,
-          child: Text(
-            widget.eventsData == null ? local.add_event : local.update_event,
-            style: theme.textTheme.titleSmall!.copyWith(
-              color: EventlyColors.white,
-            ),
-          ),
-          buttonAction: () {
-            setState(() {
-              // Validate fields
-              isDateValid = selectedDate != null;
-              isTimeValid = selectedTime != null;
-            });
-
-            if (formKey.currentState!.validate()) {
-              if (!isDateValid || !isTimeValid) {
-                return;
-              }
-              final DateTime combinedDateTime = DateTime(
-                selectedDate!.year,
-                selectedDate!.month,
-                selectedDate!.day,
-                selectedTime!.hour,
-                selectedTime!.minute,
-              );
-
-              var eventData = EventsData(
-                eventID: widget.eventsData?.eventID,
-                eventTitle: nameController.text,
-                eventDescription: descriptionController.text,
-                eventCategoryImg: categories[currentTabIndex].categoryImg,
-                eventCategoryId: categories[currentTabIndex].categoryTitle,
-                selectedDate: combinedDateTime,
-              );
-
-              EasyLoading.show();
-
-              // FirebaseFirestoreUtils.createNewEvent(eventData).then((value) {
-              //   Future.delayed(Duration(seconds: 2), () {
-              //     EasyLoading.dismiss();
-              //     if (value) {
-              //       Navigator.pop(context);
-              //       SnackbarService.showSuccessNotification("Event Created");
-              //     } else {
-              //       SnackbarService.showErrorNotification(
-              //         "Something Went Wrong",
-              //       );
-              //     }
-              //   });
-              // });
-
-              Future<bool> operation;
-              if (widget.eventsData == null) {
-                operation = FirebaseFirestoreUtils.createNewEvent(eventData);
-              } else {
-                operation = FirebaseFirestoreUtils.updateEventData(
-                  eventData: eventData,
-                );
-              }
-
-              operation.then((value) {
-                Future.delayed(Duration(seconds: 2), () {
-                  EasyLoading.dismiss();
-                  if (value) {
-                    Navigator.pushNamed(context, PageRoutesName.layout);
-                    SnackbarService.showSuccessNotification(
-                      widget.eventsData == null
-                          ? local.event_created
-                          : local.event_updated,
-                    );
-                  } else {
-                    SnackbarService.showErrorNotification(
-                      local.something_went_wrong,
-                    );
-                  }
-                });
-              });
-            }
-          },
+        backgroundColor: provider.isDark()
+            ? EventlyColors.dark
+            : EventlyColors.white,
+        title: Text(
+          widget.eventsData == null ? local.create_event : local.edit_event,
         ),
       ),
-
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 16),
-        child: SingleChildScrollView(
-          physics: BouncingScrollPhysics(),
-          child: Form(
-            key: formKey,
+        child: Form(
+          key: formKey,
+          child: SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
@@ -241,18 +161,31 @@ class _CreateEventViewState extends State<CreateEventView> {
                   ),
                 ),
                 SizedBox(height: 20),
-                Text(local.title, style: theme.textTheme.bodyLarge!.copyWith(
-                  color: provider.isDark() ? EventlyColors.white : EventlyColors.black
-                )),
+                Text(
+                  local.title,
+                  style: theme.textTheme.bodyLarge!.copyWith(
+                    color: provider.isDark()
+                        ? EventlyColors.white
+                        : EventlyColors.black,
+                  ),
+                ),
                 SizedBox(height: 10),
                 TextFieldWidget(
-                  color: provider.isDark() ? EventlyColors.dark : EventlyColors.white,
+                  color: provider.isDark()
+                      ? EventlyColors.dark
+                      : EventlyColors.white,
                   title: local.event_item,
-                  textColor: provider.isDark() ? EventlyColors.white : EventlyColors.gray,
-                  borderColor: provider.isDark() ? EventlyColors.blue : EventlyColors.gray,
+                  textColor: provider.isDark()
+                      ? EventlyColors.white
+                      : EventlyColors.gray,
+                  borderColor: provider.isDark()
+                      ? EventlyColors.blue
+                      : EventlyColors.gray,
                   prefixIcon: ImageIcon(
                     AssetImage(ImagesName.editTextIcon),
-                    color: provider.isDark() ? EventlyColors.white :EventlyColors.gray,
+                    color: provider.isDark()
+                        ? EventlyColors.white
+                        : EventlyColors.gray,
                   ),
                   controller: nameController,
                   validator: (value) {
@@ -263,16 +196,27 @@ class _CreateEventViewState extends State<CreateEventView> {
                   },
                 ),
                 SizedBox(height: 15),
-                Text(local.description, style: theme.textTheme.bodyLarge!.copyWith(
-                  color: provider.isDark() ? EventlyColors.white : EventlyColors.black,
-                )),
+                Text(
+                  local.description,
+                  style: theme.textTheme.bodyLarge!.copyWith(
+                    color: provider.isDark()
+                        ? EventlyColors.white
+                        : EventlyColors.black,
+                  ),
+                ),
                 SizedBox(height: 10),
                 TextFieldWidget(
-                  color: provider.isDark() ? EventlyColors.dark : EventlyColors.white,
+                  color: provider.isDark()
+                      ? EventlyColors.dark
+                      : EventlyColors.white,
                   controller: descriptionController,
                   title: local.event_description,
-                  textColor: provider.isDark() ? EventlyColors.white : EventlyColors.gray,
-                  borderColor: provider.isDark() ? EventlyColors.blue : EventlyColors.gray,
+                  textColor: provider.isDark()
+                      ? EventlyColors.white
+                      : EventlyColors.gray,
+                  borderColor: provider.isDark()
+                      ? EventlyColors.blue
+                      : EventlyColors.gray,
 
                   maxlines: 5,
                   validator: (value) {
@@ -285,13 +229,21 @@ class _CreateEventViewState extends State<CreateEventView> {
                 SizedBox(height: 20),
                 Row(
                   children: [
-                    Icon(Icons.calendar_month,
-                      color: provider.isDark() ? EventlyColors.white : EventlyColors.black,
+                    Icon(
+                      Icons.calendar_month,
+                      color: provider.isDark()
+                          ? EventlyColors.white
+                          : EventlyColors.black,
                     ),
                     SizedBox(width: 10),
-                    Text(local.event_date, style: theme.textTheme.bodyLarge!.copyWith(
-                      color: provider.isDark() ? EventlyColors.white : EventlyColors.black,
-                    )),
+                    Text(
+                      local.event_date,
+                      style: theme.textTheme.bodyLarge!.copyWith(
+                        color: provider.isDark()
+                            ? EventlyColors.white
+                            : EventlyColors.black,
+                      ),
+                    ),
                     Spacer(),
                     Bounceable(
                       onTap: () {
@@ -315,15 +267,21 @@ class _CreateEventViewState extends State<CreateEventView> {
                 SizedBox(height: 20),
                 Row(
                   children: [
-                    Icon(Icons.access_time,
-                      color: provider.isDark() ? EventlyColors.white : EventlyColors.black,
-
+                    Icon(
+                      Icons.access_time,
+                      color: provider.isDark()
+                          ? EventlyColors.white
+                          : EventlyColors.black,
                     ),
                     SizedBox(width: 10),
-                    Text(local.event_time, style: theme.textTheme.bodyLarge!.copyWith(
-                      color: provider.isDark() ? EventlyColors.white : EventlyColors.black,
-
-                    )),
+                    Text(
+                      local.event_time,
+                      style: theme.textTheme.bodyLarge!.copyWith(
+                        color: provider.isDark()
+                            ? EventlyColors.white
+                            : EventlyColors.black,
+                      ),
+                    ),
                     Spacer(),
                     Bounceable(
                       onTap: () {
@@ -345,48 +303,155 @@ class _CreateEventViewState extends State<CreateEventView> {
                   ],
                 ),
                 SizedBox(height: 20),
-                RegisterButtonWidget(
-                bgColor: provider.isDark() ? EventlyColors.dark : EventlyColors.white,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 5.0,
-                    ),
-                    child: Row(
-                      children: [
-                        Container(
-                          width: 45,
-                          height: double.infinity,
-                          padding: const EdgeInsets.all(5.0),
-                          decoration: BoxDecoration(
+                Consumer<AppProvider>(
+                  builder: (context,appProvider,child) => RegisterButtonWidget(
+                    bgColor: provider.isDark()
+                        ? EventlyColors.dark
+                        : EventlyColors.white,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 5.0,
+                      ),
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 45,
+                            height: double.infinity,
+                            padding: const EdgeInsets.all(5.0),
+                            decoration: BoxDecoration(
+                              color: EventlyColors.blue,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Icon(
+                              Icons.my_location_rounded,
+                              size: 26,
+                              color: EventlyColors.white,
+                            ),
+                          ),
+                          SizedBox(width: 10),
+                          Expanded(
+                            child: Text(
+                              widget.eventsData == null ?(
+                             appProvider.eventLocation == null ? local.choose_loc : "Location: ${appProvider.eventLocation!.latitude.toString()} ,\n${appProvider.eventLocation!.longitude.toString()} ")
+                              : "Location: ${widget.eventsData?.lat.toString()} ,\n${widget.eventsData?.long.toString()} ",
+                              style: theme.textTheme.bodyLarge!.copyWith(
+                                color: EventlyColors.blue,
+                                height: 1.6
+                              ),
+                              softWrap: true,
+                            ),
+                          ),
+                          // Spacer(),
+                          Icon(
+                            Icons.arrow_forward_ios_rounded,
                             color: EventlyColors.blue,
-                            borderRadius: BorderRadius.circular(10),
+                            size: 20,
                           ),
-                          child: Icon(
-                            Icons.my_location_rounded,
-                            size: 26,
-                            color: EventlyColors.white,
-                          ),
-                        ),
-                        SizedBox(width: 10),
-                        Text(
-                          local.choose_loc,
-                          style: theme.textTheme.bodyLarge!.copyWith(
-                            color: EventlyColors.blue,
-                          ),
-                        ),
-                        Spacer(),
-                        Icon(
-                          Icons.arrow_forward_ios_rounded,
-                          color: EventlyColors.blue,
-                          size: 20,
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
+                    buttonAction: () {
+                      Navigator.of(context).pushNamed(PageRoutesName.pickLocation);
+                    },
                   ),
-                  buttonAction: () {},
                 ),
-                SizedBox(height: 200),
+                SizedBox(height: 20),
+                Container(
+                  width: double.infinity,
+                  height: 60,
+                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  child: RegisterButtonWidget(
+                    bgColor: EventlyColors.blue,
+                    child: Text(
+                      widget.eventsData == null
+                          ? local.add_event
+                          : local.update_event,
+                      style: theme.textTheme.titleSmall!.copyWith(
+                        color: EventlyColors.white,
+                      ),
+                    ),
+                    buttonAction: () {
+                      setState(() {
+                        // Validate fields
+                        isDateValid = selectedDate != null;
+                        isTimeValid = selectedTime != null;
+                      });
+                      if(appProvider.eventLocation == null){
+                        return SnackbarService.showErrorNotification(
+                          local.plz_enter_loc,
+                        );
+                      }
+                      if (formKey.currentState!.validate()) {
+                        if (!isDateValid || !isTimeValid) {
+                          return;
+                        }
+                        final DateTime combinedDateTime = DateTime(
+                          selectedDate!.year,
+                          selectedDate!.month,
+                          selectedDate!.day,
+                          selectedTime!.hour,
+                          selectedTime!.minute,
+                        );
+
+                        var eventData = EventsData(
+                          eventID: widget.eventsData?.eventID,
+                          eventTitle: nameController.text,
+                          eventDescription: descriptionController.text,
+                          eventCategoryImg:
+                              categories[currentTabIndex].categoryImg,
+                          eventCategoryId:
+                              categories[currentTabIndex].categoryTitle,
+                          selectedDate: combinedDateTime,
+                          lat: appProvider.eventLocation?.latitude ?? 0,
+                          long: appProvider.eventLocation?.longitude ?? 0
+                        );
+
+                        EasyLoading.show();
+
+                        Future<bool> operation;
+                        if (widget.eventsData == null) {
+                          operation = FirebaseFirestoreUtils.createNewEvent(
+                            eventData,
+                          );
+                        } else {
+                          operation = FirebaseFirestoreUtils.updateEventData(
+                            eventData: eventData,
+                          );
+                        }
+
+                        operation.then((value) {
+                          Future.delayed(Duration(seconds: 2), () {
+                            EasyLoading.dismiss();
+
+                            if (value) {
+                              Navigator.pushNamed(
+                                // ignore: use_build_context_synchronously
+                                context,
+                                PageRoutesName.layout,
+                              );
+                              SnackbarService.showSuccessNotification(
+                                widget.eventsData == null
+                                    ? local.event_created
+                                    : local.event_updated,
+                              );
+                            } else {
+                              SnackbarService.showErrorNotification(
+                                local.something_went_wrong,
+                              );
+                            }
+                          });
+                        });
+                      }else{
+                        return SnackbarService.showErrorNotification(
+                          local.plz_enter_loc,
+                        );
+                      }
+                    },
+                  ),
+                ),
+                SizedBox(height: 30),
+
               ],
             ),
           ),

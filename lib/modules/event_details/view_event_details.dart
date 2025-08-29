@@ -6,14 +6,18 @@ import 'package:evently/l10n/app_localizations.dart';
 import 'package:evently/models/database/events_data.dart';
 import 'package:evently/modules/authentication/widgets/register_button_widget.dart';
 import 'package:evently/modules/event_creation/create_event_view.dart';
-import 'package:evently/modules/settings_provider.dart';
+import 'package:evently/modules/manager/settings_provider.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
+import '../manager/app_provider.dart';
+
 class ViewEventDetails extends StatelessWidget {
   const ViewEventDetails({super.key});
-  // final EventsData eventsData;
 
   @override
   Widget build(BuildContext context) {
@@ -31,8 +35,10 @@ class ViewEventDetails extends StatelessWidget {
     var local = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: provider.isDark() ? EventlyColors.dark:EventlyColors.white,
-        title: Text(local.event_details,),
+        backgroundColor: provider.isDark()
+            ? EventlyColors.dark
+            : EventlyColors.white,
+        title: Text(local.event_details),
         actions: [
           IconButton(
             onPressed: () {
@@ -57,6 +63,7 @@ class ViewEventDetails extends StatelessWidget {
                 // Perform deletion here
                 FirebaseFirestoreUtils.deleteEventData(eventData: eventData);
                 Navigator.of(
+                  // ignore: use_build_context_synchronously
                   context,
                 ).pushReplacementNamed(PageRoutesName.layout);
               }
@@ -91,7 +98,9 @@ class ViewEventDetails extends StatelessWidget {
                 ),
               ),
               RegisterButtonWidget(
-                bgColor: provider.isDark() ?EventlyColors.dark: EventlyColors.white,
+                bgColor: provider.isDark()
+                    ? EventlyColors.dark
+                    : EventlyColors.white,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 8,
@@ -130,7 +139,9 @@ class ViewEventDetails extends StatelessWidget {
                               "hh:mm a",
                             ).format(eventData.selectedDate).toString(),
                             style: theme.textTheme.bodyLarge!.copyWith(
-                              color: provider.isDark() ? EventlyColors.white : EventlyColors.black
+                              color: provider.isDark()
+                                  ? EventlyColors.white
+                                  : EventlyColors.black,
                             ),
                           ),
                         ],
@@ -139,64 +150,110 @@ class ViewEventDetails extends StatelessWidget {
                   ),
                 ),
               ),
-              RegisterButtonWidget(
-                bgColor:provider.isDark() ? EventlyColors.dark : EventlyColors.white,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 8,
-                    vertical: 5.0,
+              Consumer<AppProvider>(
+                builder: (context, appProvider, child) => RegisterButtonWidget(
+                  bgColor: provider.isDark()
+                      ? EventlyColors.dark
+                      : EventlyColors.white,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 5.0,
+                    ),
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 45,
+                          height: double.infinity,
+                          padding: const EdgeInsets.all(5.0),
+                          decoration: BoxDecoration(
+                            color: EventlyColors.blue,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Icon(
+                            Icons.my_location_rounded,
+                            size: 26,
+                            color: EventlyColors.white,
+                          ),
+                        ),
+                        SizedBox(width: 10),
+                        Expanded(
+                          child: Text(
+                            "Location: ${eventData.lat.toString()} ,\n${eventData.long.toString()} ",
+                            style: theme.textTheme.bodyLarge!.copyWith(
+                              color: EventlyColors.blue,
+                              height: 1.6,
+                            ),
+                            softWrap: true,
+                          ),
+                        ),
+                        // Spacer(),
+                      ],
+                    ),
                   ),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 45,
-                        height: double.infinity,
-                        padding: const EdgeInsets.all(5.0),
-                        decoration: BoxDecoration(
-                          color: EventlyColors.blue,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Icon(
-                          Icons.my_location_rounded,
-                          size: 26,
-                          color: EventlyColors.white,
-                        ),
-                      ),
-                      SizedBox(width: 10),
-                      Text(
-                        "Cairo, Egypt",
-                        style: theme.textTheme.bodyLarge!.copyWith(
-                          color: EventlyColors.blue,
-                        ),
-                      ),
-                      Spacer(),
-                      Icon(
-                        Icons.arrow_forward_ios_rounded,
-                        color: EventlyColors.blue,
-                        size: 20,
-                      ),
-                    ],
-                  ),
+                  buttonAction: () {},
                 ),
-                buttonAction: () {},
               ),
-              Container(
-                width: double.infinity,
-                height: 360,
-                decoration: BoxDecoration(
-                  border: Border.all(color: EventlyColors.blue, width: 2),
-                  borderRadius: BorderRadius.circular(16),
-                  color: Colors.transparent,
+          ClipRRect(
+            borderRadius: BorderRadiusGeometry.circular(16),
+                child: Container(
+                  padding: EdgeInsets.all(2.5),
+                  width: double.infinity,
+                  height: 360,
+                  decoration: BoxDecoration(
+                    border: Border.all(color: EventlyColors.blue, width: 2),
+                    borderRadius: BorderRadius.circular(16),
+                    color: Colors.transparent,
+                  ),
+                  child: Consumer<AppProvider>(
+                    builder: (context, provider, child) => GoogleMap(
+                      gestureRecognizers: {
+                        Factory<OneSequenceGestureRecognizer>(
+                          () => EagerGestureRecognizer(),
+                        ),
+                      },
+                      markers: {
+                        Marker(
+                          markerId: MarkerId(eventData.eventID.toString()),
+                          position: LatLng(eventData.lat!, eventData.long!),
+                        ),
+                      },
+                      onMapCreated: (mapController) {
+                        // provider.googleMapController = mapController;
+                        // provider.changeLocationOnMap(provider.eventLocation)
+                
+                        provider.googleMapController = mapController;
+                
+                        mapController.animateCamera(
+                          CameraUpdate.newCameraPosition(
+                            CameraPosition(
+                              target: LatLng(eventData.lat!, eventData.long!),
+                              zoom: 14,
+                            ),
+                          ),
+                        );
+                      },
+                      initialCameraPosition: CameraPosition(
+                        target: LatLng(eventData.lat!, eventData.long!),
+                        zoom: 14,
+                      ),
+                    ),
+                  ),
                 ),
               ),
               Align(
                 alignment: Alignment.centerLeft,
-                child: Text(local.description, style: theme.textTheme.titleSmall),
+                child: Text(
+                  local.description,
+                  style: theme.textTheme.titleSmall,
+                ),
               ),
               Text(
                 eventData.eventDescription,
                 style: theme.textTheme.bodyLarge!.copyWith(
-                  color: provider.isDark() ? EventlyColors.white: EventlyColors.black
+                  color: provider.isDark()
+                      ? EventlyColors.white
+                      : EventlyColors.black,
                 ),
               ),
             ],
@@ -213,25 +270,40 @@ class ViewEventDetails extends StatelessWidget {
       barrierDismissible: true, // Prevents closing by tapping outside
       builder: (context) {
         return AlertDialog(
-          backgroundColor:Provider.of<SettingsProvider>(context).isDark() ? EventlyColors.dark : EventlyColors.white,
+          backgroundColor: Provider.of<SettingsProvider>(context).isDark()
+              ? EventlyColors.dark
+              : EventlyColors.white,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
-          title: Text(local.confirm_del,style: TextStyle(
-            color: Provider.of<SettingsProvider>(context).isDark() ? EventlyColors.white : EventlyColors.black
-          ),),
-          content: Text(local.are_u_sure,style: TextStyle(
-          color: Provider.of<SettingsProvider>(context).isDark() ? EventlyColors.white : EventlyColors.black
-        )),
+          title: Text(
+            local.confirm_del,
+            style: TextStyle(
+              color: Provider.of<SettingsProvider>(context).isDark()
+                  ? EventlyColors.white
+                  : EventlyColors.black,
+            ),
+          ),
+          content: Text(
+            local.are_u_sure,
+            style: TextStyle(
+              color: Provider.of<SettingsProvider>(context).isDark()
+                  ? EventlyColors.white
+                  : EventlyColors.black,
+            ),
+          ),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(false); // Cancel
               },
               child: Text(
-                local.cancel,style: TextStyle(
-                  color: Provider.of<SettingsProvider>(context).isDark() ? EventlyColors.white : EventlyColors.black
-              ),
+                local.cancel,
+                style: TextStyle(
+                  color: Provider.of<SettingsProvider>(context).isDark()
+                      ? EventlyColors.white
+                      : EventlyColors.black,
+                ),
               ),
             ),
             ElevatedButton(

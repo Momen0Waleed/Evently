@@ -8,7 +8,7 @@ import 'package:evently/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart' show Provider;
 
-import '../../settings_provider.dart' show SettingsProvider;
+import '../../manager/settings_provider.dart' show SettingsProvider;
 
 class ProfileView extends StatefulWidget {
   const ProfileView({super.key});

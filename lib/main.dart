@@ -1,7 +1,7 @@
 import 'package:bot_toast/bot_toast.dart';
 import 'package:evently/core/constants/theme/evently_theme_manager.dart';
 import 'package:evently/l10n/app_localizations.dart';
-import 'package:evently/modules/settings_provider.dart';
+import 'package:evently/modules/manager/settings_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
@@ -25,7 +25,7 @@ Future<void> main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => SettingsProvider()),
-        ChangeNotifierProvider(create: (_) => AppProvider()), // ✅ add this
+        ChangeNotifierProvider(create: (_) => AppProvider()),
       ],
       child: const MyApp(),
     ),
@@ -40,7 +40,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var provider = Provider.of<SettingsProvider>(context);
+    // ignore: unused_local_variable
+    // var provider = Provider.of<SettingsProvider>(context);
     return Consumer<SettingsProvider>(
       builder: (context, provider, child) {
         return MaterialApp(

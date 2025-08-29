@@ -4,7 +4,7 @@ import 'package:evently/core/constants/services/local_storage_keys.dart';
 import 'package:evently/core/constants/services/local_storage_services.dart';
 import 'package:evently/l10n/app_localizations.dart';
 import 'package:evently/modules/onboarding/widgets/language_switch.dart';
-import 'package:evently/modules/settings_provider.dart';
+import 'package:evently/modules/manager/settings_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

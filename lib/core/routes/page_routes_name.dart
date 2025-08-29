@@ -8,6 +8,7 @@ abstract class PageRoutesName{
   static const String layout = "/layout";
   static const String eventCreation = "/Event_Creation";
   static const String eventDetails = "/Event_Details";
+  static const String pickLocation = "/Pick_location";
 
 
 
