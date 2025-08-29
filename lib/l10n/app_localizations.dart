@@ -505,6 +505,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Tap on location to select'**
   String get select_loc;
+
+  /// No description provided for @plz_enter_loc.
+  ///
+  /// In en, this message translates to:
+  /// **'Please Enter all the event attributes'**
+  String get plz_enter_loc;
 }
 
 class _AppLocalizationsDelegate

@@ -217,4 +217,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get select_loc => 'انقر علي الموقع للإختيار';
+
+  @override
+  String get plz_enter_loc => 'الرجاء ادخال كل عناصر الحدث';
 }

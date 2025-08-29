@@ -3,7 +3,7 @@ import 'package:evently/core/constants/images/images_name.dart';
 import 'package:evently/core/constants/layout_constants/layout_widgets.dart';
 import 'package:evently/core/routes/page_routes_name.dart';
 import 'package:evently/l10n/app_localizations.dart';
-import 'package:evently/modules/settings_provider.dart';
+import 'package:evently/modules/manager/settings_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:provider/provider.dart';

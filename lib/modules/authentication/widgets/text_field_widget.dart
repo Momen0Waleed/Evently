@@ -37,9 +37,6 @@ class TextFieldWidget extends StatefulWidget {
 
 class _TextFieldWidgetState extends State<TextFieldWidget> {
   bool obscurePassword = true;
-  // final TextEditingController _emailController = TextEditingController();
-  // final TextEditingController _passwordController = TextEditingController();
-  // final _confirmPasswordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context).textTheme;
@@ -48,7 +45,6 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
       width: double.infinity,
       padding: EdgeInsets.symmetric(horizontal: 10),
       child: TextFormField(
-        // controller: !widget.isPassword ? _emailController : _passwordController,
         controller: widget.controller,
         maxLines: widget.maxlines,
         minLines: widget.minlines,
@@ -100,38 +96,4 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
       ),
     );
   }
-  //
-  // String? validateEmail(String? value) {
-  //   if (value == null || value.isEmpty) {
-  //     return 'Email is required';
-  //   }
-  //   final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-  //   if (!emailRegex.hasMatch(value)) {
-  //     return 'Enter a valid email (ex: example@mail.com)';
-  //   }
-  //   return null;
-  // }
-  //
-  // String? validatePassword(String? value) {
-  //   if (value == null || value.isEmpty) {
-  //     return 'Password is required';
-  //   }
-  //   final passwordRegex = RegExp(
-  //     r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#\$&*~]).{8,}$',
-  //   );
-  //   if (!passwordRegex.hasMatch(value)) {
-  //     return 'Password must contain uppercase, lowercase,\nnumber, and special character.';
-  //   }
-  //   return null;
-  // }
-  //
-  // String? validateConfirmPassword(String? value) {
-  //   if (value == null || value.isEmpty) {
-  //     return 'Please confirm your password';
-  //   }
-  //   if (value != widget.originalPasswordController?.text) {
-  //     return 'Passwords do not match';
-  //   }
-  //   return null;
-  // }
 }

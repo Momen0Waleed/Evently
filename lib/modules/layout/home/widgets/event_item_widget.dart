@@ -2,7 +2,7 @@ import 'package:evently/core/constants/colors/evently_colors.dart';
 import 'package:evently/core/routes/page_routes_name.dart';
 import 'package:evently/core/utils/firebase_firestore.dart';
 import 'package:evently/models/database/events_data.dart';
-import 'package:evently/modules/settings_provider.dart';
+import 'package:evently/modules/manager/settings_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:intl/intl.dart';

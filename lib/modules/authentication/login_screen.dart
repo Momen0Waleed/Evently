@@ -7,7 +7,7 @@ import 'package:evently/core/utils/firebase_authentication_utils.dart';
 import 'package:evently/l10n/app_localizations.dart';
 import 'package:evently/modules/authentication/widgets/register_button_widget.dart';
 import 'package:evently/modules/authentication/widgets/text_field_widget.dart';
-import 'package:evently/modules/settings_provider.dart' show SettingsProvider;
+import 'package:evently/modules/manager/settings_provider.dart' show SettingsProvider;
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart' show Provider;

@@ -1,4 +1,4 @@
-import 'package:evently/modules/settings_provider.dart' show SettingsProvider;
+import 'package:evently/modules/manager/settings_provider.dart' show SettingsProvider;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

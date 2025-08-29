@@ -7,7 +7,7 @@ import 'package:evently/models/database/events_data.dart';
 import 'package:evently/modules/layout/home/models/category_data.dart';
 import 'package:evently/modules/layout/home/widgets/event_item_widget.dart';
 import 'package:evently/modules/layout/home/widgets/tap_item_widget.dart';
-import 'package:evently/modules/settings_provider.dart';
+import 'package:evently/modules/manager/settings_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

@@ -7,6 +7,8 @@ class EventsData {
   String? eventCategoryId;
   bool isFavourite;
   DateTime selectedDate;
+  double? lat;
+  double? long;
 
   EventsData({
     this.eventID,
@@ -16,6 +18,8 @@ class EventsData {
     required this.eventCategoryId,
     this.isFavourite = false,
     required this.selectedDate,
+    required this.lat,
+    required this.long,
   });
 
   Map<String, dynamic> toJson(){
@@ -26,6 +30,8 @@ class EventsData {
       "eventCategoryImg": eventCategoryImg,
       "eventCategoryId": eventCategoryId,
       "isFavourite": isFavourite,
+      "lat": lat,
+      "long": long,
       "selectedDate": selectedDate.millisecondsSinceEpoch,
     };
   }
@@ -38,6 +44,8 @@ class EventsData {
       eventCategoryImg: json["eventCategoryImg"],
       eventCategoryId: json["eventCategoryId"],
       isFavourite: json["isFavourite"],
+      lat: json["lat"],
+      long: json["long"],
             // .toLowerCase == 'true'
       // isFavourite: json["isFavourite"] ?? false,
 

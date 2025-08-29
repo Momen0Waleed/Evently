@@ -17,6 +17,12 @@ class _MapsViewState extends State<MapsView> {
   void initState() {
     super.initState();
     appProvider = Provider.of<AppProvider>(context, listen: false);
+    // appProvider.getLocation();
+
+    // live updates from Firestore
+    appProvider.listenToAllEvents();
+
+    // get current user location
     appProvider.getLocation();
     // appProvider.setLocationListener();
   }
@@ -25,29 +31,30 @@ class _MapsViewState extends State<MapsView> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-          onPressed: (){
-            appProvider.getLocation();
-
-          },
+        onPressed: () {
+          appProvider.getLocation();
+        },
         backgroundColor: EventlyColors.blue,
-      child: Icon(Icons.gps_fixed_rounded,color: EventlyColors.white,),),
+        child: Icon(Icons.gps_fixed_rounded, color: EventlyColors.white),
+      ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
       body: Consumer<AppProvider>(
-        builder: (context, provider, child) =>  Column(
-            // crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Expanded(child: 
-              GoogleMap(
+        builder: (context, provider, child) => Column(
+          // crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
+              child: GoogleMap(
                 markers: provider.markers,
-                onMapCreated: (mapController){
+                onMapCreated: (mapController) {
                   provider.googleMapController = mapController;
                   // appProvider.setLocationListener();
-
                 },
-                  initialCameraPosition: provider.cameraPosition))
-            ],
+                initialCameraPosition: provider.cameraPosition,
+              ),
+            ),
+          ],
         ),
       ),
     );
