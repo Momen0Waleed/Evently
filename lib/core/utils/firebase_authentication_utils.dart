@@ -1,6 +1,12 @@
 
 import 'package:evently/core/constants/services/snackbar_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+
+import '../constants/services/local_storage_keys.dart';
+import '../constants/services/local_storage_services.dart';
+import '../routes/page_routes_name.dart';
 
 abstract class FirebaseAuthenticationUtils {
   static Future<bool> createUserWithEmailAndPassword({
@@ -60,4 +66,30 @@ abstract class FirebaseAuthenticationUtils {
       return Future.value(false);
     }
   }
+  static Future<bool> signInWithGoogle() async {
+    try {
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+      if (googleUser == null) {
+        return false; // user canceled
+      }
+
+      final GoogleSignInAuthentication googleAuth =
+      await googleUser.authentication;
+
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      await FirebaseAuth.instance.signInWithCredential(credential);
+
+      SnackbarService.showSuccessNotification("Login with Google Successfully");
+      return true;
+    } catch (e) {
+      SnackbarService.showErrorNotification("Google Sign-In Failed");
+      return false;
+    }
+  }
+
+
 }

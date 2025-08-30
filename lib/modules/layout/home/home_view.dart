@@ -8,6 +8,7 @@ import 'package:evently/modules/layout/home/models/category_data.dart';
 import 'package:evently/modules/layout/home/widgets/event_item_widget.dart';
 import 'package:evently/modules/layout/home/widgets/tap_item_widget.dart';
 import 'package:evently/modules/manager/settings_provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -90,7 +91,7 @@ class _HomeViewState extends State<HomeView> {
           height: dynamic.height * 0.25,
           padding: EdgeInsets.only(left: 16, right: 16, top: 40, bottom: 20),
           decoration: BoxDecoration(
-            color:provider.isDark() ?EventlyColors.dark : theme.primaryColor,
+            color: provider.isDark() ? EventlyColors.dark : theme.primaryColor,
             borderRadius: BorderRadius.only(
               bottomLeft: Radius.circular(24),
               bottomRight: Radius.circular(24),
@@ -111,7 +112,12 @@ class _HomeViewState extends State<HomeView> {
                         local.welcome_back,
                         style: theme.textTheme.labelSmall,
                       ),
-                      Text("Momen Waleed", style: theme.textTheme.titleLarge),
+                      Text(
+                        FirebaseAuth.instance.currentUser?.displayName ??
+                            FirebaseAuth.instance.currentUser?.email ??
+                            "Guest",
+                        style: theme.textTheme.titleLarge,
+                      ),
                     ],
                   ),
                   Spacer(),
@@ -122,7 +128,9 @@ class _HomeViewState extends State<HomeView> {
                         onTap: () async {
                           // isLightMode = !isLightMode;
                           provider.changeThemeMode(
-                            provider.isDark() ? ThemeMode.light : ThemeMode.dark,
+                            provider.isDark()
+                                ? ThemeMode.light
+                                : ThemeMode.dark,
                           );
                           await LocalStorageServices.setBool(
                             LocalStorageKeys.darkThemeKey,
@@ -144,7 +152,9 @@ class _HomeViewState extends State<HomeView> {
                       GestureDetector(
                         onTap: () {
                           // isEnglish = !isEnglish;
-                          provider.changeLanguage(provider.isEnglish() ? "ar" : "en");
+                          provider.changeLanguage(
+                            provider.isEnglish() ? "ar" : "en",
+                          );
                         },
                         child: Container(
                           padding: EdgeInsets.all(8),
@@ -155,7 +165,9 @@ class _HomeViewState extends State<HomeView> {
                           child: Text(
                             provider.isEnglish() ? "EN" : "AR",
                             style: theme.textTheme.labelSmall!.copyWith(
-                              color: provider.isDark() ? EventlyColors.dark : EventlyColors.blue,
+                              color: provider.isDark()
+                                  ? EventlyColors.dark
+                                  : EventlyColors.blue,
                               fontWeight: FontWeight.w700,
                             ),
                           ),
@@ -165,22 +177,22 @@ class _HomeViewState extends State<HomeView> {
                   ),
                 ],
               ),
-              Row(
-                spacing: 6,
-                children: [
-                  Icon(
-                    Icons.location_on_outlined,
-                    color: EventlyColors.white,
-                    size: 25,
-                  ),
-                  Text(
-                    "Cairo, Egypt",
-                    style: theme.textTheme.labelSmall!.copyWith(
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
-              ),
+              // Row(
+              //   spacing: 6,
+              //   children: [
+              //     Icon(
+              //       Icons.location_on_outlined,
+              //       color: EventlyColors.white,
+              //       size: 25,
+              //     ),
+              //     Text(
+              //       "Cairo, Egypt",
+              //       style: theme.textTheme.labelSmall!.copyWith(
+              //         fontWeight: FontWeight.w500,
+              //       ),
+              //     ),
+              //   ],
+              // ),
               DefaultTabController(
                 length: categories.length,
                 child: TabBar(
@@ -237,7 +249,9 @@ class _HomeViewState extends State<HomeView> {
               return Expanded(
                 child: Center(
                   child: Text(
-                    'You don’t have any $categoryName yet',
+                    provider.isEnglish()
+                        ? 'You don’t have any $categoryName yet'
+                        : "ليس لديك اي احداث هنا حتي الآن",
                     style: TextStyle(
                       color: EventlyColors.blue,
                       fontSize: 16,
@@ -257,6 +271,7 @@ class _HomeViewState extends State<HomeView> {
                 itemBuilder: (context, index) {
                   return EventItemWidget(eventData: eventDataList[index]);
                 },
+                padding: EdgeInsets.symmetric(vertical: 20),
               ),
             );
           },

@@ -5,6 +5,7 @@ import 'package:evently/core/constants/services/local_storage_keys.dart';
 import 'package:evently/core/constants/services/local_storage_services.dart';
 import 'package:evently/core/routes/page_routes_name.dart' show PageRoutesName;
 import 'package:evently/l10n/app_localizations.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart' show Provider;
 
@@ -27,6 +28,8 @@ class _ProfileViewState extends State<ProfileView> {
     final List<String> themes = [local.light, local.dark];
 
     var provider = Provider.of<SettingsProvider>(context);
+
+    final user = FirebaseAuth.instance.currentUser;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -68,9 +71,14 @@ class _ProfileViewState extends State<ProfileView> {
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("Momen Waleed", style: theme.textTheme.titleLarge),
                   Text(
-                    "mwgendia@gmail.com",
+                    user?.displayName ?? "No Name",
+                    style: theme.textTheme.titleLarge,
+                    softWrap: true,
+                  ),
+                  Text(
+                    user?.email ?? "No Email",
+                    softWrap: true,
                     style: theme.textTheme.bodyLarge!.copyWith(
                       color: EventlyColors.white,
                     ),
@@ -94,7 +102,7 @@ class _ProfileViewState extends State<ProfileView> {
           ),
         ),
         SizedBox(height: 8),
-        Padding(
+        Padding (
           padding: EdgeInsets.symmetric(horizontal: 16),
           child: CustomDropdown<String>(
             items: languages,
@@ -174,8 +182,18 @@ class _ProfileViewState extends State<ProfileView> {
         ),
         Spacer(),
         GestureDetector(
-          onTap: (){
-            Navigator.of(context).pushNamed(PageRoutesName.login);
+          onTap: () async {
+            // Navigator.of(context).pushNamed(PageRoutesName.login);
+
+            await FirebaseAuth.instance.signOut();
+            provider.changeThemeMode(ThemeMode.light);
+            provider.changeLanguage("en");
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              PageRoutesName.login,
+                  (route) => false,
+            );
+
           },
           child: Container(
             width: double.infinity,

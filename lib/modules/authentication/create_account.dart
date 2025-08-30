@@ -4,6 +4,7 @@ import 'package:evently/l10n/app_localizations.dart';
 import 'package:evently/modules/authentication/widgets/register_button_widget.dart';
 import 'package:evently/modules/authentication/widgets/text_field_widget.dart';
 import 'package:evently/modules/manager/settings_provider.dart';
+import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth;
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
@@ -156,7 +157,7 @@ class _CreateAccountState extends State<CreateAccount> {
                         textAlign: TextAlign.center,
                       ),
                       buttonAction: () {
-                        setState(() {
+                        setState(() async {
                           if (_formKey.currentState!.validate()) {
                             // Navigator.of(
                             //   context,
@@ -165,13 +166,15 @@ class _CreateAccountState extends State<CreateAccount> {
                             FirebaseAuthenticationUtils.createUserWithEmailAndPassword(
                               emailAddress: mailController.text,
                               password: passwordController.text,
-                            ).then((value) {
-                              EasyLoading.dismiss();
+                            ).then((value) async {
+                            await FirebaseAuth.instance.currentUser!.updateDisplayName(nameController.text);
+                            await FirebaseAuth.instance.currentUser!.reload();
                               if (value) {
-                                // ignore: use_build_context_synchronously
+                            EasyLoading.dismiss();
                                 Navigator.pop(context);
                               }
                             });
+
                           }
                         });
                       },
