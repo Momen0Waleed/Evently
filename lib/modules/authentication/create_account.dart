@@ -1,16 +1,20 @@
+import 'package:evently/core/routes/page_routes_name.dart';
+import 'package:evently/core/utils/firebase_authentication_utils.dart';
+import 'package:evently/l10n/app_localizations.dart';
 import 'package:evently/modules/authentication/widgets/register_button_widget.dart';
 import 'package:evently/modules/authentication/widgets/text_field_widget.dart';
-import 'package:evently/modules/layout/layout_view.dart';
+import 'package:evently/modules/manager/settings_provider.dart';
+import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth;
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:provider/provider.dart';
 
 import '../../core/constants/colors/evently_colors.dart';
 import '../../core/constants/images/images_name.dart';
 import '../onboarding/widgets/language_switch.dart';
-import 'login_screen.dart';
 
 class CreateAccount extends StatefulWidget {
   const CreateAccount({super.key});
-  static const String routeName = "/Create-Account";
 
   @override
   State<CreateAccount> createState() => _CreateAccountState();
@@ -24,27 +28,26 @@ class _CreateAccountState extends State<CreateAccount> {
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
 
-
   @override
   Widget build(BuildContext context) {
     var textTheme = Theme.of(context).textTheme;
     var dynamicSize = MediaQuery.of(context).size;
 
+    var local = AppLocalizations.of(context)!;
+    var provider = Provider.of<SettingsProvider>(context);
+
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: provider.isDark()
+            ? EventlyColors.dark
+            : EventlyColors.white,
         leading: IconButton(
           onPressed: () {
             Navigator.of(context).pop();
           },
-          icon: Icon(Icons.arrow_back, color: EventlyColors.black, size: 30),
+          icon: Icon(Icons.arrow_back, color: EventlyColors.blue, size: 30),
         ),
-        title: Text(
-          "Register",
-          style: textTheme.bodyLarge!.copyWith(
-            fontSize: 20,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
+        title: Text(local.register),
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 16),
@@ -63,67 +66,115 @@ class _CreateAccountState extends State<CreateAccount> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     TextFieldWidget(
-                      title: 'Name',
+                      color: provider.isDark()
+                          ? Colors.transparent
+                          : EventlyColors.white,
+                      title: local.name,
+                      textColor: provider.isDark()
+                          ? EventlyColors.white
+                          : EventlyColors.gray,
+                      borderColor: provider.isDark()
+                          ? EventlyColors.blue
+                          : EventlyColors.gray,
                       prefixIcon: Icon(
                         Icons.person_rounded,
-                        color: EventlyColors.gray,
-
+                        color: provider.isDark()
+                            ? EventlyColors.white
+                            : EventlyColors.gray,
                       ),
-                      isPassword: false,
-                      isName: true,
-                      isLogin: false,
-                      controller:nameController,
+                      validator: validateName,
+                      controller: nameController,
                     ),
                     TextFieldWidget(
-                      title: 'Email',
+                      color: provider.isDark()
+                          ? Colors.transparent
+                          : EventlyColors.white,
+                      title: local.email,
+                      textColor: provider.isDark()
+                          ? EventlyColors.white
+                          : EventlyColors.gray,
+                      borderColor: provider.isDark()
+                          ? EventlyColors.blue
+                          : EventlyColors.gray,
                       prefixIcon: Icon(
                         Icons.mail_rounded,
-                        color: EventlyColors.gray,
+                        color: provider.isDark()
+                            ? EventlyColors.white
+                            : EventlyColors.gray,
                       ),
-                      isPassword: false,
-                      isName: false,
-                      isLogin: false,
-                      controller:mailController,
+                      validator: validateEmail,
+                      controller: mailController,
                     ),
                     TextFieldWidget(
-                      title: 'Password',
+                      color: provider.isDark()
+                          ? Colors.transparent
+                          : EventlyColors.white,
+                      title: local.password,
+                      textColor: provider.isDark()
+                          ? EventlyColors.white
+                          : EventlyColors.gray,
+                      borderColor: provider.isDark()
+                          ? EventlyColors.blue
+                          : EventlyColors.gray,
                       prefixIcon: Icon(
                         Icons.lock_rounded,
-                        color: EventlyColors.gray,
+                        color: provider.isDark()
+                            ? EventlyColors.white
+                            : EventlyColors.gray,
                       ),
                       isPassword: true,
-                      isName: false,
-                      isLogin: false,
+                      validator: validatePassword,
                       controller: passwordController,
                     ),
                     TextFieldWidget(
-                      title: 'Re-Password',
+                      color: provider.isDark()
+                          ? Colors.transparent
+                          : EventlyColors.white,
+                      title: local.re_password,
+                      textColor: provider.isDark()
+                          ? EventlyColors.white
+                          : EventlyColors.gray,
+                      borderColor: provider.isDark()
+                          ? EventlyColors.blue
+                          : EventlyColors.gray,
                       prefixIcon: Icon(
                         Icons.lock_rounded,
-                        color: EventlyColors.gray,
+                        color: provider.isDark()
+                            ? EventlyColors.white
+                            : EventlyColors.gray,
                       ),
                       isPassword: true,
-                      isName: false,
-                      isLogin: false,
-                      isConfirmPassword: true,
+                      validator: validateConfirmPassword,
                       controller: confirmPasswordController,
-                      originalPasswordController: passwordController,
                     ),
                     RegisterButtonWidget(
                       bgColor: EventlyColors.blue,
                       child: Text(
-                        "Create Account",
+                        local.create_acc,
                         style: textTheme.titleMedium!.copyWith(
                           color: EventlyColors.white,
                         ),
                         textAlign: TextAlign.center,
                       ),
                       buttonAction: () {
-                        setState(() {
+                        setState(() async {
                           if (_formKey.currentState!.validate()) {
-                            Navigator.of(
-                              context,
-                            ).pushReplacementNamed(LayoutView.routeName);
+                            // Navigator.of(
+                            //   context,
+                            // ).pushReplacementNamed(PageRoutesName.layout);
+                            EasyLoading.show();
+                            FirebaseAuthenticationUtils.createUserWithEmailAndPassword(
+                              emailAddress: mailController.text,
+                              password: passwordController.text,
+                            ).then((value) async {
+                            await FirebaseAuth.instance.currentUser!.updateDisplayName(nameController.text);
+                            await FirebaseAuth.instance.currentUser!.reload();
+                              if (value) {
+                            EasyLoading.dismiss();
+                                Navigator.pop(context);
+                              }
+                            });
+
                           }
                         });
                       },
@@ -133,17 +184,21 @@ class _CreateAccountState extends State<CreateAccount> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
-                          "Already Have Account ?",
-                          style: textTheme.bodyLarge,
+                          local.already_have_acc,
+                          style: textTheme.bodyLarge!.copyWith(
+                            color: provider.isDark()
+                                ? EventlyColors.white
+                                : EventlyColors.black,
+                          ),
                         ),
                         TextButton(
                           onPressed: () {
                             Navigator.of(
                               context,
-                            ).pushNamed(LoginScreen.routeName);
+                            ).pushNamed(PageRoutesName.login);
                           },
                           child: Text(
-                            "Login",
+                            local.login,
                             style: textTheme.bodyLarge!.copyWith(
                               color: EventlyColors.blue,
                               fontStyle: FontStyle.italic,
@@ -166,6 +221,11 @@ class _CreateAccountState extends State<CreateAccount> {
                   setState(() {
                     isLanguageEN = value;
                   });
+                  provider.changeLanguage(isLanguageEN ? "en" : "ar");
+                  // _formKey.currentState?.validate();
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    _formKey.currentState?.validate();
+                  });
                 },
               ),
             ),
@@ -173,5 +233,46 @@ class _CreateAccountState extends State<CreateAccount> {
         ),
       ),
     );
+  }
+
+  String? validateName(String? value) {
+    if (value == null || value.isEmpty) {
+      return AppLocalizations.of(context)!.name_req;
+    }
+    return null;
+  }
+
+  String? validateEmail(String? value) {
+    if (value == null || value.isEmpty) {
+      return "${AppLocalizations.of(context)!.email} ${AppLocalizations.of(context)!.email_is_required}";
+    }
+    final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+    if (!emailRegex.hasMatch(value)) {
+      return AppLocalizations.of(context)!.enter_valid_email;
+    }
+    return null;
+  }
+
+  String? validatePassword(String? value) {
+    if (value == null || value.isEmpty) {
+      return "${AppLocalizations.of(context)!.password} ${AppLocalizations.of(context)!.pass_is_required}";
+    }
+    final passwordRegex = RegExp(
+      r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#\$&*~]).{8,}$',
+    );
+    if (!passwordRegex.hasMatch(value)) {
+      return AppLocalizations.of(context)!.password_instructions;
+    }
+    return null;
+  }
+
+  String? validateConfirmPassword(String? value) {
+    if (value == null || value.isEmpty) {
+      return AppLocalizations.of(context)!.pls_confirm_ur_password;
+    }
+    if (value != passwordController.text) {
+      return AppLocalizations.of(context)!.password_not_match;
+    }
+    return null;
   }
 }

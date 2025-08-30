@@ -1,4 +1,6 @@
+import 'package:evently/modules/manager/settings_provider.dart' show SettingsProvider;
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../../core/constants/colors/evently_colors.dart';
 import '../../../core/constants/images/images_name.dart';
@@ -12,14 +14,18 @@ class LanguageSwitch extends StatefulWidget {
 }
 
 class _LanguageSwitchState extends State<LanguageSwitch> {
-  bool isLanguageEN = true;
+
   @override
   Widget build(BuildContext context) {
+    var provider = Provider.of<SettingsProvider>(context);
+  bool isLanguageEN = provider.isEnglish();
     return GestureDetector(
       onTap: () {
         setState(() {
-          isLanguageEN = !isLanguageEN;
-          widget.onLanguageChanged(isLanguageEN);
+          // isLanguageEN = provider.isEnglish();
+          // isLanguageEN = !isLanguageEN;
+          // widget.onLanguageChanged(isLanguageEN);
+          widget.onLanguageChanged(!isLanguageEN);
         });
       },
       child: AnimatedContainer(
@@ -28,7 +34,7 @@ class _LanguageSwitchState extends State<LanguageSwitch> {
         width: 100,
         height: 40,
         decoration: BoxDecoration(
-          color: EventlyColors.white,
+          color: provider.isDark() ? EventlyColors.dark:EventlyColors.white,
           borderRadius: BorderRadius.circular(30),
           border: Border.all(width: 3, color: EventlyColors.blue),
         ),
@@ -41,7 +47,7 @@ class _LanguageSwitchState extends State<LanguageSwitch> {
                 borderRadius: BorderRadius.circular(18),
                 color: isLanguageEN
                     ? EventlyColors.blue
-                    : EventlyColors.white,
+                    : Colors.transparent,
               ),
               padding: EdgeInsets.only(top: 3, bottom: 3, right: 3),
               child: CircleAvatar(
@@ -54,7 +60,7 @@ class _LanguageSwitchState extends State<LanguageSwitch> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(18),
                 color: isLanguageEN
-                    ? EventlyColors.white
+                    ? Colors.transparent
                     : EventlyColors.blue,
               ),
               padding: EdgeInsets.only(top: 3, bottom: 3, left: 3),

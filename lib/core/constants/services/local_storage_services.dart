@@ -20,6 +20,7 @@ abstract class LocalStorageServices {
     return _preferences.setStringList(key, value);
   }
 
+
   static int? getInt(String key) {
     return _preferences.getInt(key);
   }

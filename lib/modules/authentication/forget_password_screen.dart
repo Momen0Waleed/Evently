@@ -1,29 +1,31 @@
 import 'package:evently/core/constants/colors/evently_colors.dart';
 import 'package:evently/core/constants/images/images_name.dart';
+import 'package:evently/l10n/app_localizations.dart';
 import 'package:evently/modules/authentication/widgets/register_button_widget.dart';
+import 'package:evently/modules/manager/settings_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../../core/routes/page_routes_name.dart';
 
 class ForgetPasswordScreen extends StatelessWidget {
   const ForgetPasswordScreen({super.key});
-  static const String routeName = "/Forget-Password";
 
   @override
   Widget build(BuildContext context) {
-    var textTheme = Theme.of(context).textTheme;
+    var local = AppLocalizations.of(context)!;
+var provider = Provider.of<SettingsProvider>(context);
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: provider.isDark() ? EventlyColors.dark:EventlyColors.white,
         leading: IconButton(
           onPressed: () {
             Navigator.of(context).pop();
           },
-          icon: Icon(Icons.arrow_back, color: EventlyColors.black, size: 30),
+          icon: Icon(Icons.arrow_back, color: EventlyColors.blue, size: 30),
         ),
         title: Text(
-          "Forget Password",
-          style: textTheme.bodyLarge!.copyWith(
-            fontSize: 20,
-            fontWeight: FontWeight.w600,
-          ),
+          local.forget_password,
         ),
       ),
       body: Container(
@@ -38,7 +40,7 @@ class ForgetPasswordScreen extends StatelessWidget {
             RegisterButtonWidget(
               bgColor: EventlyColors.blue,
               child: Text(
-                "Reset Password",
+                local.reset_password,
                 style: Theme.of(
                   context,
                 ).textTheme.titleMedium!.copyWith(color: EventlyColors.white),

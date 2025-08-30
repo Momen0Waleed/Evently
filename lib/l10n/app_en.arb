@@ -1,0 +1,84 @@
+{
+    "home": "Home",
+    "profile": "Profile",
+    "maps": "Maps",
+    "favourite": "Favourite",
+    "languages": "Languages",
+    "theme_mode": "Theme Mode",
+    "light": "Light",
+    "dark": "Dark",
+
+    "email": "Email",
+    "password": "Password",
+    "forget_password": "Forget Password?",
+    "login": "Login",
+    "dont_have_acc": "Don't Have Account ?",
+    "create_acc": "Create Account",
+    "or": "Or",
+    "login_with_google": "Login With Google",
+    "reset_password": "Reset Password",
+    "register": "Register",
+    "name": "Name",
+    "re_password": "Re-Password",
+    "already_have_acc": "Already Have Account ?",
+    "name_req": "Name is Required",
+    "pass_is_required": "is required",
+    "email_is_required": "is required",
+    "pls_confirm_ur_password": "Please confirm your password",
+    "enter_valid_email": "Enter a valid email (ex: example@mail.com)",
+    "password_instructions": "Password must contain uppercase, lowercase,\nnumber, and special character.",
+    "password_not_match": "Passwords do not match",
+
+    "welcome_back": "Welcome Back ✨",
+
+    "no_fav_events": "You don’t have any Favourite Events yet",
+    "search": "Search",
+
+    "logout": "Logout",
+
+    "create_event": "Create Event",
+    "edit_event": "Edit Event",
+    "add_event": "Add Event",
+    "update_event": "Update Event",
+    "event_created": "Event Created",
+    "event_updated": "Event Updated",
+    "something_went_wrong": "Something Went Wrong",
+    "title": "Title",
+    "event_item": "Event Item",
+    "title_required": "Title is Required",
+    "description": "Description",
+    "event_description": "Event Description",
+    "description_is_required": "Description is Required",
+    "event_date": "Event Date",
+    "choose_date": "Choose Date",
+    "event_time": "Event Time",
+    "choose_time": "Choose Time",
+    "choose_loc": "Choose Event Location",
+
+    "event_details": "Event Details",
+    "confirm_del": "Confirm Deletion",
+    "are_u_sure": "Are you sure you want to delete this event ?",
+    "cancel": "Cancel",
+    "delete": "Delete",
+
+    "language": "Language",
+    "theme": "Theme",
+
+    "personalize": "Personalize Your Experience",
+    "find_event": "Find Events That Inspire You",
+    "effortless": "Effortless Event Planning",
+    "connect": "Connect with Friends & Share Moments",
+
+    "firstSettingsDescription": "Choose your preferred theme and language to get started with a comfortable, tailored experience that suits your style.",
+    "onBoarding1Description":  "Dive into a world of events crafted to fit your unique interests. Whether you're into live music, art workshops, professional networking, or simply discovering new experiences, we have something for everyone. Our curated recommendations will help you explore, connect, and make the most of every opportunity around you.",
+    "onBoarding2Description": "Take the hassle out of organizing events with our all-in-one planning tools. From setting up invites and managing RSVPs to scheduling reminders and coordinating details, we’ve got you covered. Plan with ease and focus on what matters – creating an unforgettable experience for you and your guests.",
+    "onBoarding3Description": "Make every event memorable by sharing the experience with others. Our platform lets you invite friends, keep everyone in the loop, and celebrate moments together. Capture and share the excitement with your network, so you can relive the highlights and cherish the memories.",
+    "lets_start": "Let's Start",
+
+    "skip": "Skip",
+
+    "select_loc": "Tap on location to select",
+
+    "plz_enter_loc": "Please Enter all the event attributes"
+
+}

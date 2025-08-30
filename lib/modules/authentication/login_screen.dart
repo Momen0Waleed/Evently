@@ -1,17 +1,23 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:evently/core/constants/colors/evently_colors.dart';
 import 'package:evently/core/constants/images/images_name.dart';
-import 'package:evently/modules/authentication/create_account.dart';
+import 'package:evently/core/constants/services/local_storage_keys.dart';
+import 'package:evently/core/constants/services/local_storage_services.dart';
+import 'package:evently/core/routes/page_routes_name.dart';
+import 'package:evently/core/utils/firebase_authentication_utils.dart';
+import 'package:evently/l10n/app_localizations.dart';
 import 'package:evently/modules/authentication/widgets/register_button_widget.dart';
 import 'package:evently/modules/authentication/widgets/text_field_widget.dart';
-import 'package:evently/modules/layout/layout_view.dart';
+import 'package:evently/modules/manager/settings_provider.dart' show SettingsProvider;
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:provider/provider.dart' show Provider;
 
 import '../onboarding/widgets/language_switch.dart';
-import 'forget_password_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
-  static const String routeName = "/Login";
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -23,11 +29,12 @@ class _LoginScreenState extends State<LoginScreen> {
   final mailController = TextEditingController();
   final passwordController = TextEditingController();
 
-
   @override
   Widget build(BuildContext context) {
     var dynamicSize = MediaQuery.of(context).size;
     var theme = Theme.of(context).textTheme;
+    var local = AppLocalizations.of(context)!;
+    var provider = Provider.of<SettingsProvider>(context);
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -48,37 +55,76 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Column(
                 children: [
                   Container(
-                    height: dynamicSize.height * 0.22,
+                    // height: dynamicSize.height * 0.225,
                     margin: EdgeInsets.symmetric(vertical: 25),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         TextFieldWidget(
-                          title: 'Email',
-                          prefixIcon: Icon(Icons.mail_rounded),
-                          isPassword: false,
-                          isName: false,
-                          isLogin: true,
+                          color: provider.isDark()
+                              ? Colors.transparent
+                              : EventlyColors.white,
+                          textColor: provider.isDark()
+                              ? EventlyColors.white
+                              : EventlyColors.gray,
+                          borderColor: provider.isDark()
+                              ? EventlyColors.blue
+                              : EventlyColors.gray,
+
+                          title: local.email,
+                          prefixIcon: Icon(
+                            Icons.mail_rounded,
+                            color: provider.isDark()
+                                ? EventlyColors.white
+                                : EventlyColors.gray,
+                          ),
                           controller: mailController,
+                          validator: (String? value) {
+                            if (value == null || value.isEmpty) {
+                              return "${AppLocalizations.of(context)!.email} ${AppLocalizations.of(context)!.email_is_required}";
+                            }
+                            return null;
+                          },
                         ),
+                        SizedBox(height: 10,),
                         TextFieldWidget(
-                          title: 'Password',
-                          prefixIcon: Icon(Icons.lock_rounded),
+                          color: provider.isDark()
+                              ? Colors.transparent
+                              : EventlyColors.white,
+                          textColor: provider.isDark()
+                              ? EventlyColors.white
+                              : EventlyColors.gray,
+                          borderColor: provider.isDark()
+                              ? EventlyColors.blue
+                              : EventlyColors.gray,
+
+                          title: local.password,
+                          prefixIcon: Icon(
+                            Icons.lock_rounded,
+                            color: provider.isDark()
+                                ? EventlyColors.white
+                                : EventlyColors.gray,
+                          ),
                           isPassword: true,
-                          isName: false,
-                          isLogin: true,
                           controller: passwordController,
+                          validator: (String? value) {
+                            if (value == null || value.isEmpty) {
+                              return "${AppLocalizations.of(context)!.password} ${AppLocalizations.of(context)!.pass_is_required}";
+                            }
+                            return null;
+                          },
                         ),
                         Align(
                           alignment: Alignment.centerRight,
                           child: TextButton(
                             onPressed: () {
-                              Navigator.of(context).pushNamed(ForgetPasswordScreen.routeName);
-
+                              Navigator.of(
+                                context,
+                              ).pushNamed(PageRoutesName.forgetPassword);
                             },
                             child: Text(
-                              "Forget Password?",
+                              local.forget_password,
                               style: theme.bodyLarge!.copyWith(
                                 color: EventlyColors.blue,
                                 fontStyle: FontStyle.italic,
@@ -96,13 +142,13 @@ class _LoginScreenState extends State<LoginScreen> {
                   SizedBox(
                     height: dynamicSize.height * 0.3,
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         RegisterButtonWidget(
                           bgColor: EventlyColors.blue,
                           child: Text(
-                            "Login",
+                            local.login,
                             style: theme.titleMedium!.copyWith(
                               color: EventlyColors.white,
                             ),
@@ -111,7 +157,27 @@ class _LoginScreenState extends State<LoginScreen> {
                           buttonAction: () {
                             setState(() {
                               if (_formKey.currentState!.validate()) {
-                                Navigator.of(context).pushReplacementNamed(LayoutView.routeName);
+                                EasyLoading.show();
+                                FirebaseAuthenticationUtils.signInWithEmailAndPassword(
+                                  emailAddress: mailController.text,
+                                  password: passwordController.text,
+                                ).then(((value) async{
+                                  EasyLoading.dismiss();
+
+                                  final uid = FirebaseAuth.instance.currentUser!.uid;
+                                  final userDoc = await FirebaseFirestore.instance.collection("users").doc(uid).get();
+
+                                  if (!userDoc.exists) {
+                                    await FirebaseFirestore.instance.collection("users").doc(uid).set({
+                                      "email": FirebaseAuth.instance.currentUser!.email,
+                                      "createdAt": FieldValue.serverTimestamp(),
+                                    });
+                                  }
+
+                                  Navigator.of(
+                                    context,
+                                  ).pushReplacementNamed(PageRoutesName.layout);
+                                }));
                               }
                             });
                           },
@@ -121,18 +187,24 @@ class _LoginScreenState extends State<LoginScreen> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text(
-                              "Don’t Have Account ?",
-                              style: theme.bodyLarge,
+                              local.dont_have_acc,
+                              style: theme.bodyLarge!.copyWith(
+                                color: provider.isDark()
+                                    ? EventlyColors.white
+                                    : EventlyColors.black,
+                              ),
                             ),
                             TextButton(
                               onPressed: () {
-                                Navigator.of(context).pushNamed(CreateAccount.routeName);
+                                Navigator.of(
+                                  context,
+                                ).pushNamed(PageRoutesName.register);
                               },
                               style: TextButton.styleFrom(
                                 padding: EdgeInsets.symmetric(horizontal: 2),
                               ),
                               child: Text(
-                                "Create Account",
+                                local.create_acc,
                                 style: theme.bodyLarge!.copyWith(
                                   color: EventlyColors.blue,
                                   fontStyle: FontStyle.italic,
@@ -154,7 +226,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                 endIndent: 10,
                               ),
                             ),
-                            Text(" Or ", style: theme.bodyLarge),
+                            Text(" ${local.or} ", style: theme.bodyLarge!.copyWith(
+                              color: provider.isDark() ? EventlyColors.white : EventlyColors.black
+                            )),
                             Expanded(
                               child: Divider(
                                 height: 3,
@@ -168,7 +242,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
                         /// Google Login Button
                         RegisterButtonWidget(
-                          bgColor: EventlyColors.white,
+                          bgColor: provider.isDark()
+                              ? Colors.transparent
+                              : EventlyColors.white,
+
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -176,12 +253,27 @@ class _LoginScreenState extends State<LoginScreen> {
                               Image.asset(ImagesName.googleIcon, height: 30),
                               SizedBox(width: 10),
                               Text(
-                                "Login With Google",
+                                local.login_with_google,
                                 style: theme.titleSmall,
                               ),
                             ],
                           ),
-                          buttonAction: () {},
+                          buttonAction: () async {
+                            final success = await FirebaseAuthenticationUtils.signInWithGoogle();
+                            if (success) {
+                              final uid = FirebaseAuth.instance.currentUser!.uid;
+                              final userDoc = await FirebaseFirestore.instance.collection("users").doc(uid).get();
+
+                              if (!userDoc.exists) {
+                                await FirebaseFirestore.instance.collection("users").doc(uid).set({
+                                  "email": FirebaseAuth.instance.currentUser!.email,
+                                  "createdAt": FieldValue.serverTimestamp(),
+                                });
+                              }
+
+                              Navigator.of(context).pushReplacementNamed(PageRoutesName.layout);
+                            }
+                            },
                         ),
                       ],
                     ),
@@ -193,63 +285,20 @@ class _LoginScreenState extends State<LoginScreen> {
             Container(
               margin: EdgeInsets.only(top: 25),
               child: LanguageSwitch(
-                onLanguageChanged: (bool value) {
+                onLanguageChanged: (bool value) async {
                   setState(() {
                     isLanguageEN = value;
                   });
-                },
+                  provider.changeLanguage(isLanguageEN ? "en" : "ar");
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    _formKey.currentState?.validate();
+                  });
+                  await LocalStorageServices.setString(
+                    LocalStorageKeys.languageKey,
+                    value ? "en" : "ar",
+                  );
+                  },
               ),
-              // GestureDetector(
-              //   onTap: () {
-              //     setState(() {
-              //       isLanguageEN = !isLanguageEN;
-              //     });
-              //   },
-              //   child: AnimatedContainer(
-              //     duration: Duration(milliseconds: 800),
-              //     curve: Curves.easeInOut,
-              //     width: 100,
-              //     height: 40,
-              //     decoration: BoxDecoration(
-              //       color: EventlyColors.white,
-              //       borderRadius: BorderRadius.circular(30),
-              //       border: Border.all(width: 3, color: EventlyColors.blue),
-              //     ),
-              //     child: Row(
-              //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //       children: [
-              //         AnimatedContainer(
-              //           duration: Duration(milliseconds: 500),
-              //           decoration: BoxDecoration(
-              //             borderRadius: BorderRadius.circular(18),
-              //             color: isLanguageEN
-              //                 ? EventlyColors.blue
-              //                 : EventlyColors.white,
-              //           ),
-              //           padding: EdgeInsets.only(top: 3, bottom: 3, right: 3),
-              //           child: CircleAvatar(
-              //             radius: 18,
-              //             backgroundImage: AssetImage(ImagesName.flagUS),
-              //           ),
-              //         ),
-              //         AnimatedContainer(
-              //           duration: Duration(milliseconds: 500),
-              //           decoration: BoxDecoration(
-              //             borderRadius: BorderRadius.circular(18),
-              //             color: isLanguageEN
-              //                 ? EventlyColors.white
-              //                 : EventlyColors.blue,
-              //           ),
-              //           padding: EdgeInsets.only(top: 3, bottom: 3, left: 3),
-              //           child: CircleAvatar(
-              //             radius: 18,
-              //             backgroundImage: AssetImage(ImagesName.flagEG),
-              //           ),
-              //         ),
-              //       ],
-              //     ),
-              //   ),
-              // ),
             ),
           ],
         ),

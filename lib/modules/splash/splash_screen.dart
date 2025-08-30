@@ -1,14 +1,13 @@
 import 'package:evently/core/constants/images/images_name.dart';
-import 'package:evently/modules/authentication/login_screen.dart';
+import 'package:evently/core/routes/page_routes_name.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../../core/constants/services/local_storage_keys.dart';
 import '../../core/constants/services/local_storage_services.dart';
-import '../onboarding/first_settings_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
-  static const String routeName= "/";
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();
@@ -31,11 +30,21 @@ class _SplashScreenState extends State<SplashScreen> {
 
     if (!mounted) return;
 
-    Navigator.pushReplacementNamed(
-      context,
-      hasSeenOnboarding ? LoginScreen.routeName :
-      FirstSettingsScreen.routeName,
-    );
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (!hasSeenOnboarding) {
+      Navigator.pushReplacementNamed(context, PageRoutesName.firstOnboarding);
+    } else if (user == null) {
+      Navigator.pushReplacementNamed(context, PageRoutesName.login);
+    } else {
+      Navigator.pushReplacementNamed(context, PageRoutesName.layout);
+    }
+
+    // Navigator.pushReplacementNamed(
+    //   context,
+    //   hasSeenOnboarding ? PageRoutesName.login :
+    //   PageRoutesName.firstOnboarding,
+    // );
   }
   @override
   Widget build(BuildContext context) {
