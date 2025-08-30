@@ -206,8 +206,8 @@ class _ProfileViewState extends State<ProfileView> {
             // Navigator.of(context).pushNamed(PageRoutesName.login);
 
             await FirebaseAuth.instance.signOut();
-            provider.changeThemeMode(ThemeMode.light);
-            provider.changeLanguage("en");
+            // provider.changeThemeMode(ThemeMode.light);
+            // provider.changeLanguage("en");
             Navigator.pushNamedAndRemoveUntil(
               context,
               PageRoutesName.login,
