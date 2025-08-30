@@ -68,22 +68,42 @@ class _ProfileViewState extends State<ProfileView> {
                   ),
                 ),
               ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    user?.displayName ?? "No Name",
-                    style: theme.textTheme.titleLarge,
-                    softWrap: true,
-                  ),
-                  Text(
-                    user?.email ?? "No Email",
-                    softWrap: true,
-                    style: theme.textTheme.bodyLarge!.copyWith(
-                      color: EventlyColors.white,
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: Align(
+                        alignment: Alignment.bottomLeft,
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            user?.displayName ?? "No Name",
+                            style: theme.textTheme.titleLarge,
+                            softWrap: true,
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
-                ],
+                    SizedBox(height: 5,),
+                    Expanded(
+                      child: Align(
+                        alignment: Alignment.topLeft,
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            user?.email ?? "No Email",
+                            softWrap: true,
+                            style: theme.textTheme.bodyLarge!.copyWith(
+                              color: EventlyColors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),

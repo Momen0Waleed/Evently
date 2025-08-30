@@ -40,7 +40,7 @@ class _PickEventMapScreenState extends State<PickEventMapScreen> {
                 provider.googleMapController = mapController;
                 // appProvider.setLocationListener();
               },
-              onTap: (location){
+              onLongPress: (location){
                 provider.setEventLocation(location);
                 Navigator.of(context).pop();
               },

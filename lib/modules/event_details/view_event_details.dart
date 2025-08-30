@@ -35,6 +35,8 @@ class ViewEventDetails extends StatelessWidget {
     var local = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
+        forceMaterialTransparency: true,
+
         backgroundColor: provider.isDark()
             ? EventlyColors.dark
             : EventlyColors.white,
@@ -205,37 +207,40 @@ class ViewEventDetails extends StatelessWidget {
                     borderRadius: BorderRadius.circular(16),
                     color: Colors.transparent,
                   ),
-                  child: Consumer<AppProvider>(
-                    builder: (context, provider, child) => GoogleMap(
-                      gestureRecognizers: {
-                        Factory<OneSequenceGestureRecognizer>(
-                          () => EagerGestureRecognizer(),
-                        ),
-                      },
-                      markers: {
-                        Marker(
-                          markerId: MarkerId(eventData.eventID.toString()),
-                          position: LatLng(eventData.lat!, eventData.long!),
-                        ),
-                      },
-                      onMapCreated: (mapController) {
-                        // provider.googleMapController = mapController;
-                        // provider.changeLocationOnMap(provider.eventLocation)
-                
-                        provider.googleMapController = mapController;
-                
-                        mapController.animateCamera(
-                          CameraUpdate.newCameraPosition(
-                            CameraPosition(
-                              target: LatLng(eventData.lat!, eventData.long!),
-                              zoom: 14,
-                            ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadiusGeometry.circular(16),
+                    child: Consumer<AppProvider>(
+                      builder: (context, provider, child) => GoogleMap(
+                        gestureRecognizers: {
+                          Factory<OneSequenceGestureRecognizer>(
+                            () => EagerGestureRecognizer(),
                           ),
-                        );
-                      },
-                      initialCameraPosition: CameraPosition(
-                        target: LatLng(eventData.lat!, eventData.long!),
-                        zoom: 14,
+                        },
+                        markers: {
+                          Marker(
+                            markerId: MarkerId(eventData.eventID.toString()),
+                            position: LatLng(eventData.lat!, eventData.long!),
+                          ),
+                        },
+                        onMapCreated: (mapController) {
+                          // provider.googleMapController = mapController;
+                          // provider.changeLocationOnMap(provider.eventLocation)
+                                    
+                          provider.googleMapController = mapController;
+                                    
+                          mapController.animateCamera(
+                            CameraUpdate.newCameraPosition(
+                              CameraPosition(
+                                target: LatLng(eventData.lat!, eventData.long!),
+                                zoom: 14,
+                              ),
+                            ),
+                          );
+                        },
+                        initialCameraPosition: CameraPosition(
+                          target: LatLng(eventData.lat!, eventData.long!),
+                          zoom: 14,
+                        ),
                       ),
                     ),
                   ),

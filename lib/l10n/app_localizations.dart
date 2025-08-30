@@ -503,7 +503,7 @@ abstract class AppLocalizations {
   /// No description provided for @select_loc.
   ///
   /// In en, this message translates to:
-  /// **'Tap on location to select'**
+  /// **'Long Press on location to select'**
   String get select_loc;
 
   /// No description provided for @plz_enter_loc.

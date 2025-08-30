@@ -38,6 +38,7 @@ class _CreateAccountState extends State<CreateAccount> {
 
     return Scaffold(
       appBar: AppBar(
+        forceMaterialTransparency: true,
         backgroundColor: provider.isDark()
             ? EventlyColors.dark
             : EventlyColors.white,
@@ -51,185 +52,186 @@ class _CreateAccountState extends State<CreateAccount> {
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 16),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Image.asset(ImagesName.splashLogo, width: dynamicSize.width * 0.4),
-            Container(
-              height: dynamicSize.height * 0.5,
-              margin: EdgeInsets.only(top: 30),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    TextFieldWidget(
-                      color: provider.isDark()
-                          ? Colors.transparent
-                          : EventlyColors.white,
-                      title: local.name,
-                      textColor: provider.isDark()
-                          ? EventlyColors.white
-                          : EventlyColors.gray,
-                      borderColor: provider.isDark()
-                          ? EventlyColors.blue
-                          : EventlyColors.gray,
-                      prefixIcon: Icon(
-                        Icons.person_rounded,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Image.asset(ImagesName.splashLogo, width: dynamicSize.width * 0.4),
+               Form(
+                  key: _formKey,
+                  child: Column(
+                    spacing: 15,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      TextFieldWidget(
                         color: provider.isDark()
+                            ? Colors.transparent
+                            : EventlyColors.white,
+                        title: local.name,
+                        textColor: provider.isDark()
                             ? EventlyColors.white
                             : EventlyColors.gray,
-                      ),
-                      validator: validateName,
-                      controller: nameController,
-                    ),
-                    TextFieldWidget(
-                      color: provider.isDark()
-                          ? Colors.transparent
-                          : EventlyColors.white,
-                      title: local.email,
-                      textColor: provider.isDark()
-                          ? EventlyColors.white
-                          : EventlyColors.gray,
-                      borderColor: provider.isDark()
-                          ? EventlyColors.blue
-                          : EventlyColors.gray,
-                      prefixIcon: Icon(
-                        Icons.mail_rounded,
-                        color: provider.isDark()
-                            ? EventlyColors.white
+                        borderColor: provider.isDark()
+                            ? EventlyColors.blue
                             : EventlyColors.gray,
-                      ),
-                      validator: validateEmail,
-                      controller: mailController,
-                    ),
-                    TextFieldWidget(
-                      color: provider.isDark()
-                          ? Colors.transparent
-                          : EventlyColors.white,
-                      title: local.password,
-                      textColor: provider.isDark()
-                          ? EventlyColors.white
-                          : EventlyColors.gray,
-                      borderColor: provider.isDark()
-                          ? EventlyColors.blue
-                          : EventlyColors.gray,
-                      prefixIcon: Icon(
-                        Icons.lock_rounded,
-                        color: provider.isDark()
-                            ? EventlyColors.white
-                            : EventlyColors.gray,
-                      ),
-                      isPassword: true,
-                      validator: validatePassword,
-                      controller: passwordController,
-                    ),
-                    TextFieldWidget(
-                      color: provider.isDark()
-                          ? Colors.transparent
-                          : EventlyColors.white,
-                      title: local.re_password,
-                      textColor: provider.isDark()
-                          ? EventlyColors.white
-                          : EventlyColors.gray,
-                      borderColor: provider.isDark()
-                          ? EventlyColors.blue
-                          : EventlyColors.gray,
-                      prefixIcon: Icon(
-                        Icons.lock_rounded,
-                        color: provider.isDark()
-                            ? EventlyColors.white
-                            : EventlyColors.gray,
-                      ),
-                      isPassword: true,
-                      validator: validateConfirmPassword,
-                      controller: confirmPasswordController,
-                    ),
-                    RegisterButtonWidget(
-                      bgColor: EventlyColors.blue,
-                      child: Text(
-                        local.create_acc,
-                        style: textTheme.titleMedium!.copyWith(
-                          color: EventlyColors.white,
+                        prefixIcon: Icon(
+                          Icons.person_rounded,
+                          color: provider.isDark()
+                              ? EventlyColors.white
+                              : EventlyColors.gray,
                         ),
-                        textAlign: TextAlign.center,
+                        validator: validateName,
+                        controller: nameController,
                       ),
-                      buttonAction: () {
-                        setState(() async {
-                          if (_formKey.currentState!.validate()) {
-                            // Navigator.of(
-                            //   context,
-                            // ).pushReplacementNamed(PageRoutesName.layout);
-                            EasyLoading.show();
-                            FirebaseAuthenticationUtils.createUserWithEmailAndPassword(
-                              emailAddress: mailController.text,
-                              password: passwordController.text,
-                            ).then((value) async {
-                            await FirebaseAuth.instance.currentUser!.updateDisplayName(nameController.text);
-                            await FirebaseAuth.instance.currentUser!.reload();
-                              if (value) {
-                            EasyLoading.dismiss();
-                                Navigator.pop(context);
-                              }
-                            });
-
-                          }
-                        });
-                      },
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                          local.already_have_acc,
-                          style: textTheme.bodyLarge!.copyWith(
-                            color: provider.isDark()
-                                ? EventlyColors.white
-                                : EventlyColors.black,
+                      TextFieldWidget(
+                        color: provider.isDark()
+                            ? Colors.transparent
+                            : EventlyColors.white,
+                        title: local.email,
+                        textColor: provider.isDark()
+                            ? EventlyColors.white
+                            : EventlyColors.gray,
+                        borderColor: provider.isDark()
+                            ? EventlyColors.blue
+                            : EventlyColors.gray,
+                        prefixIcon: Icon(
+                          Icons.mail_rounded,
+                          color: provider.isDark()
+                              ? EventlyColors.white
+                              : EventlyColors.gray,
+                        ),
+                        validator: validateEmail,
+                        controller: mailController,
+                      ),
+                      TextFieldWidget(
+                        color: provider.isDark()
+                            ? Colors.transparent
+                            : EventlyColors.white,
+                        title: local.password,
+                        textColor: provider.isDark()
+                            ? EventlyColors.white
+                            : EventlyColors.gray,
+                        borderColor: provider.isDark()
+                            ? EventlyColors.blue
+                            : EventlyColors.gray,
+                        prefixIcon: Icon(
+                          Icons.lock_rounded,
+                          color: provider.isDark()
+                              ? EventlyColors.white
+                              : EventlyColors.gray,
+                        ),
+                        isPassword: true,
+                        validator: validatePassword,
+                        controller: passwordController,
+                      ),
+                      TextFieldWidget(
+                        color: provider.isDark()
+                            ? Colors.transparent
+                            : EventlyColors.white,
+                        title: local.re_password,
+                        textColor: provider.isDark()
+                            ? EventlyColors.white
+                            : EventlyColors.gray,
+                        borderColor: provider.isDark()
+                            ? EventlyColors.blue
+                            : EventlyColors.gray,
+                        prefixIcon: Icon(
+                          Icons.lock_rounded,
+                          color: provider.isDark()
+                              ? EventlyColors.white
+                              : EventlyColors.gray,
+                        ),
+                        isPassword: true,
+                        validator: validateConfirmPassword,
+                        controller: confirmPasswordController,
+                      ),
+                      RegisterButtonWidget(
+                        bgColor: EventlyColors.blue,
+                        child: Text(
+                          local.create_acc,
+                          style: textTheme.titleMedium!.copyWith(
+                            color: EventlyColors.white,
                           ),
+                          textAlign: TextAlign.center,
                         ),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.of(
-                              context,
-                            ).pushNamed(PageRoutesName.login);
-                          },
-                          child: Text(
-                            local.login,
+                        buttonAction: () {
+                          setState(() async {
+                            if (_formKey.currentState!.validate()) {
+                              // Navigator.of(
+                              //   context,
+                              // ).pushReplacementNamed(PageRoutesName.layout);
+                              EasyLoading.show();
+                              FirebaseAuthenticationUtils.createUserWithEmailAndPassword(
+                                emailAddress: mailController.text,
+                                password: passwordController.text,
+                              ).then((value) async {
+                              await FirebaseAuth.instance.currentUser!.updateDisplayName(nameController.text);
+                              await FirebaseAuth.instance.currentUser!.reload();
+                                if (value) {
+                              EasyLoading.dismiss();
+                                  Navigator.pop(context);
+                                }
+                              });
+                          
+                            }
+                          });
+                        },
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            local.already_have_acc,
                             style: textTheme.bodyLarge!.copyWith(
-                              color: EventlyColors.blue,
-                              fontStyle: FontStyle.italic,
-                              decoration: TextDecoration.underline,
-                              decorationColor: EventlyColors.blue,
-                              fontWeight: FontWeight.bold,
+                              color: provider.isDark()
+                                  ? EventlyColors.white
+                                  : EventlyColors.black,
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(
+                                context,
+                              ).pushNamed(PageRoutesName.login);
+                            },
+                            child: Text(
+                              local.login,
+                              style: textTheme.bodyLarge!.copyWith(
+                                color: EventlyColors.blue,
+                                fontStyle: FontStyle.italic,
+                                decoration: TextDecoration.underline,
+                                decorationColor: EventlyColors.blue,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+
+              Container(
+                margin: EdgeInsets.only(top: 25),
+                child: LanguageSwitch(
+                  onLanguageChanged: (bool value) {
+                    setState(() {
+                      isLanguageEN = value;
+                    });
+                    provider.changeLanguage(isLanguageEN ? "en" : "ar");
+                    // _formKey.currentState?.validate();
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      _formKey.currentState?.validate();
+                    });
+                  },
                 ),
               ),
-            ),
-            Container(
-              margin: EdgeInsets.only(top: 25),
-              child: LanguageSwitch(
-                onLanguageChanged: (bool value) {
-                  setState(() {
-                    isLanguageEN = value;
-                  });
-                  provider.changeLanguage(isLanguageEN ? "en" : "ar");
-                  // _formKey.currentState?.validate();
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    _formKey.currentState?.validate();
-                  });
-                },
-              ),
-            ),
-          ],
+              SizedBox(height: 20,)
+            ],
+          ),
         ),
       ),
     );

@@ -17,6 +17,7 @@ class ForgetPasswordScreen extends StatelessWidget {
 var provider = Provider.of<SettingsProvider>(context);
     return Scaffold(
       appBar: AppBar(
+        forceMaterialTransparency: true,
         backgroundColor: provider.isDark() ? EventlyColors.dark:EventlyColors.white,
         leading: IconButton(
           onPressed: () {

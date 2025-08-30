@@ -12,6 +12,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart' show Provider, Consumer;
 
@@ -45,7 +46,10 @@ class _CreateEventViewState extends State<CreateEventView> {
       if (index != -1) {
         currentTabIndex = index;
       }
-
+      appProvider.eventLocation = LatLng(
+        widget.eventsData!.lat!,
+        widget.eventsData!.long!,
+      );
       // Set date & time
       selectedDate = widget.eventsData!.selectedDate;
       selectedTime = widget
@@ -117,7 +121,9 @@ class _CreateEventViewState extends State<CreateEventView> {
     var local = AppLocalizations.of(context)!;
     var provider = Provider.of<SettingsProvider>(context);
     return Scaffold(
+
       appBar: AppBar(
+        forceMaterialTransparency: true,
         backgroundColor: provider.isDark()
             ? EventlyColors.dark
             : EventlyColors.white,
@@ -332,17 +338,23 @@ class _CreateEventViewState extends State<CreateEventView> {
                           ),
                           SizedBox(width: 10),
                           Expanded(
-                            child: Text(
-                              widget.eventsData != null
-                                  ? "Location: ${widget.eventsData?.lat.toString()} ,\n${widget.eventsData?.long.toString()}"
-                                  : (appProvider.eventLocation == null
-                                  ? local.choose_loc
-                                  : "Location: ${appProvider.eventLocation!.latitude.toString()} ,\n${appProvider.eventLocation!.longitude.toString()}"),
-                              style: theme.textTheme.bodyLarge!.copyWith(
-                                color: EventlyColors.blue,
-                                height: 1.6,
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  widget.eventsData != null
+                                      ? "Location: ${widget.eventsData?.lat.toString()} ,\n${widget.eventsData?.long.toString()}"
+                                      : (appProvider.eventLocation == null
+                                      ? local.choose_loc
+                                      : "Location: ${appProvider.eventLocation!.latitude.toString()} ,\n${appProvider.eventLocation!.longitude.toString()}"),
+                                  style: theme.textTheme.bodyLarge!.copyWith(
+                                    color: EventlyColors.blue,
+                                    height: 1.6,
+                                  ),
+                                  softWrap: true,
+                                ),
                               ),
-                              softWrap: true,
                             ),
                           ),
                           // Spacer(),
@@ -420,7 +432,7 @@ class _CreateEventViewState extends State<CreateEventView> {
                           );
                         } else {
                           eventData.userId = FirebaseAuth.instance.currentUser!.uid;
-                          operation = FirebaseFirestoreUtils.createNewEvent(eventData);
+                          operation = FirebaseFirestoreUtils.updateEventData(eventData: eventData);
 
 
                           //  FirebaseFirestoreUtils.updateEventData(

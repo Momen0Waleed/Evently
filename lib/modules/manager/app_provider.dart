@@ -53,17 +53,38 @@ class AppProvider extends ChangeNotifier {
   }
 
   void changeLocationOnMap(LocationData locationData) {
+    final userLatLng = LatLng(locationData.latitude ?? 0, locationData.longitude ?? 0);
+
+    // update camera position
     CameraPosition newPosition = CameraPosition(
-      target: LatLng(locationData.latitude ?? 0, locationData.longitude ?? 0),
+      target: userLatLng,
       zoom: cameraPosition.zoom,
     );
+
+    // move camera
     googleMapController.animateCamera(
-      CameraUpdate.newCameraPosition(cameraPosition),
+      CameraUpdate.newCameraPosition(newPosition),
     );
+
+    // remove old user marker if exists
     markers = {...markers.where((m) => m.markerId.value != "user_location")};
+
+    // add new user marker
+    markers.add(
+      Marker(
+        markerId: const MarkerId("user_location"),
+        position: userLatLng,
+        infoWindow: const InfoWindow(title: "You are here"),
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
+      ),
+    );
+
+    // update current camera position
     cameraPosition = newPosition;
+
     notifyListeners();
   }
+
 
   void setLocationListener() {
     location.changeSettings(accuracy: LocationAccuracy.high, interval: 3000);

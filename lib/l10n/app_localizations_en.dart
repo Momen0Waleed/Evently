@@ -215,7 +215,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get skip => 'Skip';
 
   @override
-  String get select_loc => 'Tap on location to select';
+  String get select_loc => 'Long Press on location to select';
 
   @override
   String get plz_enter_loc => 'Please Enter all the event attributes';

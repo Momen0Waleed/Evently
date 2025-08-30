@@ -77,7 +77,7 @@
 
     "skip": "Skip",
 
-    "select_loc": "Tap on location to select",
+    "select_loc": "Long Press on location to select",
 
     "plz_enter_loc": "Please Enter all the event attributes"
 
