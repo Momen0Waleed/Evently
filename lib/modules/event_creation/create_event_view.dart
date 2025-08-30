@@ -8,6 +8,7 @@ import 'package:evently/modules/authentication/widgets/register_button_widget.da
 import 'package:evently/modules/event_creation/widgets/tap_item_widget.dart';
 import 'package:evently/modules/manager/app_provider.dart';
 import 'package:evently/modules/manager/settings_provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -332,12 +333,14 @@ class _CreateEventViewState extends State<CreateEventView> {
                           SizedBox(width: 10),
                           Expanded(
                             child: Text(
-                              widget.eventsData == null ?(
-                             appProvider.eventLocation == null ? local.choose_loc : "Location: ${appProvider.eventLocation!.latitude.toString()} ,\n${appProvider.eventLocation!.longitude.toString()} ")
-                              : "Location: ${widget.eventsData?.lat.toString()} ,\n${widget.eventsData?.long.toString()} ",
+                              widget.eventsData != null
+                                  ? "Location: ${widget.eventsData?.lat.toString()} ,\n${widget.eventsData?.long.toString()}"
+                                  : (appProvider.eventLocation == null
+                                  ? local.choose_loc
+                                  : "Location: ${appProvider.eventLocation!.latitude.toString()} ,\n${appProvider.eventLocation!.longitude.toString()}"),
                               style: theme.textTheme.bodyLarge!.copyWith(
                                 color: EventlyColors.blue,
-                                height: 1.6
+                                height: 1.6,
                               ),
                               softWrap: true,
                             ),
@@ -395,6 +398,7 @@ class _CreateEventViewState extends State<CreateEventView> {
                         );
 
                         var eventData = EventsData(
+                          userId: FirebaseAuth.instance.currentUser!.uid,
                           eventID: widget.eventsData?.eventID,
                           eventTitle: nameController.text,
                           eventDescription: descriptionController.text,
@@ -415,13 +419,19 @@ class _CreateEventViewState extends State<CreateEventView> {
                             eventData,
                           );
                         } else {
-                          operation = FirebaseFirestoreUtils.updateEventData(
-                            eventData: eventData,
-                          );
+                          eventData.userId = FirebaseAuth.instance.currentUser!.uid;
+                          operation = FirebaseFirestoreUtils.createNewEvent(eventData);
+
+
+                          //  FirebaseFirestoreUtils.updateEventData(
+                          //   eventData: eventData,
+                          // );
                         }
 
                         operation.then((value) {
                           Future.delayed(Duration(seconds: 2), () {
+                            appProvider.eventLocation = null;
+
                             EasyLoading.dismiss();
 
                             if (value) {

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:evently/core/constants/colors/evently_colors.dart';
 import 'package:evently/core/constants/images/images_name.dart';
 import 'package:evently/core/constants/services/local_storage_keys.dart';
@@ -8,6 +9,7 @@ import 'package:evently/l10n/app_localizations.dart';
 import 'package:evently/modules/authentication/widgets/register_button_widget.dart';
 import 'package:evently/modules/authentication/widgets/text_field_widget.dart';
 import 'package:evently/modules/manager/settings_provider.dart' show SettingsProvider;
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart' show Provider;
@@ -159,8 +161,19 @@ class _LoginScreenState extends State<LoginScreen> {
                                 FirebaseAuthenticationUtils.signInWithEmailAndPassword(
                                   emailAddress: mailController.text,
                                   password: passwordController.text,
-                                ).then(((value) {
+                                ).then(((value) async{
                                   EasyLoading.dismiss();
+
+                                  final uid = FirebaseAuth.instance.currentUser!.uid;
+                                  final userDoc = await FirebaseFirestore.instance.collection("users").doc(uid).get();
+
+                                  if (!userDoc.exists) {
+                                    await FirebaseFirestore.instance.collection("users").doc(uid).set({
+                                      "email": FirebaseAuth.instance.currentUser!.email,
+                                      "createdAt": FieldValue.serverTimestamp(),
+                                    });
+                                  }
+
                                   Navigator.of(
                                     context,
                                   ).pushReplacementNamed(PageRoutesName.layout);
@@ -245,7 +258,22 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                             ],
                           ),
-                          buttonAction: () {},
+                          buttonAction: () async {
+                            final success = await FirebaseAuthenticationUtils.signInWithGoogle();
+                            if (success) {
+                              final uid = FirebaseAuth.instance.currentUser!.uid;
+                              final userDoc = await FirebaseFirestore.instance.collection("users").doc(uid).get();
+
+                              if (!userDoc.exists) {
+                                await FirebaseFirestore.instance.collection("users").doc(uid).set({
+                                  "email": FirebaseAuth.instance.currentUser!.email,
+                                  "createdAt": FieldValue.serverTimestamp(),
+                                });
+                              }
+
+                              Navigator.of(context).pushReplacementNamed(PageRoutesName.layout);
+                            }
+                            },
                         ),
                       ],
                     ),

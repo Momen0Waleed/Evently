@@ -24,7 +24,7 @@ class AppProvider extends ChangeNotifier {
       notifyListeners();
       return;
     }
-    bool locationServiceEnabled = await _loactionServiceEnabled();
+    bool locationServiceEnabled = await _locationServiceEnabled();
     if (!locationServiceEnabled) {
       notifyListeners();
       return;
@@ -44,7 +44,7 @@ class AppProvider extends ChangeNotifier {
     return permissionStatus == PermissionStatus.granted;
   }
 
-  Future<bool> _loactionServiceEnabled() async {
+  Future<bool> _locationServiceEnabled() async {
     bool locationServiceEnabled = await location.serviceEnabled();
     if (!locationServiceEnabled) {
       locationServiceEnabled = await location.requestService();

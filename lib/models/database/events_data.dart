@@ -1,5 +1,6 @@
 class EventsData {
   static const String collectionName = "event_task";
+  String userId;
   String? eventID;
   String eventTitle;
   String eventDescription;
@@ -11,7 +12,8 @@ class EventsData {
   double? long;
 
   EventsData({
-    this.eventID,
+    required this.userId,
+    required this.eventID,
     required this.eventTitle,
     required this.eventDescription,
     required this.eventCategoryImg,
@@ -24,6 +26,7 @@ class EventsData {
 
   Map<String, dynamic> toJson(){
     return {
+      "userId": userId,
       "eventID": eventID,
       "eventTitle": eventTitle,
       "eventDescription": eventDescription,
@@ -38,6 +41,7 @@ class EventsData {
 
   factory EventsData.fromJson(Map<String,dynamic> json){
     return EventsData(
+      userId: json["userId"],
       eventID: json["eventID"],
       eventTitle: json["eventTitle"],
       eventDescription: json["eventDescription"],

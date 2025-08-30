@@ -46,11 +46,7 @@ var provider = Provider.of<SettingsProvider>(context);
                 ).textTheme.titleMedium!.copyWith(color: EventlyColors.white),
                 textAlign: TextAlign.center,
               ),
-              buttonAction: () {
-                Navigator.of(
-                  context,
-                ).pushReplacementNamed(PageRoutesName.layout);
-              },
+              buttonAction: () {},
             ),
           ],
         ),
